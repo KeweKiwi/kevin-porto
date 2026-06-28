@@ -171,20 +171,20 @@ export function SystemLoader({
 
       const timing = isMobile
         ? {
-            wake: 0.14,
-            status: 0.08,
-            statusHold: 0.01,
-            progress: 0.05,
-            ready: 0.08,
-            exit: 0.25,
+            wake: 0.18,
+            status: 0.1,
+            statusHold: 0.015,
+            progress: 0.07,
+            ready: 0.12,
+            exit: 0.32,
           }
         : {
-          wake: 0.22,
-          status: 0.09,
-          statusHold: 0.015,
-          progress: 0.06,
-          ready: 0.12,
-          exit: 0.32,
+          wake: 0.28,
+          status: 0.14,
+          statusHold: 0.025,
+          progress: 0.09,
+          ready: 0.2,
+          exit: 0.5,
         };
 
       gsap.set(statusLines, {

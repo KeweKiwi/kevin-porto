@@ -21,6 +21,26 @@
   background-size: 7.2vw 7.2vw;
 }
 
+.loader::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  content: "";
+  opacity: 0.11;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 42%,
+      rgba(215, 247, 91, 0.2) 50%,
+      transparent 58%,
+      transparent 100%
+    );
+  transform: translateY(-38%);
+  animation: loaderSweep 2.6s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
 .panelTop,
 .panelBottom {
   position: absolute;
@@ -85,6 +105,7 @@
   width: 0.45rem;
   height: 0.45rem;
   border: 1px solid #d7f75b;
+  box-shadow: 0 0 16px rgba(215, 247, 91, 0.22);
 }
 
 .metadata {
@@ -173,6 +194,7 @@
 }
 
 .terminalProgress {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -181,6 +203,25 @@
   color: rgba(243, 240, 232, 0.54);
   font-size: 0.74rem;
   line-height: 1;
+}
+
+.terminalProgress::after {
+  position: absolute;
+  inset: -0.45rem 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.34;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 18%,
+      rgba(215, 247, 91, 0.24) 46%,
+      transparent 74%,
+      transparent 100%
+    );
+  transform: translateX(-62%);
+  animation: progressSweep 2.25s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
 .progressBracket {
@@ -195,6 +236,7 @@
 }
 
 .progressCell {
+  position: relative;
   display: block;
   height: 0.72rem;
   border: 1px solid rgba(58, 65, 63, 0.86);
@@ -205,8 +247,17 @@
 
 .progressCell[data-active="true"] {
   border-color: rgba(215, 247, 91, 0.68);
-  background: #d7f75b;
-  box-shadow: 0 0 14px rgba(215, 247, 91, 0.16);
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.24), transparent 42%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(8, 9, 9, 0.18) 0 1px,
+      transparent 1px 5px
+    ),
+    #d7f75b;
+  box-shadow:
+    0 0 14px rgba(215, 247, 91, 0.18),
+    inset 0 0 0 1px rgba(8, 9, 9, 0.15);
 }
 
 .systemStatus {
@@ -257,6 +308,26 @@
   height: 1px;
   background: #d7f75b;
   opacity: 0.3;
+}
+
+@keyframes loaderSweep {
+  0% {
+    transform: translateY(-48%);
+  }
+
+  100% {
+    transform: translateY(48%);
+  }
+}
+
+@keyframes progressSweep {
+  0% {
+    transform: translateX(-68%);
+  }
+
+  100% {
+    transform: translateX(68%);
+  }
 }
 
 @media (max-width: 767px) {
