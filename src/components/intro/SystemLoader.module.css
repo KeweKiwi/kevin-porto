@@ -1,0 +1,352 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  overflow: hidden;
+  clip-path: inset(0% 0% 0% 0%);
+  color: var(--color-text);
+  font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  pointer-events: auto;
+}
+
+.loader::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  opacity: 0.16;
+  background-image:
+    linear-gradient(to right, rgba(243, 240, 232, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(243, 240, 232, 0.055) 1px, transparent 1px);
+  background-size: 7.2vw 7.2vw;
+}
+
+.panelTop,
+.panelBottom {
+  position: absolute;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 50.2%;
+  background: #080909;
+}
+
+.panelTop {
+  top: 0;
+  border-bottom: 1px solid rgba(215, 247, 91, 0.28);
+}
+
+.panelBottom {
+  bottom: 0;
+  border-top: 1px solid rgba(215, 247, 91, 0.18);
+}
+
+.exitLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 4;
+  width: 100%;
+  height: 1px;
+  background: #d7f75b;
+  opacity: 0.9;
+}
+
+.frame {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  min-height: 100svh;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(1.25rem, 4vw, 4.5rem);
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-text);
+}
+
+.statusDot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border: 1px solid #d7f75b;
+}
+
+.metadata {
+  display: grid;
+  justify-items: end;
+  gap: 0.45rem;
+  color: rgba(243, 240, 232, 0.58);
+}
+
+.scanTrack {
+  position: absolute;
+  top: 26%;
+  left: clamp(1.25rem, 4vw, 4.5rem);
+  z-index: 2;
+  width: min(42rem, 56vw);
+  height: 1px;
+  overflow: hidden;
+}
+
+.scanLine {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: rgba(215, 247, 91, 0.62);
+}
+
+.statusGrid {
+  align-self: center;
+  width: min(48rem, 72vw);
+  padding-bottom: 8vh;
+}
+
+.desktopStatuses,
+.mobileStatuses {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.mobileStatuses {
+  display: none;
+}
+
+.statusLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: min(48rem, 72vw);
+  min-height: clamp(2.4rem, 4.3vw, 4.65rem);
+  border-bottom: 1px solid rgba(58, 65, 63, 0.72);
+  color: rgba(243, 240, 232, 0.9);
+  font-size: clamp(1.25rem, 3vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 0.94;
+}
+
+.okMark {
+  margin-left: 1.5rem;
+  color: #d7f75b;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.progressDock {
+  align-self: end;
+  width: 100%;
+}
+
+.progressMeta,
+.systemStatus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.progressMeta {
+  color: rgba(243, 240, 232, 0.72);
+}
+
+.terminalProgress {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.85rem;
+  color: rgba(243, 240, 232, 0.54);
+  font-size: 0.74rem;
+  line-height: 1;
+}
+
+.progressBracket {
+  color: rgba(215, 247, 91, 0.72);
+}
+
+.progressCells {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: 3px;
+  min-width: 0;
+}
+
+.progressCell {
+  display: block;
+  height: 0.72rem;
+  border: 1px solid rgba(58, 65, 63, 0.86);
+  background:
+    linear-gradient(to bottom, rgba(243, 240, 232, 0.08), transparent),
+    rgba(8, 9, 9, 0.78);
+}
+
+.progressCell[data-active="true"] {
+  border-color: rgba(215, 247, 91, 0.68);
+  background: #d7f75b;
+  box-shadow: 0 0 14px rgba(215, 247, 91, 0.16);
+}
+
+.systemStatus {
+  margin-top: 0.8rem;
+  color: rgba(243, 240, 232, 0.48);
+}
+
+.progressRail {
+  position: relative;
+  height: 2px;
+  margin-top: 0.65rem;
+  overflow: hidden;
+  background: rgba(58, 65, 63, 0.9);
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: rgba(215, 247, 91, 0.82);
+}
+
+.segment {
+  position: absolute;
+  top: -6px;
+  width: 1px;
+  height: 13px;
+  background: rgba(243, 240, 232, 0.25);
+}
+
+.segment:nth-of-type(2) {
+  left: 18%;
+}
+
+.segment:nth-of-type(3) {
+  left: 46%;
+}
+
+.segment:nth-of-type(4) {
+  left: 72%;
+}
+
+.segment:nth-of-type(5) {
+  left: 91%;
+}
+
+.readySignal {
+  width: 4.5rem;
+  height: 1px;
+  background: #d7f75b;
+  opacity: 0.3;
+}
+
+@media (max-width: 767px) {
+  .loader::before {
+    opacity: 0.11;
+    background-size: 4.5rem 4.5rem;
+  }
+
+  .panelTop,
+  .panelBottom {
+    height: 50.1%;
+  }
+
+  .frame {
+    min-height: 100svh;
+    padding: 1.1rem;
+  }
+
+  .topbar {
+    display: block;
+    font-size: 0.64rem;
+  }
+
+  .identity {
+    gap: 0.55rem;
+  }
+
+  .identity span:last-child {
+    max-width: 3ch;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .metadata {
+    display: none;
+  }
+
+  .scanTrack {
+    display: none;
+  }
+
+  .statusGrid {
+    width: 100%;
+    padding-bottom: 4rem;
+  }
+
+  .desktopStatuses {
+    display: none;
+  }
+
+  .mobileStatuses {
+    display: block;
+  }
+
+  .statusLine {
+    max-width: none;
+    min-height: 3.25rem;
+    font-size: clamp(1.55rem, 11vw, 3.1rem);
+  }
+
+  .okMark {
+    font-size: 0.58rem;
+  }
+
+  .progressMeta,
+  .systemStatus {
+    font-size: 0.58rem;
+  }
+
+  .terminalProgress {
+    gap: 0.45rem;
+    margin-top: 0.7rem;
+  }
+
+  .progressCells {
+    gap: 2px;
+  }
+
+  .progressCell {
+    height: 0.62rem;
+  }
+
+  .readySignal {
+    width: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanTrack,
+  .exitLine {
+    display: none;
+  }
+}

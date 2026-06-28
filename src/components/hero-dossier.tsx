@@ -9,6 +9,8 @@ import { ProjectMedia } from "@/components/project-media";
 import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { projectVisuals } from "@/data/project-visuals";
+import { INTRO_REVEAL_EVENT } from "@/lib/intro";
+import { prefersReducedMotionQuery } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 gsap.registerPlugin(useGSAP);
@@ -16,6 +18,7 @@ gsap.registerPlugin(useGSAP);
 export function HeroDossier() {
   const rootRef = useRef<HTMLElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [introReady, setIntroReady] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const activeProject = projects[activeIndex];
   const activeVisual = projectVisuals[activeIndex];
@@ -32,38 +35,85 @@ export function HeroDossier() {
     return () => window.clearInterval(timer);
   }, [reducedMotion]);
 
+  useEffect(() => {
+    function revealHero() {
+      setIntroReady(true);
+    }
+
+    window.addEventListener(INTRO_REVEAL_EVENT, revealHero, { once: true });
+
+    const fallbackTimer = window.setTimeout(revealHero, 2600);
+
+    return () => {
+      window.removeEventListener(INTRO_REVEAL_EVENT, revealHero);
+      window.clearTimeout(fallbackTimer);
+    };
+  }, []);
+
   useGSAP(
     () => {
-      if (reducedMotion) {
+      if (
+        !introReady ||
+        reducedMotion ||
+        window.matchMedia(prefersReducedMotionQuery).matches
+      ) {
         return;
       }
 
       const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
       timeline
-        .from(".hero-line", {
-          yPercent: 112,
-          duration: 0.95,
-          stagger: 0.09,
+        .from(".portrait-aperture", {
+          clipPath: "inset(48% 22% 48% 22%)",
+          scale: 0.96,
+          opacity: 0,
+          duration: 0.78,
         })
         .from(
-          ".hero-meta",
+          ".hero-greeting",
+          {
+            y: 14,
+            opacity: 0,
+            duration: 0.36,
+          },
+          "-=0.28",
+        )
+        .from(
+          ".hero-line",
+          {
+            yPercent: 112,
+            duration: 0.82,
+            stagger: 0.08,
+          },
+          "-=0.2",
+        )
+        .from(
+          ".hero-copy",
           {
             y: 18,
             opacity: 0,
-            duration: 0.55,
-            stagger: 0.08,
+            duration: 0.45,
           },
-          "-=0.45",
+          "-=0.32",
         )
         .from(
-          ".portrait-aperture",
+          ".hero-actions",
           {
-            clipPath: "inset(48% 22% 48% 22%)",
-            scale: 0.96,
+            y: 16,
             opacity: 0,
-            duration: 0.8,
+            duration: 0.42,
           },
-          "-=0.35",
+          "-=0.24",
+        )
+        .from(
+          ".hero-rule",
+          {
+            scaleX: 0,
+            opacity: 0,
+            transformOrigin: "left center",
+            duration: 0.48,
+            stagger: 0.08,
+          },
+          "-=0.46",
         )
         .from(
           ".hero-signal-field",
@@ -102,7 +152,7 @@ export function HeroDossier() {
         stagger: 0.28,
       });
     },
-    { scope: rootRef, dependencies: [reducedMotion] },
+    { scope: rootRef, dependencies: [introReady, reducedMotion] },
   );
 
   function handlePointerMove(event: React.PointerEvent<HTMLElement>) {
@@ -130,9 +180,9 @@ export function HeroDossier() {
       }
     >
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute left-[8%] top-[17%] h-px w-[84%] bg-graphite-border" />
-        <div className="absolute left-[22%] top-[10%] h-[72%] w-px bg-graphite-border" />
-        <div className="absolute bottom-[12%] right-[9%] h-px w-[42%] bg-graphite-strong" />
+        <div className="hero-rule absolute left-[8%] top-[17%] h-px w-[84%] bg-graphite-border" />
+        <div className="hero-rule absolute left-[22%] top-[10%] h-[72%] w-px bg-graphite-border" />
+        <div className="hero-rule absolute bottom-[12%] right-[9%] h-px w-[42%] bg-graphite-strong" />
       </div>
       <div
         aria-hidden="true"
@@ -153,7 +203,7 @@ export function HeroDossier() {
 
       <div className="container-grid grid min-h-[calc(100svh-5rem)] content-center gap-10 py-10 tablet:py-14 laptop:grid-cols-12 laptop:items-center laptop:gap-6">
         <div className="relative z-10 laptop:col-span-5">
-          <p className="hero-meta technical-label mb-6 text-ink-muted">Hello, I&apos;m Kevin.</p>
+          <p className="hero-greeting technical-label mb-6 text-ink-muted">Hello, I&apos;m Kevin.</p>
           <h1 className="max-w-5xl text-[clamp(3.4rem,14vw,6.2rem)] font-bold leading-[0.9] tracking-normal text-ink-primary laptop:text-[clamp(4.1rem,5.2vw,5.9rem)]">
             {["I build native", "Apple experiences", "and production", "web systems."].map((line) => (
               <span key={line} className="block overflow-hidden pb-2">
@@ -161,10 +211,10 @@ export function HeroDossier() {
               </span>
             ))}
           </h1>
-          <p className="hero-meta mt-8 max-w-xl text-base leading-[1.55] text-ink-secondary tablet:text-lg">
+          <p className="hero-copy mt-8 max-w-xl text-base leading-[1.55] text-ink-secondary tablet:text-lg">
             {profile.intro}
           </p>
-          <div className="hero-meta mt-8 flex flex-wrap gap-3">
+          <div className="hero-actions mt-8 flex flex-wrap gap-3">
             <Link
               className="group inline-flex items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
               href="#work"
