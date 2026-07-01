@@ -376,7 +376,7 @@
   inset: -0.45rem 0;
   pointer-events: none;
   content: "";
-  opacity: 0.34;
+  opacity: 0.26;
   background:
     linear-gradient(
       90deg,
@@ -387,7 +387,7 @@
       transparent 100%
     );
   transform: translateX(-62%);
-  animation: progressSweep 2.25s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation: progressSweep 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
 .progressBracket {
@@ -395,6 +395,7 @@
 }
 
 .progressCells {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
   gap: 3px;
@@ -405,14 +406,18 @@
   position: relative;
   display: block;
   height: 0.72rem;
+  overflow: hidden;
   border: 1px solid rgba(58, 65, 63, 0.86);
   background:
     linear-gradient(to bottom, rgba(243, 240, 232, 0.08), transparent),
     rgba(8, 9, 9, 0.78);
+  transform: translateZ(0);
 }
 
-.progressCell[data-active="true"] {
-  border-color: rgba(215, 247, 91, 0.68);
+.progressCell::before {
+  position: absolute;
+  inset: 0;
+  content: "";
   background:
     linear-gradient(to bottom, rgba(255, 255, 255, 0.24), transparent 42%),
     repeating-linear-gradient(
@@ -424,6 +429,28 @@
   box-shadow:
     0 0 14px rgba(215, 247, 91, 0.18),
     inset 0 0 0 1px rgba(8, 9, 9, 0.15);
+  transform: scaleX(var(--cell-fill, 0));
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.progressCell::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0;
+  background: linear-gradient(to right, transparent, rgba(243, 240, 232, 0.32), transparent);
+  transform: translateX(-18%);
+}
+
+.progressCell[data-active="true"] {
+  border-color: rgba(215, 247, 91, 0.68);
+  box-shadow: 0 0 10px rgba(215, 247, 91, 0.11);
+}
+
+.progressCell[data-active="true"]::after {
+  opacity: 0.22;
 }
 
 .systemStatus {
@@ -443,6 +470,9 @@
   position: absolute;
   inset: 0;
   background: rgba(215, 247, 91, 0.82);
+  box-shadow: 0 0 18px rgba(215, 247, 91, 0.28);
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .segment {
@@ -629,7 +659,8 @@
   .exitLine,
   .statusBeam,
   .statusSweep,
-  .statusCursor {
+  .statusCursor,
+  .terminalProgress::after {
     display: none;
   }
 }

@@ -65,7 +65,7 @@ export function EvidenceCounterStrip() {
   return (
     <section
       ref={rootRef}
-      aria-label="Verified project evidence"
+      aria-label="Project proof points"
       className="relative border-b border-graphite-border bg-graphite-page py-8 tablet:py-10"
     >
       <div className="container-grid">

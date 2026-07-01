@@ -25,7 +25,7 @@ const proofRows = [
 
 export function EvidenceAbout() {
   return (
-    <section id="about" className="relative border-b border-graphite-border py-20 tablet:py-28">
+    <section id="capabilities" className="relative border-b border-graphite-border py-20 tablet:py-28">
       <div className="container-grid grid gap-10 desktop:grid-cols-12">
         <div className="desktop:col-span-5">
           <p className="technical-label mb-5 text-ink-muted">About Kevin</p>

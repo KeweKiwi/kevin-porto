@@ -35,7 +35,6 @@ const mobileStatuses: LoaderStatus[] = [
   { command: "INTERFACE CHECK", confirmation: "LIVE" },
 ];
 
-const progressMilestones = [18, 46, 72, 91, 100] as const;
 const progressCells = Array.from({ length: 24 }, (_, index) => index);
 const decodeGlyphs = ["0", "1", "/", "\\", "_", "-", "+", "*", "#", ":", "."] as const;
 
@@ -97,7 +96,7 @@ function TerminalStatusLine({
 export function SystemLoader({
   onComplete,
   allowSkip = true,
-  timeoutMs = 8600,
+  timeoutMs = 6800,
 }: SystemLoaderProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const progressFillRef = useRef<HTMLSpanElement | null>(null);
@@ -131,15 +130,26 @@ export function SystemLoader({
     let timeline: gsap.core.Timeline | undefined;
     let context: gsap.Context | undefined;
     let fallbackTimer: number | undefined;
+    const progressState = { value: 0 };
 
     function setProgress(value: number) {
+      const clampedValue = Math.max(0, Math.min(100, value));
+      const visibleValue = Math.round(clampedValue);
+
       if (progressValueRef.current) {
-        progressValueRef.current.textContent = `${value}%`;
+        progressValueRef.current.textContent = `${visibleValue}%`;
       }
 
-      const activeCellCount = Math.round((value / 100) * progressCells.length);
+      if (progressFillRef.current) {
+        gsap.set(progressFillRef.current, { scaleX: clampedValue / 100 });
+      }
+
+      const cellProgress = (clampedValue / 100) * progressCells.length;
       loaderRoot.querySelectorAll<HTMLElement>("[data-progress-cell]").forEach((cell, index) => {
-        cell.dataset.active = index < activeCellCount ? "true" : "false";
+        const cellFill = Math.max(0, Math.min(1, cellProgress - index));
+
+        cell.style.setProperty("--cell-fill", cellFill.toFixed(3));
+        cell.dataset.active = cellFill > 0.015 ? "true" : "false";
       });
     }
 
@@ -233,28 +243,28 @@ export function SystemLoader({
 
       const timing = isMobile
         ? {
-          wake: 0.24,
-          status: 0.07,
-          statusHold: 0.34,
-          statusOut: 0.2,
-          char: 0.042,
-          charStagger: 0.015,
-          decodeFlicker: 0.048,
-          progress: 0.18,
-          ready: 0.22,
-          exit: 0.42,
+          wake: 0.18,
+          status: 0.055,
+          statusHold: 0.16,
+          statusOut: 0.15,
+          char: 0.034,
+          charStagger: 0.01,
+          decodeFlicker: 0.034,
+          progressDuration: 4.35,
+          ready: 0.16,
+          exit: 0.34,
         }
         : {
-          wake: 0.36,
-          status: 0.08,
-          statusHold: 0.48,
-          statusOut: 0.24,
-          char: 0.046,
-          charStagger: 0.017,
-          decodeFlicker: 0.055,
-          progress: 0.22,
-          ready: 0.34,
-          exit: 0.66,
+          wake: 0.24,
+          status: 0.065,
+          statusHold: 0.2,
+          statusOut: 0.18,
+          char: 0.036,
+          charStagger: 0.011,
+          decodeFlicker: 0.036,
+          progressDuration: 4.7,
+          ready: 0.22,
+          exit: 0.5,
         };
 
       root.querySelectorAll<HTMLElement>("[data-status-char]").forEach((char) => {
@@ -292,6 +302,7 @@ export function SystemLoader({
       gsap.set("[data-loader-metadata]", { autoAlpha: 0, y: -8 });
       gsap.set("[data-loader-scan]", { scaleX: 0, transformOrigin: "left center" });
       gsap.set("[data-loader-exit-line]", { scaleX: 0, transformOrigin: "center center" });
+      progressState.value = 0;
 
       const introTimeline = gsap.timeline({
         defaults: { ease: "power3.out" },
@@ -335,7 +346,6 @@ export function SystemLoader({
 
       statusLines.forEach((line, index) => {
         const confirmation = confirmationMarks[index];
-        const milestone = progressMilestones[index] ?? 100;
         const prompt = line.querySelector<HTMLElement>("[data-status-prompt]");
         const cursor = line.querySelector<HTMLElement>("[data-status-cursor]");
         const beam = line.querySelector<HTMLElement>("[data-status-beam]");
@@ -438,7 +448,7 @@ export function SystemLoader({
               autoAlpha: 0.86,
               scaleX: 1,
               xPercent: 0,
-              duration: isMobile ? 0.24 : 0.32,
+              duration: isMobile ? 0.18 : 0.24,
               ease: "power2.out",
             },
             "<+=0.03",
@@ -450,7 +460,7 @@ export function SystemLoader({
               autoAlpha: 0,
               scaleX: 1.12,
               xPercent: 22,
-              duration: isMobile ? 0.22 : 0.3,
+              duration: isMobile ? 0.18 : 0.24,
               ease: "power2.in",
             },
             ">-=0.12",
@@ -502,16 +512,6 @@ export function SystemLoader({
             ease: "power1.out",
           })
           .to(
-            progressFillRef.current,
-            {
-              scaleX: milestone / 100,
-              duration: timing.progress,
-              ease: "power2.out",
-              onStart: () => setProgress(milestone),
-            },
-            "<+=0.06",
-          )
-          .to(
             line,
             {
               autoAlpha: 0,
@@ -529,11 +529,23 @@ export function SystemLoader({
       });
 
       introTimeline
-        .to(progressFillRef.current, {
-          scaleX: 1,
-          duration: timing.progress,
-          ease: "power2.out",
-          onStart: () => setProgress(100),
+        .to(
+          progressState,
+          {
+            value: 94,
+            duration: timing.progressDuration,
+            ease: "power1.inOut",
+            onUpdate: () => setProgress(progressState.value),
+            onComplete: () => setProgress(94),
+          },
+          0.08,
+        )
+        .to(progressState, {
+          value: 100,
+          duration: isMobile ? 0.24 : 0.32,
+          ease: "power1.inOut",
+          onUpdate: () => setProgress(progressState.value),
+          onComplete: () => setProgress(100),
         })
         .call(() => {
           setSystemStatus("SYSTEM READY");

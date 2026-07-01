@@ -133,3 +133,123 @@ select {
   white-space: nowrap;
   border: 0;
 }
+
+.kwf-grid {
+  background-image:
+    linear-gradient(to right, rgba(215, 247, 91, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(243, 240, 232, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+.kwf-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(243, 240, 232, 0.86);
+  text-stroke: 1px rgba(243, 240, 232, 0.86);
+}
+
+.skill-marquee-row {
+  overflow: hidden;
+  border-top: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.skill-marquee-row-dark {
+  background: var(--color-page);
+  color: var(--color-accent);
+}
+
+.skill-marquee-row-signal {
+  background: var(--color-accent);
+  color: var(--color-page);
+}
+
+.skill-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: kwf-marquee-left 34s linear infinite;
+  will-change: transform;
+}
+
+.skill-marquee-track[data-direction="right"] {
+  animation-name: kwf-marquee-right;
+  animation-duration: 38s;
+}
+
+.skill-marquee-group {
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+}
+
+.skill-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.35rem;
+  font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  font-size: clamp(0.95rem, 2.1vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.skill-marquee-item::after {
+  width: 0.36rem;
+  height: 0.36rem;
+  content: "";
+  background: currentColor;
+  opacity: 0.55;
+}
+
+@keyframes kwf-marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes kwf-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-width: 430px) {
+  .kwf-grid {
+    background-size: 48px 48px;
+  }
+
+  .skill-marquee-item {
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-marquee-track {
+    width: 100%;
+    animation: none;
+    transform: none !important;
+  }
+
+  .skill-marquee-group {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .skill-marquee-group[aria-hidden="true"] {
+    display: none;
+  }
+
+  .skill-marquee-row {
+    white-space: normal;
+  }
+}

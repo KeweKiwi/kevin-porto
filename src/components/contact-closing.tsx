@@ -43,7 +43,7 @@ export function ContactClosing() {
               className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
               href="/projects/quackfight"
             >
-              Open flagship case study
+              Open QuackFight case study
               <ArrowRight aria-hidden="true" size={16} />
             </Link>
             <a

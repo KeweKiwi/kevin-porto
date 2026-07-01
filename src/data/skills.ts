@@ -88,7 +88,7 @@ export const skillGroups: SkillGroup[] = [
     id: "web",
     title: "Web and Full-Stack Development",
     summary: "Production web delivery from requirements through public inventory, admin workflows, deployment, and maintenance.",
-    proof: "Rizki Mobil is the strongest proof point: a live client platform Kevin delivered independently for real dealership operations.",
+    proof: "Rizki Mobil shows Kevin's web delivery range: a live client platform delivered independently for real dealership operations.",
     skills: [
       {
         name: "Laravel",
@@ -156,7 +156,7 @@ export const skillGroups: SkillGroup[] = [
     id: "delivery",
     title: "Engineering and Delivery",
     summary: "Architecture, code review, integration, debugging, deployment, training, and maintenance across team and client work.",
-    proof: "Kevin's strongest differentiator is ownership: he has led technical workflows and independently delivered a live client platform.",
+    proof: "Kevin's delivery pattern is ownership: leading technical workflows and independently shipping a live client platform.",
     skills: [
       {
         name: "MVVM",
@@ -247,7 +247,7 @@ export const evidenceCounters = [
   {
     value: 100,
     prefix: "~",
-    label: "Exhibition players",
-    detail: "QuackFight booth build",
+    label: "Exhibition visitors",
+    detail: "played QuackFight",
   },
 ] as const;

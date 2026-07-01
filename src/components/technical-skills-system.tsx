@@ -36,11 +36,11 @@ export function TechnicalSkillsSystem() {
           <div className="desktop:col-span-7">
             <p className="technical-label mb-5 text-ink-muted">Technical skills</p>
             <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl desktop:text-7xl">
-              Skills mapped to evidence, not scores.
+              Technical skills connected to real project work.
             </h2>
           </div>
           <p className="max-w-xl text-base leading-[1.55] text-ink-secondary desktop:col-span-4 desktop:col-start-9">
-            Every item in this system points back to a selected project, role, or shipped workflow. No ratings, no inflated technology wall.
+            Each skill is tied to a project, role, or shipped workflow so the stack stays grounded in work Kevin has actually handled.
           </p>
         </div>
 
