@@ -16,17 +16,28 @@ type SystemLoaderProps = {
   timeoutMs?: number;
 };
 
+type LoaderStatus = {
+  command: string;
+  confirmation: string;
+};
+
 const desktopStatuses = [
-  "INITIALIZING PROFILE",
-  "LOADING CORE ASSETS",
-  "COMPILING PROJECT SIGNALS",
-  "VALIDATING INTERFACE",
+  { command: "INITIALIZING PROFILE", confirmation: "PROFILE SYNCED" },
+  { command: "LOADING CORE ASSETS", confirmation: "ASSETS MOUNTED" },
+  { command: "COMPILING PROJECT SIGNALS", confirmation: "SIGNAL LOCKED" },
+  { command: "VALIDATING INTERFACE", confirmation: "INTERFACE LIVE" },
 ];
 
-const mobileStatuses = desktopStatuses;
+const mobileStatuses: LoaderStatus[] = [
+  { command: "PROFILE INIT", confirmation: "SYNCED" },
+  { command: "CORE ASSETS", confirmation: "MOUNTED" },
+  { command: "PROJECT SIGNALS", confirmation: "LOCKED" },
+  { command: "INTERFACE CHECK", confirmation: "LIVE" },
+];
 
 const progressMilestones = [18, 46, 72, 91, 100] as const;
 const progressCells = Array.from({ length: 24 }, (_, index) => index);
+const decodeGlyphs = ["0", "1", "/", "\\", "_", "-", "+", "*", "#", ":", "."] as const;
 
 type StatusMode = "desktop" | "mobile";
 
@@ -39,30 +50,33 @@ function TerminalStatusLine({
   status,
 }: {
   mode: StatusMode;
-  status: string;
+  status: LoaderStatus;
 }) {
   const lineProps =
     mode === "desktop"
       ? { "data-desktop-status": true }
       : { "data-mobile-status": true };
-  const okProps =
+  const confirmationProps =
     mode === "desktop"
-      ? { "data-desktop-ok": true }
-      : { "data-mobile-ok": true };
+      ? { "data-desktop-confirmation": true }
+      : { "data-mobile-confirmation": true };
 
   return (
     <li className={styles.statusLine} {...lineProps}>
+      <span className={styles.statusBeam} data-status-beam />
       <span className={styles.statusCommand}>
+        <span className={styles.statusSweep} data-status-sweep />
         <span className={styles.statusPrompt} data-status-prompt>
           &gt;
         </span>
         <span className={styles.statusText}>
-          {status.split(" ").map((word, wordIndex) => (
-            <span key={`${status}-${wordIndex}-${word}`} className={styles.statusWord}>
+          {status.command.split(" ").map((word, wordIndex) => (
+            <span key={`${status.command}-${wordIndex}-${word}`} className={styles.statusWord}>
               {Array.from(word).map((char, charIndex) => (
                 <span
-                  key={`${status}-${wordIndex}-${charIndex}`}
+                  key={`${status.command}-${wordIndex}-${charIndex}`}
                   className={styles.statusChar}
+                  data-status-value={char}
                   data-status-char
                 >
                   {char}
@@ -73,8 +87,8 @@ function TerminalStatusLine({
           <span className={styles.statusCursor} data-status-cursor />
         </span>
       </span>
-      <span className={styles.okMark} {...okProps}>
-        OK
+      <span className={styles.confirmationMark} {...confirmationProps}>
+        {status.confirmation}
       </span>
     </li>
   );
@@ -83,7 +97,7 @@ function TerminalStatusLine({
 export function SystemLoader({
   onComplete,
   allowSkip = true,
-  timeoutMs = 6200,
+  timeoutMs = 8600,
 }: SystemLoaderProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const progressFillRef = useRef<HTMLSpanElement | null>(null);
@@ -191,8 +205,8 @@ export function SystemLoader({
         isMobile ? "[data-mobile-status]" : "[data-desktop-status]",
         root,
       );
-      const okMarks = gsap.utils.toArray<HTMLElement>(
-        isMobile ? "[data-mobile-ok]" : "[data-desktop-ok]",
+      const confirmationMarks = gsap.utils.toArray<HTMLElement>(
+        isMobile ? "[data-mobile-confirmation]" : "[data-desktop-confirmation]",
         root,
       );
 
@@ -219,27 +233,33 @@ export function SystemLoader({
 
       const timing = isMobile
         ? {
-          wake: 0.2,
-          status: 0.05,
-          statusHold: 0.16,
-          statusOut: 0.16,
-          char: 0.024,
-          charStagger: 0.012,
-          progress: 0.14,
-          ready: 0.16,
-          exit: 0.34,
+          wake: 0.24,
+          status: 0.07,
+          statusHold: 0.34,
+          statusOut: 0.2,
+          char: 0.042,
+          charStagger: 0.015,
+          decodeFlicker: 0.048,
+          progress: 0.18,
+          ready: 0.22,
+          exit: 0.42,
         }
         : {
-          wake: 0.28,
-          status: 0.05,
-          statusHold: 0.18,
-          statusOut: 0.18,
-          char: 0.026,
-          charStagger: 0.011,
-          progress: 0.16,
-          ready: 0.2,
-          exit: 0.5,
+          wake: 0.36,
+          status: 0.08,
+          statusHold: 0.48,
+          statusOut: 0.24,
+          char: 0.046,
+          charStagger: 0.017,
+          decodeFlicker: 0.055,
+          progress: 0.22,
+          ready: 0.34,
+          exit: 0.66,
         };
+
+      root.querySelectorAll<HTMLElement>("[data-status-char]").forEach((char) => {
+        char.textContent = char.dataset.statusValue ?? char.textContent;
+      });
 
       gsap.set(statusLines, {
         autoAlpha: 0,
@@ -248,9 +268,27 @@ export function SystemLoader({
         scale: 0.985,
         y: isMobile ? 10 : 16,
       });
-      gsap.set("[data-status-char]", { autoAlpha: 0, filter: "blur(3px)", yPercent: 38 });
+      gsap.set("[data-status-char]", {
+        autoAlpha: 0,
+        color: "rgba(215, 247, 91, 0.68)",
+        filter: "blur(3px)",
+        textShadow: "0 0 18px rgba(215, 247, 91, 0.18)",
+        yPercent: 38,
+      });
       gsap.set("[data-status-prompt], [data-status-cursor]", { autoAlpha: 0 });
-      gsap.set(okMarks, { autoAlpha: 0, y: 5 });
+      gsap.set("[data-status-beam]", {
+        autoAlpha: 0,
+        scaleX: 0,
+        xPercent: 0,
+        transformOrigin: "center center",
+      });
+      gsap.set("[data-status-sweep]", {
+        autoAlpha: 0,
+        scaleX: 0.22,
+        xPercent: -24,
+        transformOrigin: "left center",
+      });
+      gsap.set(confirmationMarks, { autoAlpha: 0, y: 5 });
       gsap.set("[data-loader-metadata]", { autoAlpha: 0, y: -8 });
       gsap.set("[data-loader-scan]", { scaleX: 0, transformOrigin: "left center" });
       gsap.set("[data-loader-exit-line]", { scaleX: 0, transformOrigin: "center center" });
@@ -296,13 +334,77 @@ export function SystemLoader({
       }
 
       statusLines.forEach((line, index) => {
-        const ok = okMarks[index];
+        const confirmation = confirmationMarks[index];
         const milestone = progressMilestones[index] ?? 100;
         const prompt = line.querySelector<HTMLElement>("[data-status-prompt]");
         const cursor = line.querySelector<HTMLElement>("[data-status-cursor]");
+        const beam = line.querySelector<HTMLElement>("[data-status-beam]");
+        const sweep = line.querySelector<HTMLElement>("[data-status-sweep]");
         const chars = gsap.utils.toArray<HTMLElement>("[data-status-char]", line);
+        const lineTimeline = gsap.timeline();
+        const decodeTimeline = gsap.timeline();
 
-        introTimeline
+        chars.forEach((char, charIndex) => {
+          const finalChar = char.dataset.statusValue ?? char.textContent ?? "";
+          const firstGlyph = decodeGlyphs[(charIndex + index * 3) % decodeGlyphs.length];
+          const secondGlyph =
+            decodeGlyphs[(charIndex * 2 + index * 5 + 4) % decodeGlyphs.length];
+          const startAt = charIndex * timing.charStagger;
+
+          decodeTimeline
+            .call(
+              () => {
+                char.textContent = firstGlyph;
+              },
+              undefined,
+              startAt,
+            )
+            .to(
+              char,
+              {
+                autoAlpha: 0.72,
+                color: "rgba(215, 247, 91, 0.78)",
+                filter: "blur(2px)",
+                textShadow: "0 0 18px rgba(215, 247, 91, 0.28)",
+                yPercent: isMobile ? 26 : 34,
+                duration: timing.decodeFlicker,
+                ease: "none",
+              },
+              startAt,
+            )
+            .call(
+              () => {
+                char.textContent = secondGlyph;
+              },
+              undefined,
+              startAt + timing.decodeFlicker * 0.52,
+            )
+            .call(
+              () => {
+                char.textContent = finalChar;
+              },
+              undefined,
+              startAt + timing.decodeFlicker + timing.char * 0.32,
+            )
+            .to(
+              char,
+              {
+                autoAlpha: 1,
+                color: "rgba(243, 240, 232, 0.92)",
+                filter: "blur(0px)",
+                textShadow: "0 0 14px rgba(243, 240, 232, 0.06)",
+                yPercent: 0,
+                duration: timing.char,
+                ease: "power2.out",
+                onComplete: () => {
+                  char.textContent = finalChar;
+                },
+              },
+              startAt + timing.decodeFlicker,
+            );
+        });
+
+        lineTimeline
           .to(line, {
             autoAlpha: 1,
             clipPath: "inset(0% 0% 0% 0%)",
@@ -321,19 +423,47 @@ export function SystemLoader({
             "<",
           )
           .to(
-            chars,
+            beam,
             {
               autoAlpha: 1,
-              filter: "blur(0px)",
-              yPercent: 0,
-              duration: timing.char,
-              ease: "none",
-              stagger: {
-                each: timing.charStagger,
-                from: "start",
-              },
+              scaleX: 1,
+              duration: 0.18,
+              ease: "power2.out",
             },
-            "<+=0.05",
+            "<",
+          )
+          .to(
+            sweep,
+            {
+              autoAlpha: 0.86,
+              scaleX: 1,
+              xPercent: 0,
+              duration: isMobile ? 0.24 : 0.32,
+              ease: "power2.out",
+            },
+            "<+=0.03",
+          )
+          .add(decodeTimeline, "<+=0.08")
+          .to(
+            sweep,
+            {
+              autoAlpha: 0,
+              scaleX: 1.12,
+              xPercent: 22,
+              duration: isMobile ? 0.22 : 0.3,
+              ease: "power2.in",
+            },
+            ">-=0.12",
+          )
+          .to(
+            beam,
+            {
+              autoAlpha: 0.32,
+              xPercent: isMobile ? 0 : 3,
+              duration: 0.24,
+              ease: "none",
+            },
+            "<",
           )
           .to(
             cursor,
@@ -345,7 +475,7 @@ export function SystemLoader({
             ">-=0.02",
           )
           .to(
-            ok,
+            confirmation,
             {
               autoAlpha: 1,
               y: 0,
@@ -353,6 +483,24 @@ export function SystemLoader({
             },
             "<+=0.03",
           )
+          .to(
+            chars,
+            {
+              color: "#D7F75B",
+              duration: 0.035,
+              stagger: {
+                each: 0.003,
+                from: "random",
+              },
+              ease: "none",
+            },
+            "<+=0.03",
+          )
+          .to(chars, {
+            color: "rgba(243, 240, 232, 0.9)",
+            duration: 0.08,
+            ease: "power1.out",
+          })
           .to(
             progressFillRef.current,
             {
@@ -376,6 +524,8 @@ export function SystemLoader({
             },
             `+=${timing.statusHold}`,
           );
+
+        introTimeline.add(lineTimeline);
       });
 
       introTimeline
@@ -526,13 +676,13 @@ export function SystemLoader({
         <div className={styles.statusGrid}>
           <ul className={styles.desktopStatuses}>
             {desktopStatuses.map((status) => (
-              <TerminalStatusLine key={status} mode="desktop" status={status} />
+              <TerminalStatusLine key={status.command} mode="desktop" status={status} />
             ))}
           </ul>
 
           <ul className={styles.mobileStatuses}>
             {mobileStatuses.map((status) => (
-              <TerminalStatusLine key={status} mode="mobile" status={status} />
+              <TerminalStatusLine key={status.command} mode="mobile" status={status} />
             ))}
           </ul>
         </div>

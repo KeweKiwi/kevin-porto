@@ -134,7 +134,7 @@
 
 .statusGrid {
   place-self: center;
-  width: min(74rem, calc(100vw - (clamp(1.25rem, 4vw, 4.5rem) * 2)));
+  width: min(94rem, calc(100vw - (clamp(1.25rem, 4vw, 4.5rem) * 2)));
   padding-bottom: 5vh;
   text-align: center;
 }
@@ -157,6 +157,7 @@
 .statusLine {
   position: absolute;
   inset: 0;
+  z-index: 0;
   display: grid;
   grid-template-columns: minmax(0, auto);
   align-items: center;
@@ -166,7 +167,7 @@
   min-height: clamp(7.5rem, 18vh, 12rem);
   border-bottom: 1px solid rgba(58, 65, 63, 0.72);
   color: rgba(243, 240, 232, 0.9);
-  font-size: clamp(2rem, 5.8vw, 5.7rem);
+  font-size: clamp(2.15rem, min(4.55vw, 13.2vh), 5rem);
   font-weight: 600;
   letter-spacing: 0;
   line-height: 0.9;
@@ -176,7 +177,48 @@
   will-change: clip-path, filter, opacity, transform;
 }
 
+.statusBeam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: min(52rem, 78vw);
+  height: 1px;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(215, 247, 91, 0.08) 22%,
+      rgba(243, 240, 232, 0.22) 50%,
+      rgba(215, 247, 91, 0.12) 78%,
+      transparent 100%
+    );
+  box-shadow:
+    0 0 18px rgba(215, 247, 91, 0.18),
+    0 0 44px rgba(215, 247, 91, 0.08);
+  transform: translate(-50%, -50%) scaleX(0);
+}
+
+.statusBeam::after {
+  position: absolute;
+  inset: -2.75rem 0;
+  content: "";
+  opacity: 0.18;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(215, 247, 91, 0.1) 48%,
+      rgba(243, 240, 232, 0.08) 50%,
+      rgba(215, 247, 91, 0.08) 52%,
+      transparent 100%
+    );
+}
+
 .statusCommand {
+  position: relative;
+  isolation: isolate;
   display: inline-grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
@@ -188,7 +230,39 @@
     0 0 34px rgba(215, 247, 91, 0.08);
 }
 
+.desktopStatuses .statusCommand {
+  width: max-content;
+}
+
+.statusSweep {
+  position: absolute;
+  inset: -0.16em -0.24em;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(215, 247, 91, 0.06) 22%,
+      rgba(215, 247, 91, 0.22) 48%,
+      rgba(243, 240, 232, 0.12) 50%,
+      rgba(215, 247, 91, 0.18) 52%,
+      transparent 78%,
+      transparent 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(215, 247, 91, 0.16),
+    inset 0 -1px 0 rgba(215, 247, 91, 0.11),
+    0 0 28px rgba(215, 247, 91, 0.1);
+  clip-path: polygon(0 32%, 100% 22%, 100% 72%, 0 82%);
+  mix-blend-mode: screen;
+  transform: translate3d(0, 0, 0);
+}
+
 .statusPrompt {
+  position: relative;
+  z-index: 1;
   color: rgba(215, 247, 91, 0.82);
   font-size: 0.42em;
   line-height: 1;
@@ -196,6 +270,8 @@
 }
 
 .statusText {
+  position: relative;
+  z-index: 1;
   display: flex;
   min-width: 0;
   max-width: 100%;
@@ -206,13 +282,20 @@
   row-gap: 0.06em;
 }
 
+.desktopStatuses .statusText {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
 .statusWord {
   display: inline-flex;
   min-width: 0;
 }
 
 .statusChar {
+  position: relative;
   display: inline-block;
+  text-shadow: 0 0 0 transparent;
   will-change: filter, opacity, transform;
 }
 
@@ -227,12 +310,31 @@
   animation: terminalCursor 0.78s steps(1, end) infinite;
 }
 
-.okMark {
+.confirmationMark {
+  display: inline-flex;
+  align-items: center;
   justify-self: center;
-  color: #d7f75b;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  gap: 0.58rem;
+  color: rgba(215, 247, 91, 0.9);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(215, 247, 91, 0.26);
+}
+
+.confirmationMark::before,
+.confirmationMark::after {
+  display: block;
+  width: clamp(1.4rem, 3.8vw, 3.25rem);
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(215, 247, 91, 0.56));
+}
+
+.confirmationMark::after {
+  background: linear-gradient(90deg, rgba(215, 247, 91, 0.56), transparent);
 }
 
 .progressDock {
@@ -468,9 +570,18 @@
     line-height: 0.92;
   }
 
+  .statusBeam {
+    width: min(25rem, 88vw);
+  }
+
   .statusCommand {
     grid-template-columns: 1fr;
     gap: 0.45rem;
+  }
+
+  .statusSweep {
+    inset: -0.2em -0.16em;
+    clip-path: polygon(0 36%, 100% 28%, 100% 70%, 0 78%);
   }
 
   .statusPrompt {
@@ -478,9 +589,16 @@
     font-size: 0.36em;
   }
 
-  .okMark {
+  .confirmationMark {
     justify-self: center;
-    font-size: 0.58rem;
+    gap: 0.42rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+
+  .confirmationMark::before,
+  .confirmationMark::after {
+    width: 1.25rem;
   }
 
   .progressMeta,
@@ -509,6 +627,8 @@
 @media (prefers-reduced-motion: reduce) {
   .scanTrack,
   .exitLine,
+  .statusBeam,
+  .statusSweep,
   .statusCursor {
     display: none;
   }
