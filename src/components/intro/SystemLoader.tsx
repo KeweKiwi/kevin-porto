@@ -23,19 +23,67 @@ const desktopStatuses = [
   "VALIDATING INTERFACE",
 ];
 
-const mobileStatuses = ["INITIALIZING", "LOADING ASSETS", "READY"];
+const mobileStatuses = desktopStatuses;
 
 const progressMilestones = [18, 46, 72, 91, 100] as const;
 const progressCells = Array.from({ length: 24 }, (_, index) => index);
+
+type StatusMode = "desktop" | "mobile";
 
 function prefersReducedMotion() {
   return window.matchMedia(prefersReducedMotionQuery).matches;
 }
 
+function TerminalStatusLine({
+  mode,
+  status,
+}: {
+  mode: StatusMode;
+  status: string;
+}) {
+  const lineProps =
+    mode === "desktop"
+      ? { "data-desktop-status": true }
+      : { "data-mobile-status": true };
+  const okProps =
+    mode === "desktop"
+      ? { "data-desktop-ok": true }
+      : { "data-mobile-ok": true };
+
+  return (
+    <li className={styles.statusLine} {...lineProps}>
+      <span className={styles.statusCommand}>
+        <span className={styles.statusPrompt} data-status-prompt>
+          &gt;
+        </span>
+        <span className={styles.statusText}>
+          {status.split(" ").map((word, wordIndex) => (
+            <span key={`${status}-${wordIndex}-${word}`} className={styles.statusWord}>
+              {Array.from(word).map((char, charIndex) => (
+                <span
+                  key={`${status}-${wordIndex}-${charIndex}`}
+                  className={styles.statusChar}
+                  data-status-char
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
+          ))}
+          <span className={styles.statusCursor} data-status-cursor />
+        </span>
+      </span>
+      <span className={styles.okMark} {...okProps}>
+        OK
+      </span>
+    </li>
+  );
+}
+
 export function SystemLoader({
   onComplete,
   allowSkip = true,
-  timeoutMs = 2500,
+  timeoutMs = 6200,
 }: SystemLoaderProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const progressFillRef = useRef<HTMLSpanElement | null>(null);
@@ -171,28 +219,38 @@ export function SystemLoader({
 
       const timing = isMobile
         ? {
-            wake: 0.18,
-            status: 0.1,
-            statusHold: 0.015,
-            progress: 0.07,
-            ready: 0.12,
-            exit: 0.32,
-          }
+          wake: 0.2,
+          status: 0.05,
+          statusHold: 0.16,
+          statusOut: 0.16,
+          char: 0.024,
+          charStagger: 0.012,
+          progress: 0.14,
+          ready: 0.16,
+          exit: 0.34,
+        }
         : {
           wake: 0.28,
-          status: 0.14,
-          statusHold: 0.025,
-          progress: 0.09,
+          status: 0.05,
+          statusHold: 0.18,
+          statusOut: 0.18,
+          char: 0.026,
+          charStagger: 0.011,
+          progress: 0.16,
           ready: 0.2,
           exit: 0.5,
         };
 
       gsap.set(statusLines, {
         autoAlpha: 0,
-        clipPath: "inset(0% 0% 100% 0%)",
-        y: isMobile ? 8 : 14,
+        clipPath: "inset(0% 44% 0% 44%)",
+        filter: "blur(4px)",
+        scale: 0.985,
+        y: isMobile ? 10 : 16,
       });
-      gsap.set(okMarks, { autoAlpha: 0, x: -4 });
+      gsap.set("[data-status-char]", { autoAlpha: 0, filter: "blur(3px)", yPercent: 38 });
+      gsap.set("[data-status-prompt], [data-status-cursor]", { autoAlpha: 0 });
+      gsap.set(okMarks, { autoAlpha: 0, y: 5 });
       gsap.set("[data-loader-metadata]", { autoAlpha: 0, y: -8 });
       gsap.set("[data-loader-scan]", { scaleX: 0, transformOrigin: "left center" });
       gsap.set("[data-loader-exit-line]", { scaleX: 0, transformOrigin: "center center" });
@@ -240,30 +298,60 @@ export function SystemLoader({
       statusLines.forEach((line, index) => {
         const ok = okMarks[index];
         const milestone = progressMilestones[index] ?? 100;
+        const prompt = line.querySelector<HTMLElement>("[data-status-prompt]");
+        const cursor = line.querySelector<HTMLElement>("[data-status-cursor]");
+        const chars = gsap.utils.toArray<HTMLElement>("[data-status-char]", line);
 
         introTimeline
           .to(line, {
             autoAlpha: 1,
             clipPath: "inset(0% 0% 0% 0%)",
+            filter: "blur(0px)",
+            scale: 1,
             y: 0,
             duration: timing.status,
           })
           .to(
+            prompt,
+            {
+              autoAlpha: 1,
+              duration: 0.04,
+              ease: "none",
+            },
+            "<",
+          )
+          .to(
+            chars,
+            {
+              autoAlpha: 1,
+              filter: "blur(0px)",
+              yPercent: 0,
+              duration: timing.char,
+              ease: "none",
+              stagger: {
+                each: timing.charStagger,
+                from: "start",
+              },
+            },
+            "<+=0.05",
+          )
+          .to(
+            cursor,
+            {
+              autoAlpha: 1,
+              duration: 0.04,
+              ease: "none",
+            },
+            ">-=0.02",
+          )
+          .to(
             ok,
             {
               autoAlpha: 1,
-              x: 0,
-              duration: timing.status * 0.5,
+              y: 0,
+              duration: 0.08,
             },
             "<+=0.03",
-          )
-          .to(
-            line,
-            {
-              opacity: index === statusLines.length - 1 ? 1 : 0.44,
-              duration: timing.status * 0.5,
-            },
-            `+=${timing.statusHold}`,
           )
           .to(
             progressFillRef.current,
@@ -273,7 +361,20 @@ export function SystemLoader({
               ease: "power2.out",
               onStart: () => setProgress(milestone),
             },
-            "<",
+            "<+=0.06",
+          )
+          .to(
+            line,
+            {
+              autoAlpha: 0,
+              clipPath: "inset(0% 0% 0% 0%)",
+              filter: "blur(4px)",
+              scale: 1.01,
+              y: isMobile ? -8 : -14,
+              duration: timing.statusOut,
+              ease: "power2.in",
+            },
+            `+=${timing.statusHold}`,
           );
       });
 
@@ -425,23 +526,13 @@ export function SystemLoader({
         <div className={styles.statusGrid}>
           <ul className={styles.desktopStatuses}>
             {desktopStatuses.map((status) => (
-              <li key={status} className={styles.statusLine} data-desktop-status>
-                <span>{status}</span>
-                <span className={styles.okMark} data-desktop-ok>
-                  OK
-                </span>
-              </li>
+              <TerminalStatusLine key={status} mode="desktop" status={status} />
             ))}
           </ul>
 
           <ul className={styles.mobileStatuses}>
             {mobileStatuses.map((status) => (
-              <li key={status} className={styles.statusLine} data-mobile-status>
-                <span>{status}</span>
-                <span className={styles.okMark} data-mobile-ok>
-                  OK
-                </span>
-              </li>
+              <TerminalStatusLine key={status} mode="mobile" status={status} />
             ))}
           </ul>
         </div>

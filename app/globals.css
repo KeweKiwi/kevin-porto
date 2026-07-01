@@ -31,6 +31,10 @@ html {
   background: var(--color-page);
 }
 
+html[data-kwf-intro-active="true"] nextjs-portal {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

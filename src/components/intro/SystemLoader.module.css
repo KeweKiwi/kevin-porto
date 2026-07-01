@@ -133,13 +133,18 @@
 }
 
 .statusGrid {
-  align-self: center;
-  width: min(48rem, 72vw);
-  padding-bottom: 8vh;
+  place-self: center;
+  width: min(74rem, calc(100vw - (clamp(1.25rem, 4vw, 4.5rem) * 2)));
+  padding-bottom: 5vh;
+  text-align: center;
 }
 
 .desktopStatuses,
 .mobileStatuses {
+  position: relative;
+  display: grid;
+  min-height: clamp(7.5rem, 18vh, 12rem);
+  place-items: center;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -150,21 +155,80 @@
 }
 
 .statusLine {
-  display: flex;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, auto);
   align-items: center;
-  justify-content: space-between;
-  max-width: min(48rem, 72vw);
-  min-height: clamp(2.4rem, 4.3vw, 4.65rem);
+  justify-content: center;
+  gap: 0.85rem;
+  width: 100%;
+  min-height: clamp(7.5rem, 18vh, 12rem);
   border-bottom: 1px solid rgba(58, 65, 63, 0.72);
   color: rgba(243, 240, 232, 0.9);
-  font-size: clamp(1.25rem, 3vw, 3.4rem);
+  font-size: clamp(2rem, 5.8vw, 5.7rem);
   font-weight: 600;
   letter-spacing: 0;
-  line-height: 0.94;
+  line-height: 0.9;
+  opacity: 0;
+  visibility: hidden;
+  text-wrap: balance;
+  will-change: clip-path, filter, opacity, transform;
+}
+
+.statusCommand {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.55rem, 1.4vw, 1rem);
+  max-width: 100%;
+  text-shadow:
+    0 0 18px rgba(243, 240, 232, 0.08),
+    0 0 34px rgba(215, 247, 91, 0.08);
+}
+
+.statusPrompt {
+  color: rgba(215, 247, 91, 0.82);
+  font-size: 0.42em;
+  line-height: 1;
+  transform: translateY(0.03em);
+}
+
+.statusText {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.34em;
+  row-gap: 0.06em;
+}
+
+.statusWord {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.statusChar {
+  display: inline-block;
+  will-change: filter, opacity, transform;
+}
+
+.statusCursor {
+  display: inline-block;
+  width: 0.12em;
+  height: 0.72em;
+  margin-left: 0.06em;
+  background: rgba(215, 247, 91, 0.86);
+  box-shadow: 0 0 18px rgba(215, 247, 91, 0.34);
+  transform: translateY(0.04em);
+  animation: terminalCursor 0.78s steps(1, end) infinite;
 }
 
 .okMark {
-  margin-left: 1.5rem;
+  justify-self: center;
   color: #d7f75b;
   font-size: 0.65rem;
   font-weight: 500;
@@ -330,6 +394,18 @@
   }
 }
 
+@keyframes terminalCursor {
+  0%,
+  44% {
+    opacity: 1;
+  }
+
+  45%,
+  100% {
+    opacity: 0.22;
+  }
+}
+
 @media (max-width: 767px) {
   .loader::before {
     opacity: 0.11;
@@ -379,16 +455,31 @@
   }
 
   .mobileStatuses {
-    display: block;
+    display: grid;
+    min-height: clamp(8rem, 28vh, 13rem);
   }
 
   .statusLine {
     max-width: none;
-    min-height: 3.25rem;
-    font-size: clamp(1.55rem, 11vw, 3.1rem);
+    min-height: clamp(8rem, 28vh, 13rem);
+    grid-template-columns: minmax(0, auto);
+    gap: 0.7rem;
+    font-size: clamp(1.9rem, 9.4vw, 3.25rem);
+    line-height: 0.92;
+  }
+
+  .statusCommand {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .statusPrompt {
+    justify-self: center;
+    font-size: 0.36em;
   }
 
   .okMark {
+    justify-self: center;
     font-size: 0.58rem;
   }
 
@@ -417,7 +508,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .scanTrack,
-  .exitLine {
+  .exitLine,
+  .statusCursor {
     display: none;
   }
 }
