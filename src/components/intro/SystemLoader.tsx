@@ -36,7 +36,7 @@ const mobileStatuses: LoaderStatus[] = [
 ];
 
 const progressCells = Array.from({ length: 24 }, (_, index) => index);
-const decodeGlyphs = ["0", "1", "/", "\\", "_", "-", "+", "*", "#", ":", "."] as const;
+const decodeGlyphs = ["0", "1", "/", "\\", "_", "-", "+", ":", "."] as const;
 
 type StatusMode = "desktop" | "mobile";
 
@@ -250,7 +250,7 @@ export function SystemLoader({
           char: 0.034,
           charStagger: 0.01,
           decodeFlicker: 0.034,
-          progressDuration: 4.35,
+          progressDuration: 4.18,
           ready: 0.16,
           exit: 0.34,
         }
@@ -262,7 +262,7 @@ export function SystemLoader({
           char: 0.036,
           charStagger: 0.011,
           decodeFlicker: 0.036,
-          progressDuration: 4.7,
+          progressDuration: 4.48,
           ready: 0.22,
           exit: 0.5,
         };
@@ -534,7 +534,7 @@ export function SystemLoader({
           {
             value: 94,
             duration: timing.progressDuration,
-            ease: "power1.inOut",
+            ease: "none",
             onUpdate: () => setProgress(progressState.value),
             onComplete: () => setProgress(94),
           },
@@ -542,8 +542,8 @@ export function SystemLoader({
         )
         .to(progressState, {
           value: 100,
-          duration: isMobile ? 0.24 : 0.32,
-          ease: "power1.inOut",
+          duration: isMobile ? 0.34 : 0.42,
+          ease: "power2.out",
           onUpdate: () => setProgress(progressState.value),
           onComplete: () => setProgress(100),
         })

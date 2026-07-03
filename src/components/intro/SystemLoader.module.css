@@ -7,6 +7,7 @@
   color: var(--color-text);
   font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
   pointer-events: auto;
+  background: #080909;
 }
 
 .loader::before {
@@ -14,7 +15,7 @@
   inset: 0;
   z-index: 1;
   content: "";
-  opacity: 0.16;
+  opacity: 0.135;
   background-image:
     linear-gradient(to right, rgba(243, 240, 232, 0.08) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(243, 240, 232, 0.055) 1px, transparent 1px);
@@ -27,13 +28,13 @@
   z-index: 2;
   pointer-events: none;
   content: "";
-  opacity: 0.11;
+  opacity: 0.08;
   background:
     linear-gradient(
       to bottom,
       transparent 0%,
       transparent 42%,
-      rgba(215, 247, 91, 0.2) 50%,
+      rgba(215, 247, 91, 0.14) 50%,
       transparent 58%,
       transparent 100%
     );
@@ -48,17 +49,24 @@
   z-index: 0;
   width: 100%;
   height: 50.2%;
-  background: #080909;
+  background:
+    linear-gradient(180deg, rgba(215, 247, 91, 0.018), transparent 38%),
+    #080909;
 }
 
 .panelTop {
   top: 0;
   border-bottom: 1px solid rgba(215, 247, 91, 0.28);
+  box-shadow: inset 0 -1rem 2.75rem rgba(215, 247, 91, 0.018);
 }
 
 .panelBottom {
   bottom: 0;
   border-top: 1px solid rgba(215, 247, 91, 0.18);
+  background:
+    linear-gradient(0deg, rgba(215, 247, 91, 0.014), transparent 38%),
+    #080909;
+  box-shadow: inset 0 1rem 2.75rem rgba(215, 247, 91, 0.014);
 }
 
 .exitLine {
@@ -130,6 +138,7 @@
   width: 42%;
   height: 100%;
   background: rgba(215, 247, 91, 0.62);
+  box-shadow: 0 0 18px rgba(215, 247, 91, 0.16);
 }
 
 .statusGrid {
@@ -195,8 +204,8 @@
       transparent 100%
     );
   box-shadow:
-    0 0 18px rgba(215, 247, 91, 0.18),
-    0 0 44px rgba(215, 247, 91, 0.08);
+    0 0 18px rgba(215, 247, 91, 0.11),
+    0 0 38px rgba(215, 247, 91, 0.045);
   transform: translate(-50%, -50%) scaleX(0);
 }
 
@@ -204,7 +213,7 @@
   position: absolute;
   inset: -2.75rem 0;
   content: "";
-  opacity: 0.18;
+  opacity: 0.11;
   background:
     linear-gradient(
       to bottom,
@@ -226,8 +235,8 @@
   gap: clamp(0.55rem, 1.4vw, 1rem);
   max-width: 100%;
   text-shadow:
-    0 0 18px rgba(243, 240, 232, 0.08),
-    0 0 34px rgba(215, 247, 91, 0.08);
+    0 0 18px rgba(243, 240, 232, 0.055),
+    0 0 30px rgba(215, 247, 91, 0.055);
 }
 
 .desktopStatuses .statusCommand {
@@ -244,17 +253,17 @@
     linear-gradient(
       90deg,
       transparent 0%,
-      rgba(215, 247, 91, 0.06) 22%,
-      rgba(215, 247, 91, 0.22) 48%,
-      rgba(243, 240, 232, 0.12) 50%,
-      rgba(215, 247, 91, 0.18) 52%,
+      rgba(215, 247, 91, 0.045) 22%,
+      rgba(215, 247, 91, 0.14) 48%,
+      rgba(243, 240, 232, 0.08) 50%,
+      rgba(215, 247, 91, 0.12) 52%,
       transparent 78%,
       transparent 100%
     );
   box-shadow:
-    inset 0 1px 0 rgba(215, 247, 91, 0.16),
-    inset 0 -1px 0 rgba(215, 247, 91, 0.11),
-    0 0 28px rgba(215, 247, 91, 0.1);
+    inset 0 1px 0 rgba(215, 247, 91, 0.11),
+    inset 0 -1px 0 rgba(215, 247, 91, 0.075),
+    0 0 24px rgba(215, 247, 91, 0.065);
   clip-path: polygon(0 32%, 100% 22%, 100% 72%, 0 82%);
   mix-blend-mode: screen;
   transform: translate3d(0, 0, 0);
@@ -321,7 +330,7 @@
   letter-spacing: 0.14em;
   line-height: 1;
   text-transform: uppercase;
-  text-shadow: 0 0 18px rgba(215, 247, 91, 0.26);
+  text-shadow: 0 0 16px rgba(215, 247, 91, 0.18);
 }
 
 .confirmationMark::before,
@@ -376,18 +385,18 @@
   inset: -0.45rem 0;
   pointer-events: none;
   content: "";
-  opacity: 0.26;
+  opacity: 0.14;
   background:
     linear-gradient(
       90deg,
       transparent 0%,
       transparent 18%,
-      rgba(215, 247, 91, 0.24) 46%,
+      rgba(215, 247, 91, 0.18) 46%,
       transparent 74%,
       transparent 100%
     );
   transform: translateX(-62%);
-  animation: progressSweep 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation: progressSweep 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
 .progressBracket {
@@ -411,6 +420,10 @@
   background:
     linear-gradient(to bottom, rgba(243, 240, 232, 0.08), transparent),
     rgba(8, 9, 9, 0.78);
+  contain: paint;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
   transform: translateZ(0);
 }
 
@@ -427,7 +440,7 @@
     ),
     #d7f75b;
   box-shadow:
-    0 0 14px rgba(215, 247, 91, 0.18),
+    0 0 12px rgba(215, 247, 91, 0.13),
     inset 0 0 0 1px rgba(8, 9, 9, 0.15);
   transform: scaleX(var(--cell-fill, 0));
   transform-origin: left center;
@@ -445,8 +458,8 @@
 }
 
 .progressCell[data-active="true"] {
-  border-color: rgba(215, 247, 91, 0.68);
-  box-shadow: 0 0 10px rgba(215, 247, 91, 0.11);
+  border-color: rgba(215, 247, 91, 0.58);
+  box-shadow: 0 0 8px rgba(215, 247, 91, 0.075);
 }
 
 .progressCell[data-active="true"]::after {
@@ -460,17 +473,18 @@
 
 .progressRail {
   position: relative;
-  height: 2px;
+  height: 3px;
   margin-top: 0.65rem;
   overflow: hidden;
-  background: rgba(58, 65, 63, 0.9);
+  background: rgba(58, 65, 63, 0.82);
+  box-shadow: 0 0 18px rgba(215, 247, 91, 0.035);
 }
 
 .progressFill {
   position: absolute;
   inset: 0;
   background: rgba(215, 247, 91, 0.82);
-  box-shadow: 0 0 18px rgba(215, 247, 91, 0.28);
+  box-shadow: 0 0 16px rgba(215, 247, 91, 0.2);
   transform-origin: left center;
   will-change: transform;
 }
