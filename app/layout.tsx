@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GeistMono } from "geist/font/mono";
+import { GeistPixelLine, GeistPixelSquare } from "geist/font/pixel";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
@@ -26,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable} ${GeistPixelLine.variable}`}
       data-scroll-behavior="smooth"
     >
       <body>

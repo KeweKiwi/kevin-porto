@@ -20,6 +20,8 @@
   --radius-action: 4px;
   --radius-panel: 8px;
   --radius-media: 10px;
+  --font-display-signal: var(--font-geist-pixel-square), var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  --font-display-wire: var(--font-geist-pixel-line), var(--font-geist-pixel-square), var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
 }
 
 * {
@@ -177,15 +179,100 @@ select {
 }
 
 .kwf-outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(243, 240, 232, 0.86);
-  text-stroke: 1px rgba(243, 240, 232, 0.86);
+  color: rgba(215, 247, 91, 0.18);
+  -webkit-text-stroke: 1px rgba(243, 240, 232, 0.68);
+  text-stroke: 1px rgba(243, 240, 232, 0.68);
 }
 
 .kwf-display-fill {
   text-shadow:
     1px 0 rgba(215, 247, 91, 0.16),
     -1px 0 rgba(243, 240, 232, 0.1);
+}
+
+.hero-name-stack {
+  width: 100%;
+  margin-inline: auto;
+  font-family: var(--font-display-signal);
+  font-synthesis-weight: none;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero-name-primary,
+.hero-name-outline {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-name-primary::before,
+.hero-name-primary::after,
+.hero-name-outline::before,
+.hero-name-outline::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  content: attr(data-word);
+}
+
+.hero-name-primary::before {
+  color: rgba(215, 247, 91, 0.16);
+  clip-path: polygon(0 50%, 100% 50%, 100% 56%, 0 56%);
+  transform: translate3d(0.018em, 0.012em, 0);
+}
+
+.hero-name-primary::after {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(215, 247, 91, 0.28);
+  text-stroke: 1px rgba(215, 247, 91, 0.28);
+  clip-path: polygon(0 70%, 100% 70%, 100% 76%, 0 76%);
+  transform: translate3d(-0.014em, 0.01em, 0);
+}
+
+.hero-name-outline::before {
+  color: rgba(243, 240, 232, 0.16);
+  clip-path: polygon(0 18%, 100% 18%, 100% 25%, 0 25%);
+  transform: translate3d(0.014em, 0.002em, 0);
+}
+
+.hero-name-outline::after {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(215, 247, 91, 0.36);
+  text-stroke: 1px rgba(215, 247, 91, 0.36);
+  clip-path: polygon(0 62%, 100% 62%, 100% 69%, 0 69%);
+  transform: translate3d(-0.012em, 0.01em, 0);
+}
+
+.hero-name-primary {
+  font-size: 4.76rem;
+  font-weight: 500;
+  line-height: 0.86;
+  text-shadow:
+    0 0 18px rgba(215, 247, 91, 0.08),
+    1px 0 rgba(243, 240, 232, 0.1);
+}
+
+.hero-name-outline {
+  max-width: 100%;
+  margin-inline: auto;
+  font-family: var(--font-display-wire);
+  font-size: 2.32rem;
+  font-weight: 500;
+  line-height: 0.95;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  text-shadow:
+    0 0 24px rgba(215, 247, 91, 0.24),
+    1px 0 rgba(215, 247, 91, 0.24);
+}
+
+.hero-strapline {
+  font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-shadow: 0 0 28px rgba(243, 240, 232, 0.08);
 }
 
 .hero-identity-lockup::before,
@@ -206,6 +293,84 @@ select {
 
 .hero-identity-lockup::after {
   bottom: -1.1rem;
+}
+
+@media (min-width: 375px) {
+  .hero-name-primary {
+    font-size: 5.28rem;
+  }
+
+  .hero-name-outline {
+    font-size: 2.58rem;
+  }
+}
+
+@media (min-width: 430px) {
+  .hero-name-primary {
+    font-size: 5.92rem;
+  }
+
+  .hero-name-outline {
+    font-size: 2.88rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-name-primary {
+    font-size: 9.15rem;
+  }
+
+  .hero-name-outline {
+    font-size: 4.36rem;
+  }
+
+  .hero-strapline {
+    font-size: 1.72rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-name-primary {
+    font-size: 11.1rem;
+  }
+
+  .hero-name-outline {
+    font-size: 5.24rem;
+  }
+
+  .hero-strapline {
+    font-size: 1.98rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-name-primary {
+    font-size: 13.05rem;
+  }
+
+  .hero-name-outline {
+    font-size: 6.1rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .hero-name-primary {
+    font-size: 14.18rem;
+  }
+
+  .hero-name-outline {
+    font-size: 6.62rem;
+  }
+}
+
+@media (min-width: 1728px) {
+  .hero-name-primary {
+    font-size: 15.24rem;
+  }
+
+  .hero-name-outline {
+    font-size: 7.12rem;
+  }
 }
 
 .casefile-coordinate {

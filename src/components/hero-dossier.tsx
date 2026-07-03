@@ -280,22 +280,22 @@ export function HeroDossier() {
           ))}
         </div>
 
-        <div className="hero-identity-lockup relative max-w-[min(1160px,100%)] px-2 tablet:px-8">
+        <div className="hero-identity-lockup relative w-full max-w-[min(1340px,100%)] px-2 tablet:px-8">
           <span aria-hidden="true" className="hero-lockup-rail absolute left-0 top-[36%] hidden h-px w-24 bg-signal/60 tablet:block" />
           <span aria-hidden="true" className="hero-lockup-rail absolute right-0 top-[66%] hidden h-px w-24 bg-ink-primary/30 tablet:block" />
           <h1
             aria-label={profile.name}
-            className="select-none text-center font-sans font-semibold tracking-normal"
+            className="hero-name-stack select-none text-center"
           >
-            <span className="hero-name-primary kwf-display-fill block overflow-hidden text-[clamp(4.4rem,22vw,13.8rem)] leading-[0.78] text-ink-primary tablet:text-[clamp(7rem,16vw,15rem)]">
+            <span className="hero-name-primary kwf-display-fill block overflow-hidden text-ink-primary" data-word="KEVIN">
               KEVIN
             </span>
-            <span className="hero-name-outline kwf-outline block overflow-hidden whitespace-nowrap text-[clamp(2rem,10.8vw,9.2rem)] leading-[0.92] tablet:text-[clamp(4.2rem,9.5vw,10rem)]">
+            <span className="hero-name-outline kwf-outline block overflow-visible text-ink-primary" data-word="WILLIAM FAITH">
               WILLIAM FAITH
             </span>
           </h1>
 
-          <p className="hero-positioning mt-7 text-[clamp(1.2rem,4.4vw,2.45rem)] font-semibold leading-tight text-ink-primary tablet:mt-8">
+          <p className="hero-positioning hero-strapline mx-auto mt-7 max-w-5xl text-balance font-semibold leading-tight text-ink-primary tablet:mt-8">
             Native Apple Engineering. Production Web Delivery.
           </p>
           <p className="hero-copy mx-auto mt-5 max-w-2xl text-sm leading-[1.7] text-ink-secondary tablet:text-base">
