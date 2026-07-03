@@ -141,16 +141,129 @@ select {
   background-size: 72px 72px;
 }
 
+.kwf-field-depth {
+  opacity: 0.42;
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 17px, rgba(243, 240, 232, 0.025) 17px 18px),
+    repeating-linear-gradient(0deg, transparent 0 21px, rgba(215, 247, 91, 0.018) 21px 22px);
+  background-size: 100% 100%;
+}
+
+.kwf-corner-field {
+  pointer-events: none;
+}
+
+.kwf-corner-field::before,
+.kwf-corner-field::after {
+  position: absolute;
+  width: min(16vw, 180px);
+  height: min(18vw, 180px);
+  content: "";
+  border-color: rgba(215, 247, 91, 0.42);
+}
+
+.kwf-corner-field::before {
+  left: 0;
+  top: 0;
+  border-left: 1px solid;
+  border-top: 1px solid;
+}
+
+.kwf-corner-field::after {
+  right: 0;
+  bottom: 0;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
 .kwf-outline {
   color: transparent;
   -webkit-text-stroke: 1px rgba(243, 240, 232, 0.86);
   text-stroke: 1px rgba(243, 240, 232, 0.86);
 }
 
+.kwf-display-fill {
+  text-shadow:
+    1px 0 rgba(215, 247, 91, 0.16),
+    -1px 0 rgba(243, 240, 232, 0.1);
+}
+
+.hero-identity-lockup::before,
+.hero-identity-lockup::after {
+  position: absolute;
+  left: 50%;
+  width: min(68vw, 820px);
+  height: 1px;
+  pointer-events: none;
+  content: "";
+  background: rgba(58, 65, 63, 0.82);
+  transform: translateX(-50%);
+}
+
+.hero-identity-lockup::before {
+  top: -1rem;
+}
+
+.hero-identity-lockup::after {
+  bottom: -1.1rem;
+}
+
+.casefile-coordinate {
+  position: relative;
+}
+
+.casefile-coordinate::before {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 34px;
+  height: 1px;
+  content: "";
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+
 .skill-marquee-row {
   overflow: hidden;
   border-top: 1px solid var(--color-border);
   white-space: nowrap;
+}
+
+.skill-marquee-shell {
+  box-shadow:
+    inset 0 1px rgba(215, 247, 91, 0.22),
+    inset 0 -1px rgba(215, 247, 91, 0.18);
+}
+
+.skill-marquee-edge {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-top: 1px solid rgba(243, 240, 232, 0.08);
+  border-bottom: 1px solid rgba(243, 240, 232, 0.08);
+}
+
+.skill-marquee-edge::before,
+.skill-marquee-edge::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 11vw;
+  content: "";
+  background: var(--color-page);
+}
+
+.skill-marquee-edge::before {
+  left: -10.5vw;
+  box-shadow: 18px 0 0 rgba(8, 9, 9, 0.72);
+  transform: skewX(-18deg);
+}
+
+.skill-marquee-edge::after {
+  right: -10.5vw;
+  box-shadow: -18px 0 0 rgba(8, 9, 9, 0.72);
+  transform: skewX(-18deg);
 }
 
 .skill-marquee-row-dark {
@@ -202,6 +315,187 @@ select {
   opacity: 0.55;
 }
 
+.profile-casefile-frame::before,
+.profile-casefile-frame::after,
+.casefile-stage::before,
+.casefile-stage::after {
+  position: absolute;
+  z-index: 2;
+  width: 58px;
+  height: 58px;
+  pointer-events: none;
+  content: "";
+  border-color: rgba(215, 247, 91, 0.46);
+}
+
+.profile-casefile-frame::before,
+.casefile-stage::before {
+  left: 16px;
+  top: 16px;
+  border-left: 1px solid;
+  border-top: 1px solid;
+}
+
+.profile-casefile-frame::after,
+.casefile-stage::after {
+  right: 16px;
+  bottom: 16px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.profile-casefile-frame {
+  box-shadow:
+    0 18px 70px rgba(0, 0, 0, 0.36),
+    inset 0 0 0 1px rgba(243, 240, 232, 0.025);
+}
+
+.casefile-mini-card {
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.casefile-mini-card::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  content: "";
+  background: var(--color-accent);
+  opacity: 0.26;
+}
+
+.casefile-mini-card:hover {
+  border-color: rgba(215, 247, 91, 0.42);
+  transform: translateY(-2px);
+}
+
+.proof-ledger {
+  border-radius: 2px;
+}
+
+.proof-ledger-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.proof-ledger-card::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  content: "";
+  background: var(--color-accent);
+  opacity: 0.42;
+}
+
+.proof-ledger-card::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  content: "";
+  background: rgba(215, 247, 91, 0.26);
+}
+
+.casefile-section {
+  overflow: hidden;
+}
+
+.casefile-section::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.22;
+  background-image:
+    linear-gradient(to right, rgba(243, 240, 232, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(215, 247, 91, 0.03) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+
+.casefile-stage {
+  border-radius: 2px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.34),
+    inset 0 0 0 1px rgba(243, 240, 232, 0.025);
+}
+
+.project-archive-section {
+  overflow: hidden;
+}
+
+.project-archive-section::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.18;
+  background-image:
+    linear-gradient(to right, rgba(215, 247, 91, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(243, 240, 232, 0.035) 1px, transparent 1px);
+  background-size: 88px 88px;
+}
+
+.project-archive-shell {
+  border-radius: 2px;
+  box-shadow:
+    0 22px 76px rgba(0, 0, 0, 0.34),
+    inset 0 0 0 1px rgba(243, 240, 232, 0.024);
+}
+
+.project-archive-shell::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.22;
+  background-image:
+    linear-gradient(115deg, transparent 0 42%, rgba(215, 247, 91, 0.06) 42% 42.2%, transparent 42.2% 100%),
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(243, 240, 232, 0.03) 23px 24px);
+}
+
+.project-archive-shell::after {
+  position: absolute;
+  inset: 18px;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  border: 1px solid rgba(215, 247, 91, 0.12);
+}
+
+.project-archive-progress {
+  box-shadow: 0 0 24px rgba(215, 247, 91, 0.32);
+  transition: width 420ms ease;
+}
+
+.project-archive-marker {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-archive-marker::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  content: "";
+  background: var(--color-accent);
+  opacity: 0;
+  transform: scaleY(0.35);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.project-archive-marker[aria-current="true"]::before,
+.project-archive-marker:hover::before {
+  opacity: 0.72;
+  transform: scaleY(1);
+}
+
 @keyframes kwf-marquee-left {
   from {
     transform: translate3d(0, 0, 0);
@@ -227,9 +521,35 @@ select {
     background-size: 48px 48px;
   }
 
+  .hero-identity-lockup::before,
+  .hero-identity-lockup::after {
+    width: min(86vw, 360px);
+  }
+
+  .skill-marquee-edge::before,
+  .skill-marquee-edge::after {
+    width: 16vw;
+  }
+
   .skill-marquee-item {
     padding: 0.9rem 1rem;
     font-size: 0.9rem;
+  }
+
+  .profile-casefile-frame::before,
+  .profile-casefile-frame::after,
+  .casefile-stage::before,
+  .casefile-stage::after {
+    width: 38px;
+    height: 38px;
+  }
+
+  .project-archive-section::before {
+    background-size: 54px 54px;
+  }
+
+  .project-archive-shell::after {
+    inset: 10px;
   }
 }
 
@@ -251,5 +571,10 @@ select {
 
   .skill-marquee-row {
     white-space: normal;
+  }
+
+  .project-archive-progress,
+  .project-archive-marker::before {
+    transition: none;
   }
 }

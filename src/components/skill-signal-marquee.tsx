@@ -26,8 +26,9 @@ export function SkillSignalMarquee() {
   return (
     <section
       aria-label="Technical focus areas"
-      className="relative overflow-hidden border-b border-graphite-border bg-graphite-page"
+      className="skill-marquee-shell relative overflow-hidden border-b border-graphite-border bg-graphite-page"
     >
+      <div aria-hidden="true" className="skill-marquee-edge" />
       <MarqueeRow items={primarySkills} tone="dark" />
       <MarqueeRow items={deliverySkills} direction="right" tone="signal" />
     </section>

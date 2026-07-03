@@ -31,6 +31,8 @@ const profileSignals = [
   { label: "Ship", detail: "Production delivery" },
 ] as const;
 
+const calibrationBars = [72, 38, 88, 54, 64] as const;
+
 export function PersonalIntroduction() {
   const rootRef = useRef<HTMLElement | null>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -76,11 +78,24 @@ export function PersonalIntroduction() {
         <div className="desktop:col-span-5" data-intro-reveal>
           <div
             aria-label="Kevin William Faith visual identity frame"
-            className="relative aspect-[4/5] min-h-[420px] overflow-hidden border border-graphite-strong bg-graphite-base shadow-signal-sm"
+            className="profile-casefile-frame relative aspect-[4/5] min-h-[420px] overflow-hidden border border-graphite-strong bg-graphite-base shadow-signal-sm"
             role="img"
           >
             <div className="absolute inset-0 kwf-grid opacity-40" />
             <span className="portrait-scan absolute left-[-54%] top-[43%] h-px w-[54%] bg-signal/55" />
+            <div aria-hidden="true" className="absolute right-7 top-8 grid w-20 gap-2">
+              {calibrationBars.map((bar, index) => (
+                <span key={bar} className="h-px bg-graphite-strong">
+                  <span
+                    className="block h-px bg-signal/70"
+                    style={{
+                      width: `${bar}%`,
+                      opacity: 1 - index * 0.12,
+                    }}
+                  />
+                </span>
+              ))}
+            </div>
             <span className="absolute left-5 top-5 h-7 w-7 border-l border-t border-signal/70" />
             <span className="absolute right-5 top-5 h-7 w-7 border-r border-t border-ink-primary/35" />
             <span className="absolute bottom-5 left-5 h-7 w-7 border-b border-l border-ink-primary/35" />
@@ -131,7 +146,7 @@ export function PersonalIntroduction() {
 
           <div className="mt-10 grid gap-3 tablet:grid-cols-2">
             {capabilityLabels.map((item) => (
-              <div key={item.label} className="border border-graphite-strong bg-graphite-base p-4">
+              <div key={item.label} className="casefile-mini-card border border-graphite-strong bg-graphite-base p-4">
                 <div className="mb-4 flex items-center justify-between gap-4">
                   <p className="font-mono text-sm font-semibold uppercase tracking-[0.08em] text-ink-primary">
                     {item.label}

@@ -8,6 +8,27 @@ export type ProjectVisual = {
   markers: string[];
 };
 
+export const projectArchiveContent = {
+  label: "Project archive",
+  title: "All project signals, ready to scan.",
+  summary:
+    "The featured cases above stay cinematic. This archive rail keeps every project in the portfolio quick to browse as the body of work expands.",
+  recordLabel: "Live index",
+  recordNoun: "records",
+  sequenceLabel: "Signal sequence",
+  evidenceLabel: "Evidence signal",
+  markerLabel: "Markers",
+  openLabel: "Open case file",
+  previousLabel: "Previous project",
+  nextLabel: "Next project",
+  metaLabels: {
+    platform: "Platform",
+    role: "Role",
+    status: "Status",
+    duration: "Duration",
+  },
+} as const;
+
 export const projectVisuals: ProjectVisual[] = [
   {
     slug: "quackfight",

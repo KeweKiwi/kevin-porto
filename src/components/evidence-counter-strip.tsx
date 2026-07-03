@@ -66,18 +66,22 @@ export function EvidenceCounterStrip() {
     <section
       ref={rootRef}
       aria-label="Project proof points"
-      className="relative border-b border-graphite-border bg-graphite-page py-8 tablet:py-10"
+      className="relative overflow-hidden border-b border-graphite-border bg-graphite-page py-8 tablet:py-10"
     >
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-signal/35" />
       <div className="container-grid">
-        <div className="grid gap-px overflow-hidden rounded-[10px] border border-graphite-strong bg-graphite-strong tablet:grid-cols-4">
-          {evidenceCounters.map((counter) => (
+        <div className="proof-ledger grid gap-px overflow-hidden border border-graphite-strong bg-graphite-strong tablet:grid-cols-4">
+          {evidenceCounters.map((counter, index) => (
             <div
               key={counter.label}
-              className="grid min-h-[150px] content-between bg-graphite-base p-5 tablet:min-h-[172px] desktop:p-6"
+              className="proof-ledger-card grid min-h-[150px] content-between bg-graphite-base p-5 tablet:min-h-[172px] desktop:p-6"
               data-counter-card
             >
               <div className="flex items-start justify-between gap-4">
-                <p className="technical-label text-ink-muted">{counter.label}</p>
+                <p className="technical-label text-ink-muted">
+                  <span className="mr-2 text-signal">{String(index + 1).padStart(2, "0")}</span>
+                  {counter.label}
+                </p>
                 <span className="h-px w-8 bg-signal/60" />
               </div>
               <div>

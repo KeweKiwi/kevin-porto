@@ -26,7 +26,12 @@ const heroMeta = [
   { label: "Focus", value: "iOS + Web" },
 ] as const;
 
-const coordinates = ["-06.2 / 106.8", "build: native", "ship: web", "signal: ready"] as const;
+const coordinates = [
+  { label: "-06.2 / 106.8", strength: 42 },
+  { label: "build: native", strength: 72 },
+  { label: "ship: web", strength: 84 },
+  { label: "signal: ready", strength: 100 },
+] as const;
 
 export function HeroDossier() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -86,6 +91,17 @@ export function HeroDossier() {
             stagger: 0.06,
           },
           "-=0.35",
+        )
+        .from(
+          ".hero-lockup-rail",
+          {
+            scaleX: 0,
+            opacity: 0,
+            transformOrigin: "left center",
+            duration: 0.45,
+            stagger: 0.08,
+          },
+          "-=0.22",
         )
         .from(
           ".hero-name-primary",
@@ -171,6 +187,15 @@ export function HeroDossier() {
         yoyo: true,
         stagger: 0.22,
       });
+
+      gsap.to(".hero-signal-meter", {
+        scaleX: 0.58,
+        duration: 2.4,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        stagger: 0.18,
+      });
     },
     { scope: rootRef, dependencies: [introReady, reducedMotion] },
   );
@@ -190,7 +215,7 @@ export function HeroDossier() {
   return (
     <section
       ref={rootRef}
-      className="relative min-h-[100svh] overflow-hidden border-b border-graphite-border pt-16 tablet:pt-[4.5rem]"
+      className="relative isolate min-h-[100svh] overflow-hidden border-b border-graphite-border bg-graphite-page pt-16 tablet:pt-[4.5rem]"
       onPointerMove={handlePointerMove}
       style={
         {
@@ -201,6 +226,7 @@ export function HeroDossier() {
     >
       <div aria-hidden="true" className="hero-grid-plane absolute inset-0">
         <div className="absolute inset-0 opacity-70 kwf-grid" />
+        <div className="absolute inset-0 kwf-field-depth" />
         <span className="hero-scanline absolute left-[-44%] top-[26%] h-px w-[44%] bg-signal/45" />
         <span className="hero-scanline absolute left-[-52%] top-[58%] h-px w-[52%] bg-ink-primary/16" />
         <span className="hero-scanline absolute left-[-38%] top-[76%] h-px w-[38%] bg-signal/30" />
@@ -208,6 +234,7 @@ export function HeroDossier() {
         <span className="absolute bottom-[18%] left-[18%] h-px w-[64%] bg-graphite-border" />
         <span className="absolute left-[50%] top-[12%] hidden h-[72%] w-px bg-graphite-border tablet:block" />
       </div>
+      <div aria-hidden="true" className="kwf-corner-field absolute inset-x-4 top-20 z-[1] hidden h-[calc(100%-7rem)] tablet:block" />
 
       <div
         aria-hidden="true"
@@ -253,12 +280,14 @@ export function HeroDossier() {
           ))}
         </div>
 
-        <div className="max-w-[min(1160px,100%)]">
+        <div className="hero-identity-lockup relative max-w-[min(1160px,100%)] px-2 tablet:px-8">
+          <span aria-hidden="true" className="hero-lockup-rail absolute left-0 top-[36%] hidden h-px w-24 bg-signal/60 tablet:block" />
+          <span aria-hidden="true" className="hero-lockup-rail absolute right-0 top-[66%] hidden h-px w-24 bg-ink-primary/30 tablet:block" />
           <h1
             aria-label={profile.name}
             className="select-none text-center font-sans font-semibold tracking-normal"
           >
-            <span className="hero-name-primary block overflow-hidden text-[clamp(4.4rem,22vw,13.8rem)] leading-[0.78] text-ink-primary tablet:text-[clamp(7rem,16vw,15rem)]">
+            <span className="hero-name-primary kwf-display-fill block overflow-hidden text-[clamp(4.4rem,22vw,13.8rem)] leading-[0.78] text-ink-primary tablet:text-[clamp(7rem,16vw,15rem)]">
               KEVIN
             </span>
             <span className="hero-name-outline kwf-outline block overflow-hidden whitespace-nowrap text-[clamp(2rem,10.8vw,9.2rem)] leading-[0.92] tablet:text-[clamp(4.2rem,9.5vw,10rem)]">
@@ -303,11 +332,21 @@ export function HeroDossier() {
         <div className="hero-coordinate grid w-full max-w-4xl grid-cols-2 gap-2 pt-2 text-left tablet:grid-cols-4">
           {coordinates.map((coordinate, index) => (
             <div
-              key={coordinate}
-              className="border-t border-graphite-border pt-3 font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted"
+              key={coordinate.label}
+              className="casefile-coordinate border-t border-graphite-border pt-3 font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted"
             >
-              <span className="mr-2 text-signal">{String(index + 1).padStart(2, "0")}</span>
-              {coordinate}
+              <div className="flex items-center justify-between gap-3">
+                <span>
+                  <span className="mr-2 text-signal">{String(index + 1).padStart(2, "0")}</span>
+                  {coordinate.label}
+                </span>
+                <span aria-hidden="true" className="h-px w-8 bg-graphite-strong">
+                  <span
+                    className="hero-signal-meter block h-px origin-left bg-signal"
+                    style={{ width: `${coordinate.strength}%` }}
+                  />
+                </span>
+              </div>
             </div>
           ))}
         </div>

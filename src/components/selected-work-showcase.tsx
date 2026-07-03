@@ -77,7 +77,7 @@ export function SelectedWorkShowcase() {
   );
 
   return (
-    <section ref={sectionRef} id="work" className="relative border-b border-graphite-border bg-graphite-page">
+    <section ref={sectionRef} id="work" className="casefile-section relative border-b border-graphite-border bg-graphite-page">
       <div ref={pinRef} className="container-grid py-20 tablet:py-28 desktop:min-h-screen desktop:py-20">
         <div className="mb-12 grid gap-6 desktop:grid-cols-12 desktop:items-end">
           <div className="desktop:col-span-7">
@@ -108,15 +108,19 @@ export function SelectedWorkShowcase() {
             ))}
           </div>
 
-          <div className="relative min-h-[600px] overflow-hidden rounded-[10px] border border-graphite-strong bg-graphite-base">
+          <div className="casefile-stage relative min-h-[600px] overflow-hidden border border-graphite-strong bg-graphite-base">
             {projects.map((project, index) => {
               const visual = projectVisuals[index];
               return (
-                <article key={project.slug} className="project-stage absolute inset-0 grid grid-cols-12 gap-6 p-7">
-                  <div className="col-span-6 self-center">
-                    <ProjectMedia project={project} variant="hero" className={index === 0 ? "min-h-[460px]" : "min-h-[420px]"} />
+                <article key={project.slug} className="project-stage absolute inset-0 grid grid-cols-12 gap-8 p-7">
+                  <div className="col-span-5 min-w-0 self-center">
+                    <ProjectMedia
+                      project={project}
+                      variant="hero"
+                      className={index === 0 ? "min-h-[460px] w-full max-w-full" : "min-h-[420px] w-full max-w-full"}
+                    />
                   </div>
-                  <div className="col-span-6 flex flex-col justify-between py-5">
+                  <div className="col-span-7 flex min-w-0 flex-col justify-between py-5">
                     <div>
                       <p className="technical-label mb-5 text-signal">{visual.technicalSignal}</p>
                       <h3 className="text-5xl font-semibold leading-none text-ink-primary wide:text-6xl">{project.name}</h3>
