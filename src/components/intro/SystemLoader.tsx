@@ -22,17 +22,17 @@ type LoaderStatus = {
 };
 
 const desktopStatuses = [
-  { command: "INITIALIZING PROFILE", confirmation: "PROFILE SYNCED" },
-  { command: "LOADING CORE ASSETS", confirmation: "ASSETS MOUNTED" },
+  { command: "INITIALIZING PROFILE", confirmation: "IDENTITY LOCKED" },
+  { command: "INDEXING CORE ASSETS", confirmation: "ASSET MAP READY" },
   { command: "COMPILING PROJECT SIGNALS", confirmation: "SIGNAL LOCKED" },
-  { command: "VALIDATING INTERFACE", confirmation: "INTERFACE LIVE" },
+  { command: "OPENING CASEFILE", confirmation: "INTERFACE LIVE" },
 ];
 
 const mobileStatuses: LoaderStatus[] = [
-  { command: "PROFILE INIT", confirmation: "SYNCED" },
-  { command: "CORE ASSETS", confirmation: "MOUNTED" },
+  { command: "PROFILE INIT", confirmation: "LOCKED" },
+  { command: "CORE INDEX", confirmation: "READY" },
   { command: "PROJECT SIGNALS", confirmation: "LOCKED" },
-  { command: "INTERFACE CHECK", confirmation: "LIVE" },
+  { command: "OPEN CASEFILE", confirmation: "LIVE" },
 ];
 
 const progressCells = Array.from({ length: 24 }, (_, index) => index);
@@ -96,7 +96,7 @@ function TerminalStatusLine({
 export function SystemLoader({
   onComplete,
   allowSkip = true,
-  timeoutMs = 6800,
+  timeoutMs = 6900,
 }: SystemLoaderProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const progressFillRef = useRef<HTMLSpanElement | null>(null);
@@ -134,7 +134,7 @@ export function SystemLoader({
 
     function setProgress(value: number) {
       const clampedValue = Math.max(0, Math.min(100, value));
-      const visibleValue = Math.round(clampedValue);
+      const visibleValue = clampedValue >= 99.95 ? 100 : Math.floor(clampedValue);
 
       if (progressValueRef.current) {
         progressValueRef.current.textContent = `${visibleValue}%`;
@@ -174,6 +174,10 @@ export function SystemLoader({
       }
 
       completeRef.current = true;
+      if (fallbackTimer) {
+        window.clearTimeout(fallbackTimer);
+        fallbackTimer = undefined;
+      }
       document.body.style.overflow = originalBodyOverflow;
       document.documentElement.style.overflow = originalHtmlOverflow;
       delete document.documentElement.dataset.kwfIntroActive;
@@ -245,14 +249,16 @@ export function SystemLoader({
         ? {
           wake: 0.18,
           status: 0.055,
-          statusHold: 0.16,
-          statusOut: 0.15,
+          statusHold: 0.13,
+          statusOut: 0.13,
           char: 0.034,
           charStagger: 0.01,
           decodeFlicker: 0.034,
-          progressDuration: 4.18,
-          ready: 0.16,
-          exit: 0.34,
+          progressDuration: 4.12,
+          finish: 0.2,
+          ready: 0.14,
+          exit: 0.36,
+          handoff: 0.1,
         }
         : {
           wake: 0.24,
@@ -262,15 +268,21 @@ export function SystemLoader({
           char: 0.036,
           charStagger: 0.011,
           decodeFlicker: 0.036,
-          progressDuration: 4.48,
-          ready: 0.22,
-          exit: 0.5,
+          progressDuration: 4.42,
+          finish: 0.26,
+          ready: 0.16,
+          exit: 0.56,
+          handoff: 0.18,
         };
 
       root.querySelectorAll<HTMLElement>("[data-status-char]").forEach((char) => {
         char.textContent = char.dataset.statusValue ?? char.textContent;
       });
 
+      gsap.set(root, {
+        autoAlpha: 1,
+        clipPath: "inset(0% 0% 0% 0%)",
+      });
       gsap.set(statusLines, {
         autoAlpha: 0,
         clipPath: "inset(0% 44% 0% 44%)",
@@ -300,8 +312,23 @@ export function SystemLoader({
       });
       gsap.set(confirmationMarks, { autoAlpha: 0, y: 5 });
       gsap.set("[data-loader-metadata]", { autoAlpha: 0, y: -8 });
+      gsap.set("[data-loader-sequence]", { autoAlpha: 0, y: 8 });
+      gsap.set("[data-loader-cinema-frame]", {
+        autoAlpha: 0,
+        scale: 0.986,
+        transformOrigin: "center center",
+      });
+      gsap.set("[data-loader-aperture-line]", {
+        scaleX: 0,
+        transformOrigin: "center center",
+      });
       gsap.set("[data-loader-scan]", { scaleX: 0, transformOrigin: "left center" });
       gsap.set("[data-loader-exit-line]", { scaleX: 0, transformOrigin: "center center" });
+      gsap.set("[data-loader-ready]", {
+        autoAlpha: 0,
+        scaleX: 0,
+        transformOrigin: "right center",
+      });
       progressState.value = 0;
 
       const introTimeline = gsap.timeline({
@@ -322,6 +349,36 @@ export function SystemLoader({
             y: 0,
             duration: timing.wake,
             stagger: 0.05,
+          },
+          "<",
+        )
+        .to(
+          "[data-loader-sequence]",
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: timing.wake * 1.35,
+            ease: "power2.out",
+          },
+          "<+=0.06",
+        )
+        .to(
+          "[data-loader-cinema-frame]",
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: timing.wake * 1.7,
+            ease: "power2.out",
+          },
+          "<",
+        )
+        .to(
+          "[data-loader-aperture-line]",
+          {
+            scaleX: 1,
+            duration: timing.wake * 1.6,
+            stagger: 0.06,
+            ease: "power3.inOut",
           },
           "<",
         );
@@ -542,7 +599,7 @@ export function SystemLoader({
         )
         .to(progressState, {
           value: 100,
-          duration: isMobile ? 0.34 : 0.42,
+          duration: timing.finish,
           ease: "power2.out",
           onUpdate: () => setProgress(progressState.value),
           onComplete: () => setProgress(100),
@@ -551,13 +608,31 @@ export function SystemLoader({
           setSystemStatus("SYSTEM READY");
         })
         .to("[data-loader-ready]", {
-          opacity: 1,
+          autoAlpha: 1,
+          scaleX: 1,
           duration: timing.ready,
+          ease: "power2.out",
         })
         .to(
           "[data-loader-metadata]",
           {
             opacity: 0.42,
+            duration: timing.ready,
+          },
+          "<",
+        )
+        .to(
+          "[data-loader-sequence]",
+          {
+            opacity: 0.5,
+            duration: timing.ready,
+          },
+          "<",
+        )
+        .to(
+          "[data-loader-cinema-frame]",
+          {
+            opacity: 0.58,
             duration: timing.ready,
           },
           "<",
@@ -572,7 +647,16 @@ export function SystemLoader({
         )
         .add(() => {
           revealHero();
-        }, "+=0.04");
+        }, "+=0.02")
+        .to(
+          root,
+          {
+            opacity: isMobile ? 0.96 : 0.93,
+            duration: timing.handoff,
+            ease: "power1.out",
+          },
+          "+=0.02",
+        );
 
       if (isMobile) {
         introTimeline
@@ -590,6 +674,15 @@ export function SystemLoader({
               ease: "power3.inOut",
             },
             "<",
+          )
+          .to(
+            root,
+            {
+              autoAlpha: 0,
+              duration: timing.exit * 0.88,
+              ease: "power2.inOut",
+            },
+            "<",
           );
       } else {
         introTimeline
@@ -605,6 +698,26 @@ export function SystemLoader({
               y: -10,
               duration: timing.exit * 0.45,
               ease: "power2.in",
+            },
+            "<",
+          )
+          .to(
+            "[data-loader-aperture-line]",
+            {
+              scaleX: 0.18,
+              autoAlpha: 0,
+              duration: timing.exit * 0.52,
+              ease: "power3.in",
+            },
+            "<",
+          )
+          .to(
+            "[data-loader-cinema-frame]",
+            {
+              autoAlpha: 0,
+              scale: 1.012,
+              duration: timing.exit * 0.5,
+              ease: "power3.in",
             },
             "<",
           )
@@ -627,12 +740,21 @@ export function SystemLoader({
             "<",
           )
           .to(
+            root,
+            {
+              autoAlpha: 0,
+              duration: timing.exit * 0.92,
+              ease: "power2.inOut",
+            },
+            "<",
+          )
+          .to(
             "[data-loader-exit-line]",
             {
               autoAlpha: 0,
               duration: timing.exit * 0.35,
             },
-            "<+=0.2",
+            "<+=0.22",
           );
       }
     }, root);
@@ -683,6 +805,23 @@ export function SystemLoader({
 
         <div className={styles.scanTrack}>
           <span className={styles.scanLine} data-loader-scan />
+        </div>
+
+        <div className={styles.sequencePlate} data-loader-sequence>
+          <span>CASEFILE SEQUENCE</span>
+          <span>KWF-07 / PROFILE INTERFACE</span>
+        </div>
+
+        <div className={styles.cinemaFrame} aria-hidden="true" data-loader-cinema-frame>
+          <span className={`${styles.frameCorner} ${styles.frameCornerTopLeft}`} />
+          <span className={`${styles.frameCorner} ${styles.frameCornerTopRight}`} />
+          <span className={`${styles.frameCorner} ${styles.frameCornerBottomLeft}`} />
+          <span className={`${styles.frameCorner} ${styles.frameCornerBottomRight}`} />
+        </div>
+
+        <div className={styles.aperture} aria-hidden="true">
+          <span className={styles.apertureLine} data-loader-aperture-line />
+          <span className={styles.apertureLine} data-loader-aperture-line />
         </div>
 
         <div className={styles.statusGrid}>

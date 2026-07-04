@@ -7,7 +7,11 @@
   color: var(--color-text);
   font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
   pointer-events: auto;
-  background: #080909;
+  will-change: clip-path, opacity, visibility;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(215, 247, 91, 0.032), transparent 30rem),
+    linear-gradient(180deg, rgba(243, 240, 232, 0.012), transparent 28%),
+    #080909;
 }
 
 .loader::before {
@@ -15,11 +19,13 @@
   inset: 0;
   z-index: 1;
   content: "";
-  opacity: 0.135;
+  opacity: 0.56;
   background-image:
-    linear-gradient(to right, rgba(243, 240, 232, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(243, 240, 232, 0.055) 1px, transparent 1px);
-  background-size: 7.2vw 7.2vw;
+    linear-gradient(to right, rgba(215, 247, 91, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(243, 240, 232, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 72%);
+  mask-image: radial-gradient(circle at 50% 50%, black, transparent 72%);
 }
 
 .loader::after {
@@ -141,7 +147,174 @@
   box-shadow: 0 0 18px rgba(215, 247, 91, 0.16);
 }
 
+.sequencePlate {
+  position: absolute;
+  top: clamp(7.25rem, 25vh, 14.25rem);
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2.4vw, 2.6rem);
+  width: min(42rem, calc(100vw - 2.5rem));
+  color: rgba(243, 240, 232, 0.44);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  pointer-events: none;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+.sequencePlate span:first-child {
+  color: rgba(215, 247, 91, 0.76);
+}
+
+.sequencePlate::before,
+.sequencePlate::after {
+  display: block;
+  flex: 1 1 4rem;
+  height: 1px;
+  min-width: 2rem;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(215, 247, 91, 0.32));
+}
+
+.sequencePlate::after {
+  background: linear-gradient(90deg, rgba(215, 247, 91, 0.32), transparent);
+}
+
+.cinemaFrame {
+  position: absolute;
+  inset: clamp(4.75rem, 8vw, 8.75rem) clamp(1.35rem, 7vw, 8rem);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cinemaFrame::before,
+.cinemaFrame::after {
+  position: absolute;
+  left: 50%;
+  width: min(38rem, 58vw);
+  height: 1px;
+  content: "";
+  opacity: 0.48;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(215, 247, 91, 0.18) 22%,
+      rgba(243, 240, 232, 0.24) 50%,
+      rgba(215, 247, 91, 0.18) 78%,
+      transparent
+    );
+  transform: translateX(-50%);
+}
+
+.cinemaFrame::before {
+  top: 0;
+}
+
+.cinemaFrame::after {
+  bottom: 0;
+}
+
+.frameCorner {
+  position: absolute;
+  width: clamp(2.2rem, 5vw, 5rem);
+  height: clamp(2.2rem, 5vw, 5rem);
+  color: rgba(243, 240, 232, 0.5);
+}
+
+.frameCorner::before,
+.frameCorner::after {
+  position: absolute;
+  content: "";
+  background: currentColor;
+}
+
+.frameCorner::before {
+  width: 100%;
+  height: 1px;
+}
+
+.frameCorner::after {
+  width: 1px;
+  height: 100%;
+}
+
+.frameCornerTopLeft {
+  top: 0;
+  left: 0;
+}
+
+.frameCornerTopRight {
+  top: 0;
+  right: 0;
+}
+
+.frameCornerBottomLeft {
+  bottom: 0;
+  left: 0;
+}
+
+.frameCornerBottomRight {
+  right: 0;
+  bottom: 0;
+}
+
+.frameCornerTopLeft::before,
+.frameCornerTopRight::before {
+  top: 0;
+}
+
+.frameCornerBottomLeft::before,
+.frameCornerBottomRight::before {
+  bottom: 0;
+}
+
+.frameCornerTopLeft::after,
+.frameCornerBottomLeft::after {
+  left: 0;
+}
+
+.frameCornerTopRight::after,
+.frameCornerBottomRight::after {
+  right: 0;
+}
+
+.aperture {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  gap: clamp(8.5rem, 22vh, 15rem);
+  padding-inline: clamp(1.25rem, 12vw, 15rem);
+  pointer-events: none;
+}
+
+.apertureLine {
+  display: block;
+  height: 1px;
+  opacity: 0.74;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(215, 247, 91, 0.13) 22%,
+      rgba(243, 240, 232, 0.34) 50%,
+      rgba(215, 247, 91, 0.13) 78%,
+      transparent
+    );
+  box-shadow: 0 0 18px rgba(215, 247, 91, 0.08);
+  transform: scaleX(0);
+}
+
 .statusGrid {
+  position: relative;
+  z-index: 2;
   place-self: center;
   width: min(94rem, calc(100vw - (clamp(1.25rem, 4vw, 4.5rem) * 2)));
   padding-bottom: 5vh;
@@ -177,7 +350,7 @@
   border-bottom: 1px solid rgba(58, 65, 63, 0.72);
   color: rgba(243, 240, 232, 0.9);
   font-size: clamp(2.15rem, min(4.55vw, 13.2vh), 5rem);
-  font-weight: 600;
+  font-weight: 650;
   letter-spacing: 0;
   line-height: 0.9;
   opacity: 0;
@@ -199,7 +372,7 @@
       90deg,
       transparent 0%,
       rgba(215, 247, 91, 0.08) 22%,
-      rgba(243, 240, 232, 0.22) 50%,
+      rgba(243, 240, 232, 0.26) 50%,
       rgba(215, 247, 91, 0.12) 78%,
       transparent 100%
     );
@@ -324,7 +497,7 @@
   align-items: center;
   justify-self: center;
   gap: 0.58rem;
-  color: rgba(215, 247, 91, 0.9);
+  color: rgba(215, 247, 91, 0.86);
   font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -347,6 +520,8 @@
 }
 
 .progressDock {
+  position: relative;
+  z-index: 3;
   align-self: end;
   width: 100%;
 }
@@ -480,6 +655,23 @@
   box-shadow: 0 0 18px rgba(215, 247, 91, 0.035);
 }
 
+.progressRail::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.32;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(243, 240, 232, 0.32),
+      transparent
+    );
+  transform: translateX(-100%);
+  animation: railSweep 3.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
 .progressFill {
   position: absolute;
   inset: 0;
@@ -540,6 +732,16 @@
   }
 }
 
+@keyframes railSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes terminalCursor {
   0%,
   44% {
@@ -589,6 +791,45 @@
 
   .scanTrack {
     display: none;
+  }
+
+  .sequencePlate {
+    top: 23vh;
+    display: grid;
+    gap: 0.4rem;
+    width: min(21rem, calc(100vw - 2.2rem));
+    font-size: 0.52rem;
+    letter-spacing: 0.1em;
+  }
+
+  .sequencePlate::before,
+  .sequencePlate::after {
+    display: none;
+  }
+
+  .cinemaFrame {
+    inset: 4.75rem 1rem 7.25rem;
+  }
+
+  .cinemaFrame::before,
+  .cinemaFrame::after {
+    width: min(15rem, 64vw);
+    opacity: 0.34;
+  }
+
+  .frameCorner {
+    width: 1.8rem;
+    height: 1.8rem;
+    color: rgba(243, 240, 232, 0.34);
+  }
+
+  .aperture {
+    gap: clamp(9.25rem, 31vh, 14rem);
+    padding-inline: 1.1rem;
+  }
+
+  .apertureLine {
+    opacity: 0.46;
   }
 
   .statusGrid {
@@ -671,10 +912,13 @@
 @media (prefers-reduced-motion: reduce) {
   .scanTrack,
   .exitLine,
+  .aperture,
+  .cinemaFrame,
   .statusBeam,
   .statusSweep,
   .statusCursor,
-  .terminalProgress::after {
+  .terminalProgress::after,
+  .progressRail::after {
     display: none;
   }
 }
