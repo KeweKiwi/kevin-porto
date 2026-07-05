@@ -66,7 +66,7 @@ function QuackFightVisual() {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-5 right-5 flex gap-2 font-mono text-[0.6rem] uppercase tracking-[0.08em] text-ink-muted">
+      <div className="absolute bottom-5 right-5 hidden gap-2 font-mono text-[0.6rem] uppercase tracking-[0.08em] text-ink-muted tablet:flex">
         <span>Core Motion</span>
         <span>/</span>
         <span>AVFoundation</span>
