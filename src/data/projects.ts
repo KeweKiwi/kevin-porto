@@ -4,6 +4,11 @@ export type AssetSlot = {
   status: "missing" | "available";
 };
 
+export type ProjectCaseHighlight = {
+  label: string;
+  value: string;
+};
+
 export type Project = {
   slug: string;
   name: string;
@@ -22,7 +27,11 @@ export type Project = {
     href: string;
     isExternal?: boolean;
   };
+  repoUrl: string;
   productSummary: string;
+  caseSummary: string;
+  caseHighlights: ProjectCaseHighlight[];
+  caseFocus: string[];
   team: string[];
   kevinOwned: string[];
   collaborative: string[];
@@ -57,8 +66,30 @@ export const projects: Project[] = [
       label: "View case study",
       href: "/projects/quackfight",
     },
+    repoUrl: "https://github.com/Quack-Fight/QuackFight",
     productSummary:
       "QuackFight was designed to feel interactive, immersive, humorous when played together, challenging, and different from ordinary touch controls.",
+    caseSummary:
+      "A playable iOS artillery prototype centered on motion aiming, voice-controlled throw power, haptics, and multiplayer turn resolution.",
+    caseHighlights: [
+      {
+        label: "Contribution",
+        value: "Tech Lead for architecture decisions, code review, feature integration, and multiplayer debugging.",
+      },
+      {
+        label: "Implementation",
+        value: "Tilt aiming, voice-powered throw power, haptics, local pass-and-play, and online state routing.",
+      },
+      {
+        label: "Evidence",
+        value: "Playable prototype, External TestFlight build, and booth testing with approximately 100 exhibition visitors.",
+      },
+    ],
+    caseFocus: [
+      "Motion and voice controls made the iPhone feel like part of the controller.",
+      "A state-machine turn flow kept aiming, power, throw resolution, and handoff understandable.",
+      "GameKit packet routing separated live aim/power updates from reliable locked-turn events.",
+    ],
     team: [
       "Justin - Project Manager",
       "Kevin - Tech Lead",
@@ -172,8 +203,30 @@ export const projects: Project[] = [
       href: "https://rizkimobil.com",
       isExternal: true,
     },
+    repoUrl: "https://github.com/KeweKiwi/rizkimobil",
     productSummary:
       "The client moved from primarily displaying inventory through Instagram to a managed website with public browsing, WhatsApp conversion paths, and an administration workflow.",
+    caseSummary:
+      "A production dealership platform covering requirements, database design, public inventory, admin workflows, deployment, training, and maintenance.",
+    caseHighlights: [
+      {
+        label: "Contribution",
+        value: "Independent full-stack ownership from requirements through deployment, handover, and maintenance.",
+      },
+      {
+        label: "Implementation",
+        value: "Public inventory discovery, vehicle detail pages, image workflows, admin operations, and branch WhatsApp routing.",
+      },
+      {
+        label: "Evidence",
+        value: "Live production site used for client-managed inventory, dealership operations, and ongoing maintenance.",
+      },
+    ],
+    caseFocus: [
+      "The project translated a dealership workflow into a manageable web system, not only a brochure site.",
+      "Inventory filtering uses conditional queries, AJAX updates, pagination, and shareable URL state.",
+      "Admin tools support client-managed vehicles, media, inquiries, branches, and operational handover.",
+    ],
     team: ["Kevin - Independent full-stack developer"],
     kevinOwned: [
       "Client discussion",
@@ -256,7 +309,7 @@ export const projects: Project[] = [
       "Client reviewed the complete system before launch and requested only minor revisions",
     ],
     outcome:
-      "Rizki Mobil is a live production website with client-managed inventory, multi-branch operations, an operational dashboard, real users, real inquiries, and an ongoing maintenance agreement. Usage numbers are confidential.",
+      "Rizki Mobil is a live production website supporting client-managed inventory, multi-branch operations, inventory-derived dashboard views, inquiries, and ongoing maintenance. Usage numbers are confidential.",
     limitations: [
       "Do not display the source-code repository publicly",
       "Do not describe the dashboard as real-time analytics",
@@ -297,8 +350,30 @@ export const projects: Project[] = [
       label: "View case study",
       href: "/projects/squeaky",
     },
+    repoUrl: "https://github.com/KeweKiwi/Squeaky",
     productSummary:
       "Squeaky was designed to help young adults manage money in a faster, lighter, and less intimidating way.",
+    caseSummary:
+      "A native finance prototype where transaction CRUD, SwiftData persistence, App Shortcuts, and dashboard integration share one technical foundation.",
+    caseHighlights: [
+      {
+        label: "Contribution",
+        value: "Tech Lead for technical decisions, integration review, and the core transaction system.",
+      },
+      {
+        label: "Implementation",
+        value: "Transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction-data integration.",
+      },
+      {
+        label: "Evidence",
+        value: "Functional prototype demoed to peers and mentors, with the main transaction flow working end to end.",
+      },
+    ],
+    caseFocus: [
+      "The transaction system became the shared data backbone for budget, dashboard, recap, and related modules.",
+      "App Shortcuts reduced friction by letting users add transactions through a native system surface.",
+      "Team-owned modules were integrated into one prototype flow with clear ownership boundaries.",
+    ],
     team: [
       "Gaby - Project Manager",
       "Kevin - Tech Lead",
@@ -369,7 +444,7 @@ export const projects: Project[] = [
       "Internal demos and mentor reviews did not reveal major blockers in the main transaction flow",
     ],
     outcome:
-      "Squeaky reached a complete functional prototype that combined end-to-end transaction management, SwiftData persistence, App Shortcuts, budgeting, financial summaries, and a behavior-linked virtual pet system. Kevin led the technical workflow and personally built the transaction system, persistence layer, and App Intent flow. The app was demonstrated to peers and mentors and refined through feedback, but still required broader user testing, stronger accessibility, additional visual polish, and public distribution preparation.",
+      "Squeaky reached a functional prototype that combined transaction management, SwiftData persistence, App Shortcuts, budgeting, financial summaries, and a behavior-linked virtual pet system. Kevin's direct work covered the transaction system, persistence layer, App Intent flow, and technical integration review. The app was demonstrated to peers and mentors, with broader user testing, accessibility work, visual polish, and public distribution preparation still needed.",
     limitations: [
       "Do not claim that gamification was proven to improve long-term habits",
       "Do not invent a percentage improvement for App Shortcuts",

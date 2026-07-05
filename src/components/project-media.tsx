@@ -25,9 +25,11 @@ export function ProjectMedia({ project, variant = "hero", className }: ProjectMe
       {project.slug === "quackfight" ? <QuackFightVisual /> : null}
       {project.slug === "rizki-mobil" ? <RizkiMobilVisual /> : null}
       {project.slug === "squeaky" ? <SqueakyVisual /> : null}
-      <div className="absolute left-4 top-4 rounded-[4px] border border-graphite-strong bg-graphite-page/85 px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-secondary">
-        {project.platform} / {project.role}
-      </div>
+      {variant !== "case" ? (
+        <div className="absolute left-4 top-4 rounded-[4px] border border-graphite-strong bg-graphite-page/85 px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-secondary">
+          {project.platform} / {project.role}
+        </div>
+      ) : null}
     </div>
   );
 }
