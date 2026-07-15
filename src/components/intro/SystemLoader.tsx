@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import {
   INTRO_COMPLETE_EVENT,
@@ -36,7 +36,7 @@ const mobileStatuses: LoaderStatus[] = [
 ];
 
 const progressCells = Array.from({ length: 24 }, (_, index) => index);
-const decodeGlyphs = ["0", "1", "/", "\\", "_", "-", "+", ":", "."] as const;
+const decodeGlyphs = ["0", "1", "/", "_", "+", ":"] as const;
 
 const wireframeRows = [
   [[12, 28], [108, 48], [206, 18], [302, 52], [398, 24], [496, 58], [594, 20], [692, 48], [790, 16], [888, 56], [986, 24], [1084, 52], [1182, 20]],
@@ -151,7 +151,7 @@ function TerminalStatusLine({
         <span className={styles.statusPrompt} data-status-prompt>
           &gt;
         </span>
-        <span className={styles.statusText}>
+        <span className={styles.statusText} data-status-text>
           {status.command.split(" ").map((word, wordIndex) => (
             <span key={`${status.command}-${wordIndex}-${word}`} className={styles.statusWord}>
               {Array.from(word).map((char, charIndex) => (
@@ -478,13 +478,13 @@ export function SystemLoader({
       const timing = isMobile
         ? {
           wake: 0.18,
-          status: 0.1,
-          statusHold: 0.13,
-          statusOut: 0.16,
-          char: 0.034,
-          charStagger: 0.01,
-          decodeFlicker: 0.034,
-          progressDuration: 4.12,
+          status: 0.17,
+          reveal: 0.3,
+          sweep: 0.34,
+          confirmation: 0.15,
+          statusHold: 0.16,
+          statusOut: 0.18,
+          statusOverlap: 0.2,
           finish: 0.2,
           ready: 0.2,
           exit: 0.48,
@@ -492,13 +492,13 @@ export function SystemLoader({
         }
         : {
           wake: 0.24,
-          status: 0.11,
-          statusHold: 0.18,
-          statusOut: 0.18,
-          char: 0.036,
-          charStagger: 0.011,
-          decodeFlicker: 0.036,
-          progressDuration: 4.42,
+          status: 0.2,
+          reveal: 0.36,
+          sweep: 0.42,
+          confirmation: 0.18,
+          statusHold: 0.2,
+          statusOut: 0.22,
+          statusOverlap: 0.24,
           finish: 0.26,
           ready: 0.22,
           exit: 0.58,
@@ -516,14 +516,13 @@ export function SystemLoader({
       });
       gsap.set(statusLines, {
         autoAlpha: 0,
-        clipPath: "inset(0% 44% 0% 44%)",
-        scale: 0.985,
-        y: isMobile ? 10 : 16,
+        scale: 0.992,
+        y: isMobile ? 7 : 10,
       });
-      gsap.set("[data-status-char]", {
-        autoAlpha: 0,
-        color: "rgba(215, 247, 91, 0.68)",
-        yPercent: 38,
+      gsap.set("[data-status-text]", {
+        autoAlpha: 1,
+        clipPath: "inset(0% 100% 0% 0%)",
+        x: isMobile ? 5 : 8,
       });
       gsap.set("[data-status-prompt], [data-status-cursor]", { autoAlpha: 0 });
       gsap.set("[data-status-phase]", { autoAlpha: 0, y: 5 });
@@ -537,9 +536,9 @@ export function SystemLoader({
       });
       gsap.set("[data-status-sweep]", {
         autoAlpha: 0,
-        scaleX: 0.22,
-        xPercent: -24,
-        transformOrigin: "left center",
+        scaleX: 0.72,
+        xPercent: -145,
+        transformOrigin: "center center",
       });
       gsap.set(confirmationMarks, { autoAlpha: 0, y: 5 });
       gsap.set("[data-loader-metadata]", { autoAlpha: 0, y: -8 });
@@ -769,215 +768,171 @@ export function SystemLoader({
           });
       }
 
+      const statusSequenceStart = introTimeline.duration();
+
       statusLines.forEach((line, index) => {
         const confirmation = confirmationMarks[index];
         const prompt = line.querySelector<HTMLElement>("[data-status-prompt]");
         const cursor = line.querySelector<HTMLElement>("[data-status-cursor]");
+        const text = line.querySelector<HTMLElement>("[data-status-text]");
         const beam = line.querySelector<HTMLElement>("[data-status-beam]");
         const sweep = line.querySelector<HTMLElement>("[data-status-sweep]");
         const phase = line.querySelector<HTMLElement>("[data-status-phase]");
         const gateLeft = line.querySelector<HTMLElement>("[data-status-gate-left]");
         const gateRight = line.querySelector<HTMLElement>("[data-status-gate-right]");
         const chars = gsap.utils.toArray<HTMLElement>("[data-status-char]", line);
+        const decodeChars = chars.filter(
+          (_, charIndex) => (charIndex + index * 2) % 7 === 2,
+        );
         const lineTimeline = gsap.timeline();
-        const decodeTimeline = gsap.timeline();
-
-        chars.forEach((char, charIndex) => {
-          const finalChar = char.dataset.statusValue ?? char.textContent ?? "";
-          const firstGlyph = decodeGlyphs[(charIndex + index * 3) % decodeGlyphs.length];
-          const secondGlyph =
-            decodeGlyphs[(charIndex * 2 + index * 5 + 4) % decodeGlyphs.length];
-          const startAt = charIndex * timing.charStagger;
-
-          decodeTimeline
-            .call(
-              () => {
-                char.textContent = firstGlyph;
-              },
-              undefined,
-              startAt,
-            )
-            .to(
-              char,
-              {
-                autoAlpha: 0.72,
-                color: "rgba(215, 247, 91, 0.78)",
-                yPercent: isMobile ? 26 : 34,
-                duration: timing.decodeFlicker,
-                ease: "none",
-              },
-              startAt,
-            )
-            .call(
-              () => {
-                char.textContent = secondGlyph;
-              },
-              undefined,
-              startAt + timing.decodeFlicker * 0.52,
-            )
-            .call(
-              () => {
-                char.textContent = finalChar;
-              },
-              undefined,
-              startAt + timing.decodeFlicker + timing.char * 0.32,
-            )
-            .to(
-              char,
-              {
-                autoAlpha: 1,
-                color: "rgba(243, 240, 232, 0.92)",
-                yPercent: 0,
-                duration: timing.char,
-                ease: "power2.out",
-                onComplete: () => {
-                  char.textContent = finalChar;
-                },
-              },
-              startAt + timing.decodeFlicker,
-            );
-        });
 
         lineTimeline
+          .addLabel("enter")
           .to(line, {
             autoAlpha: 1,
-            clipPath: "inset(0% 0% 0% 0%)",
             scale: 1,
             y: 0,
             duration: timing.status,
+            ease: "power2.out",
           })
-          .to(
-            "[data-loader-horizon]",
-            {
-              autoAlpha: isMobile ? 0.48 : 0.82,
-              duration: 0.12,
-              ease: "power2.out",
-            },
-            "<",
-          )
           .to(
             prompt,
             {
               autoAlpha: 1,
-              duration: 0.04,
-              ease: "none",
+              duration: timing.status * 0.7,
+              ease: "power2.out",
             },
-            "<",
+            "enter+=0.02",
           )
           .to(
             phase,
             {
               autoAlpha: 1,
               y: 0,
-              duration: 0.12,
+              duration: timing.status,
               ease: "power2.out",
             },
-            "<",
+            "enter",
           )
           .to(
             [gateLeft, gateRight],
             {
               autoAlpha: isMobile ? 0.46 : 0.66,
               xPercent: 0,
-              duration: isMobile ? 0.2 : 0.26,
-              ease: "power3.out",
+              duration: timing.status + 0.08,
+              ease: "power2.out",
             },
-            "<",
+            "enter",
           )
           .to(
             beam,
             {
               autoAlpha: 1,
               scaleX: 1,
-              duration: 0.18,
-              ease: "power2.out",
+              duration: timing.status + 0.08,
+              ease: "power2.inOut",
             },
-            "<",
+            "enter",
+          )
+          .call(
+            () => {
+              decodeChars.forEach((char, charIndex) => {
+                char.textContent =
+                  decodeGlyphs[(charIndex + index * 3) % decodeGlyphs.length];
+              });
+            },
+            undefined,
+            "enter+=0.06",
+          )
+          .to(
+            text,
+            {
+              clipPath: "inset(0% 0% 0% 0%)",
+              x: 0,
+              duration: timing.reveal,
+              ease: "power2.inOut",
+            },
+            "enter+=0.05",
           )
           .to(
             sweep,
             {
-              autoAlpha: 0.86,
+              autoAlpha: isMobile ? 0.56 : 0.72,
               scaleX: 1,
-              xPercent: 0,
-              duration: isMobile ? 0.18 : 0.24,
-              ease: "power2.out",
+              xPercent: 365,
+              duration: timing.sweep,
+              ease: "power2.inOut",
             },
-            "<+=0.03",
+            "enter+=0.02",
           )
-          .add(decodeTimeline, "<+=0.08")
-          .to(
-            sweep,
-            {
-              autoAlpha: 0,
-              scaleX: 1.12,
-              xPercent: 22,
-              duration: isMobile ? 0.18 : 0.24,
-              ease: "power2.in",
+          .call(
+            () => {
+              chars.forEach((char) => {
+                char.textContent = char.dataset.statusValue ?? char.textContent;
+              });
             },
-            ">-=0.12",
+            undefined,
+            `enter+=${timing.reveal * 0.48}`,
           )
+          .to(sweep, {
+            autoAlpha: 0,
+            duration: timing.sweep * 0.24,
+            ease: "power1.out",
+          })
           .to(
             beam,
             {
-              autoAlpha: 0.32,
-              xPercent: isMobile ? 0 : 3,
-              duration: 0.24,
-              ease: "none",
+              autoAlpha: isMobile ? 0.36 : 0.5,
+              scaleX: 0.92,
+              duration: timing.confirmation,
+              ease: "sine.inOut",
             },
-            "<",
+            `enter+=${timing.reveal * 0.72}`,
           )
           .to(
             cursor,
             {
               autoAlpha: 1,
-              duration: 0.04,
-              ease: "none",
+              duration: timing.confirmation,
+              ease: "power2.out",
             },
-            ">-=0.02",
+            `enter+=${timing.reveal * 0.72}`,
           )
           .to(
             confirmation,
             {
               autoAlpha: 1,
               y: 0,
-              duration: 0.08,
+              duration: timing.confirmation,
+              ease: "power2.out",
             },
-            "<+=0.03",
+            `enter+=${timing.reveal * 0.88}`,
           )
           .to(
-            chars,
+            [phase, confirmation],
             {
-              color: "#D7F75B",
-              duration: 0.035,
-              stagger: {
-                each: 0.003,
-                from: "random",
-              },
-              ease: "none",
+              opacity: (targetIndex) => (targetIndex === 0 ? 0.86 : 1),
+              duration: timing.confirmation,
+              ease: "sine.inOut",
             },
-            "<+=0.03",
+            "<",
           )
-          .to(chars, {
-            color: "rgba(243, 240, 232, 0.9)",
-            duration: 0.08,
-            ease: "power1.out",
-          })
           .to(
             [phase, gateLeft, gateRight],
             {
               autoAlpha: 0,
-              duration: timing.statusOut * 0.7,
-              ease: "power2.in",
+              duration: timing.statusOut,
+              ease: "power2.inOut",
             },
             `+=${timing.statusHold}`,
           )
           .to(
-            "[data-loader-horizon]",
+            text,
             {
-              autoAlpha: isMobile ? 0.3 : 0.52,
+              clipPath: "inset(0% 0% 0% 100%)",
+              x: isMobile ? -4 : -7,
               duration: timing.statusOut,
-              ease: "power2.in",
+              ease: "power2.inOut",
             },
             "<",
           )
@@ -985,53 +940,95 @@ export function SystemLoader({
             line,
             {
               autoAlpha: 0,
-              clipPath: "inset(0% 0% 0% 0%)",
-              scale: 1.01,
-              y: isMobile ? -8 : -14,
+              scale: 1.004,
+              y: isMobile ? -5 : -7,
               duration: timing.statusOut,
-              ease: "power2.in",
+              ease: "power2.inOut",
             },
             "<",
           );
 
-        introTimeline.add(lineTimeline);
+        introTimeline.add(
+          lineTimeline,
+          index === 0 ? undefined : `-=${timing.statusOverlap}`,
+        );
       });
+
+      const statusSequenceEnd = introTimeline.duration();
+      const statusSequenceDuration = statusSequenceEnd - statusSequenceStart;
+      const readyDuration = Math.max(timing.finish, timing.ready);
+
+      introTimeline.to(
+        "[data-loader-monogram]",
+        {
+          scale: 1.008,
+          yPercent: isMobile ? -0.35 : -0.55,
+          duration: statusSequenceDuration,
+          ease: "sine.inOut",
+        },
+        statusSequenceStart,
+      );
+      introTimeline.to(
+        "[data-loader-horizon]",
+        {
+          autoAlpha: isMobile ? 0.48 : 0.74,
+          duration: statusSequenceDuration / 2,
+          ease: "sine.inOut",
+          repeat: 1,
+          yoyo: true,
+        },
+        statusSequenceStart,
+      );
 
       introTimeline
         .to(
           progressState,
           {
-            value: 94,
-            duration: timing.progressDuration,
+            value: 96,
+            duration: Math.max(1, statusSequenceEnd - 0.08),
             ease: "none",
             onUpdate: () => setProgress(progressState.value),
-            onComplete: () => setProgress(94),
+            onComplete: () => setProgress(96),
           },
           0.08,
         )
-        .to(progressState, {
-          value: 100,
-          duration: timing.finish,
-          ease: "power2.out",
-          onUpdate: () => setProgress(progressState.value),
-          onComplete: () => setProgress(100),
-        })
-        .call(() => {
-          setSystemStatus("SYSTEM READY");
-        })
-        .to("[data-loader-ready]", {
-          autoAlpha: 1,
-          scaleX: 1,
-          duration: timing.ready,
-          ease: "power2.out",
-        })
+        .addLabel("ready")
+        .call(
+          () => {
+            setSystemStatus("SYSTEM READY");
+          },
+          undefined,
+          "ready",
+        )
+        .to(
+          progressState,
+          {
+            value: 100,
+            duration: timing.finish,
+            ease: "power2.out",
+            onUpdate: () => setProgress(progressState.value),
+            onComplete: () => setProgress(100),
+          },
+          "ready",
+        )
+        .to(
+          "[data-loader-ready]",
+          {
+            autoAlpha: 1,
+            scaleX: 1,
+            duration: timing.ready,
+            ease: "power2.out",
+            onStart: revealHero,
+          },
+          "ready",
+        )
         .to(
           "[data-loader-metadata]",
           {
             opacity: 0.42,
             duration: timing.ready,
           },
-          "<",
+          "ready",
         )
         .to(
           "[data-loader-sequence]",
@@ -1039,7 +1036,7 @@ export function SystemLoader({
             opacity: 0.5,
             duration: timing.ready,
           },
-          "<",
+          "ready",
         )
         .to(
           "[data-loader-cinema-frame]",
@@ -1047,7 +1044,7 @@ export function SystemLoader({
             opacity: 0.58,
             duration: timing.ready,
           },
-          "<",
+          "ready",
         )
         .to(
           "[data-loader-axis]",
@@ -1057,7 +1054,7 @@ export function SystemLoader({
             duration: timing.ready,
             ease: "power2.inOut",
           },
-          "<",
+          "ready",
         )
         .to(
           "[data-loader-horizon]",
@@ -1066,7 +1063,7 @@ export function SystemLoader({
             duration: timing.ready,
             ease: "power2.out",
           },
-          "<",
+          "ready",
         )
         .to(
           "[data-loader-monogram]",
@@ -1076,7 +1073,7 @@ export function SystemLoader({
             duration: timing.ready,
             ease: "power2.out",
           },
-          "<",
+          "ready",
         )
         .to(
           wireLetters,
@@ -1088,7 +1085,7 @@ export function SystemLoader({
             duration: timing.ready,
             ease: "power2.out",
           },
-          "<",
+          "ready",
         )
         .to(
           progressFillRef.current,
@@ -1096,11 +1093,8 @@ export function SystemLoader({
             backgroundColor: "#D7F75B",
             duration: timing.ready,
           },
-          "<",
+          "ready",
         )
-        .add(() => {
-          revealHero();
-        }, "+=0.02")
         .to(
           "[data-loader-exit-line]",
           {
@@ -1108,7 +1102,7 @@ export function SystemLoader({
             duration: timing.exit * 0.3,
             ease: "power3.inOut",
           },
-          `+=${timing.handoff}`,
+          `ready+=${(readyDuration + timing.handoff).toFixed(3)}`,
         )
         .to(
           "[data-loader-frame]",
@@ -1135,16 +1129,16 @@ export function SystemLoader({
           {
             yPercent: -101,
             duration: timing.exit,
-            ease: "power4.inOut",
+            ease: "power3.inOut",
           },
-          ">-=0.02",
+          `<+=${(timing.exit * 0.12).toFixed(3)}`,
         )
         .to(
           "[data-loader-panel='bottom']",
           {
             yPercent: 101,
             duration: timing.exit,
-            ease: "power4.inOut",
+            ease: "power3.inOut",
           },
           "<",
         )
@@ -1316,7 +1310,6 @@ export function SystemLoader({
                 <span
                   key={cell}
                   className={styles.progressCell}
-                  style={{ "--cell-index": cell } as CSSProperties}
                 />
               ))}
             </div>
