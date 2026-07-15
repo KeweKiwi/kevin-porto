@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -23,140 +22,351 @@ export function SelectedWorkShowcase() {
 
   useGSAP(
     () => {
-      if (reducedMotion || window.innerWidth < 1024 || !pinRef.current) {
+      if (reducedMotion) {
         return;
       }
 
-      const cards = gsap.utils.toArray<HTMLElement>(".project-reel-card");
-      const stepCount = Math.max(projects.length - 1, 1);
+      const responsiveMotion = gsap.matchMedia();
 
-      const cardState = (offset: number) => {
-        if (offset === 0) {
-          return {
-            autoAlpha: 1,
-            filter: "blur(0px)",
-            rotateY: 0,
-            scale: 1,
-            xPercent: -50,
-            yPercent: -50,
-            zIndex: 5,
-          };
-        }
+      responsiveMotion.add("(max-width: 1279px)", () => {
+        const mobileCards = gsap.utils.toArray<HTMLElement>(".project-mobile-card");
 
-        if (offset === -1) {
-          return {
-            autoAlpha: 0.28,
-            filter: "blur(1.2px)",
-            rotateY: 9,
-            scale: 0.7,
-            xPercent: -92,
-            yPercent: -50,
-            zIndex: 2,
-          };
-        }
+        mobileCards.forEach((card) => {
+          const media = card.querySelector<HTMLElement>(".project-mobile-media");
+          const copy = card.querySelector<HTMLElement>(".project-mobile-copy");
 
-        if (offset === 1) {
-          return {
-            autoAlpha: 0.34,
-            filter: "blur(1.2px)",
-            rotateY: -9,
-            scale: 0.7,
-            xPercent: 24,
-            yPercent: -50,
-            zIndex: 2,
-          };
-        }
-
-        return {
-          autoAlpha: 0,
-          filter: "blur(2px)",
-          rotateY: offset < 0 ? 12 : -12,
-          scale: 0.54,
-          xPercent: offset < 0 ? -150 : 82,
-          yPercent: -50,
-          zIndex: 1,
-        };
-      };
-
-      gsap.set(".casefile-stage", { perspective: 1400 });
-      gsap.set(cards, {
-        transformOrigin: "center center",
-        transformPerspective: 1400,
-        transformStyle: "preserve-3d",
-      });
-      cards.forEach((card, index) => gsap.set(card, cardState(index)));
-      gsap.set(".project-reel-media", { y: 0 });
-      gsap.set(".project-reel-copy", { y: 0 });
-      gsap.set(".work-reel-beam", { autoAlpha: 0.42, xPercent: -180 });
-      gsap.set(".work-progress-line", { scaleY: 0, transformOrigin: "top center" });
-      gsap.set(".project-reel-frame-line", { scaleX: 0, transformOrigin: "left center" });
-      gsap.set(".project-reel-frame-drop", { scaleY: 0, transformOrigin: "top center" });
-
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          id: "selected-work-showcase",
-          trigger: sectionRef.current,
-          start: "top top",
-          end: () => `+=${window.innerHeight * stepCount * 1.25}`,
-          pin: pinRef.current,
-          scrub: 0.8,
-          onUpdate: (self) => {
-            const nextIndex = Math.min(
-              projects.length - 1,
-              Math.round(self.progress * (projects.length - 1)),
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: card,
+                start: "top 88%",
+                toggleActions: "play none none reverse",
+              },
+            })
+            .fromTo(
+              card,
+              { autoAlpha: 0, scale: 0.985, y: 48 },
+              { autoAlpha: 1, duration: 0.68, ease: "power3.out", scale: 1, y: 0 },
+            )
+            .fromTo(
+              media,
+              { scale: 1.055, y: 18 },
+              { duration: 0.78, ease: "power3.out", scale: 1, y: 0 },
+              "<",
+            )
+            .fromTo(
+              copy,
+              { autoAlpha: 0, y: 20 },
+              { autoAlpha: 1, duration: 0.48, ease: "power3.out", y: 0 },
+              "-=0.46",
             );
-
-            if (activeIndexRef.current !== nextIndex) {
-              activeIndexRef.current = nextIndex;
-              setActiveIndex(nextIndex);
-            }
-          },
-        },
+        });
       });
 
-      timeline
-        .to(".work-progress-line", { scaleY: 1, duration: stepCount, ease: "none" }, 0)
-        .to(".work-reel-beam", { xPercent: 520, duration: stepCount, ease: "none" }, 0)
-        .to(".project-reel-frame-line", { scaleX: 1, duration: 0.28, ease: "power3.out" }, 0)
-        .to(".project-reel-frame-drop", { scaleY: 1, duration: 0.28, ease: "power3.out" }, 0.04);
+      responsiveMotion.add("(min-width: 1280px)", () => {
+        if (!pinRef.current) {
+          return;
+        }
 
-      projects.slice(1).forEach((_, stepIndex) => {
-        const nextActiveIndex = stepIndex + 1;
+        const cards = gsap.utils.toArray<HTMLElement>(".project-reel-card");
+        const indexLayers = gsap.utils.toArray<HTMLElement>(".work-stage-index-layer");
+        const transitionScans = gsap.utils.toArray<HTMLElement>(".work-transition-scan");
+        const stepCount = Math.max(projects.length - 1, 1);
 
-        cards.forEach((card, cardIndex) => {
-          timeline.to(
+        const cardState = (offset: number) => {
+          if (offset === 0) {
+            return {
+              autoAlpha: 1,
+              rotateX: 0,
+              rotateY: 0,
+              scale: 1,
+              xPercent: -50,
+              yPercent: -50,
+              z: 0,
+              zIndex: 5,
+            };
+          }
+
+          if (offset === -1) {
+            return {
+              autoAlpha: 0.16,
+              rotateX: 1.2,
+              rotateY: 8,
+              scale: 0.76,
+              xPercent: -114,
+              yPercent: -50,
+              z: -180,
+              zIndex: 2,
+            };
+          }
+
+          if (offset === 1) {
+            return {
+              autoAlpha: 0.3,
+              rotateX: -1,
+              rotateY: -8,
+              scale: 0.76,
+              xPercent: 16,
+              yPercent: -50,
+              z: -150,
+              zIndex: 2,
+            };
+          }
+
+          return {
+            autoAlpha: 0,
+            rotateX: offset < 0 ? 2 : -2,
+            rotateY: offset < 0 ? 11 : -11,
+            scale: 0.62,
+            xPercent: offset < 0 ? -154 : 76,
+            yPercent: -50,
+            z: -260,
+            zIndex: 1,
+          };
+        };
+
+        gsap.set(".casefile-stage", { perspective: 1800 });
+        gsap.set(cards, {
+          force3D: true,
+          transformOrigin: "center center",
+          transformPerspective: 1800,
+          transformStyle: "preserve-3d",
+        });
+        gsap.set(".work-stage-field", {
+          scale: 1.04,
+          transformOrigin: "center center",
+        });
+        gsap.set(".work-stage-reticle", {
+          autoAlpha: 0.34,
+          rotation: 0,
+          scale: 0.92,
+        });
+        gsap.set(".work-progress-line", {
+          scaleY: 0,
+          transformOrigin: "top center",
+        });
+        gsap.set(".project-reel-frame-line", {
+          scaleX: 0,
+          transformOrigin: "left center",
+        });
+        gsap.set(".project-reel-frame-drop", {
+          scaleY: 0,
+          transformOrigin: "top center",
+        });
+        gsap.set(transitionScans, { autoAlpha: 0, xPercent: -170 });
+        gsap.set(indexLayers, { autoAlpha: 0, y: 12 });
+        gsap.set(indexLayers[0], { autoAlpha: 1, y: 0 });
+
+        cards.forEach((card, index) => {
+          const media = card.querySelector<HTMLElement>(".project-reel-media-inner");
+          const copyItems = gsap.utils.toArray<HTMLElement>(
+            ".project-reel-copy-item",
             card,
-            {
-              ...cardState(cardIndex - nextActiveIndex),
-              duration: 1,
-              ease: "power3.inOut",
-            },
-            stepIndex,
           );
+
+          gsap.set(card, cardState(index));
+          gsap.set(media, {
+            force3D: true,
+            scale: index === 0 ? 1 : 0.955,
+            xPercent: index === 0 ? 0 : 7,
+          });
+          gsap.set(copyItems, {
+            autoAlpha: index === 0 ? 1 : 0,
+            y: index === 0 ? 0 : 22,
+          });
         });
 
-        const activeCard = cards[nextActiveIndex];
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            id: "selected-work-showcase",
+            anticipatePin: 1,
+            trigger: sectionRef.current,
+            start: "top top",
+            end: () => `+=${window.innerHeight * stepCount * 1.35}`,
+            invalidateOnRefresh: true,
+            pin: pinRef.current,
+            scrub: 0.9,
+            snap: {
+              delay: 0.08,
+              duration: { min: 0.18, max: 0.42 },
+              ease: "power2.inOut",
+              snapTo: 1 / stepCount,
+            },
+            onUpdate: (self) => {
+              const nextIndex = Math.min(
+                projects.length - 1,
+                Math.round(self.progress * (projects.length - 1)),
+              );
+
+              if (activeIndexRef.current !== nextIndex) {
+                activeIndexRef.current = nextIndex;
+                setActiveIndex(nextIndex);
+              }
+            },
+          },
+        });
 
         timeline
-          .fromTo(
-            activeCard.querySelector(".project-reel-media"),
-            { y: 28 },
-            { y: 0, duration: 0.55, ease: "power3.out" },
-            stepIndex + 0.48,
+          .to(
+            ".work-progress-line",
+            { duration: stepCount, ease: "none", scaleY: 1 },
+            0,
           )
-          .fromTo(
-            activeCard.querySelector(".project-reel-copy"),
-            { y: 22 },
-            { y: 0, duration: 0.48, ease: "power3.out" },
-            stepIndex + 0.55,
+          .to(
+            ".work-stage-field",
+            {
+              duration: stepCount,
+              ease: "none",
+              scale: 1.085,
+              xPercent: -2.4,
+              yPercent: 1.2,
+            },
+            0,
+          )
+          .to(
+            ".work-stage-reticle",
+            {
+              autoAlpha: 0.52,
+              duration: stepCount,
+              ease: "none",
+              rotation: 90,
+              scale: 1.08,
+            },
+            0,
+          )
+          .to(
+            ".project-reel-frame-line",
+            { duration: 0.28, ease: "power3.out", scaleX: 1 },
+            0,
+          )
+          .to(
+            ".project-reel-frame-drop",
+            { duration: 0.28, ease: "power3.out", scaleY: 1 },
+            0.04,
           );
+
+        projects.slice(1).forEach((_, stepIndex) => {
+          const nextActiveIndex = stepIndex + 1;
+          const outgoingCard = cards[nextActiveIndex - 1];
+          const activeCard = cards[nextActiveIndex];
+          const outgoingMedia = outgoingCard.querySelector<HTMLElement>(
+            ".project-reel-media-inner",
+          );
+          const activeMedia = activeCard.querySelector<HTMLElement>(
+            ".project-reel-media-inner",
+          );
+          const outgoingCopy = gsap.utils.toArray<HTMLElement>(
+            ".project-reel-copy-item",
+            outgoingCard,
+          );
+          const activeCopy = gsap.utils.toArray<HTMLElement>(
+            ".project-reel-copy-item",
+            activeCard,
+          );
+          const transitionScan = transitionScans[stepIndex];
+
+          cards.forEach((card, cardIndex) => {
+            timeline.to(
+              card,
+              {
+                ...cardState(cardIndex - nextActiveIndex),
+                duration: 0.9,
+                ease: "power4.inOut",
+              },
+              stepIndex + 0.05,
+            );
+          });
+
+          timeline
+            .to(
+              outgoingMedia,
+              {
+                duration: 0.42,
+                ease: "power3.in",
+                scale: 1.045,
+                xPercent: -7,
+              },
+              stepIndex + 0.04,
+            )
+            .to(
+              outgoingCopy,
+              {
+                autoAlpha: 0,
+                duration: 0.24,
+                ease: "power2.in",
+                stagger: 0.016,
+                y: -14,
+              },
+              stepIndex + 0.04,
+            )
+            .to(
+              activeMedia,
+              {
+                duration: 0.62,
+                ease: "power4.out",
+                scale: 1,
+                xPercent: 0,
+              },
+              stepIndex + 0.3,
+            )
+            .to(
+              activeCopy,
+              {
+                autoAlpha: 1,
+                duration: 0.42,
+                ease: "power3.out",
+                stagger: 0.04,
+                y: 0,
+              },
+              stepIndex + 0.43,
+            )
+            .to(
+              indexLayers[nextActiveIndex - 1],
+              {
+                autoAlpha: 0,
+                duration: 0.2,
+                ease: "power2.in",
+                y: -12,
+              },
+              stepIndex + 0.24,
+            )
+            .to(
+              indexLayers[nextActiveIndex],
+              {
+                autoAlpha: 1,
+                duration: 0.3,
+                ease: "power3.out",
+                y: 0,
+              },
+              stepIndex + 0.42,
+            )
+            .fromTo(
+              transitionScan,
+              { autoAlpha: 0, xPercent: -170 },
+              {
+                autoAlpha: 0.82,
+                duration: 0.66,
+                ease: "power2.inOut",
+                immediateRender: false,
+                xPercent: 470,
+              },
+              stepIndex + 0.08,
+            )
+            .to(
+              transitionScan,
+              { autoAlpha: 0, duration: 0.14, ease: "power2.out" },
+              stepIndex + 0.7,
+            );
+        });
       });
+
+      return () => responsiveMotion.revert();
     },
     { scope: sectionRef, dependencies: [reducedMotion] },
   );
 
   function selectProject(index: number) {
-    if (reducedMotion || window.innerWidth < 1024) {
+    if (reducedMotion || window.innerWidth < 1280) {
       activeIndexRef.current = index;
       setActiveIndex(index);
       return;
@@ -174,7 +384,7 @@ export function SelectedWorkShowcase() {
 
     window.scrollTo({
       top: trigger.start + (trigger.end - trigger.start) * progress,
-      behavior: "auto",
+      behavior: "smooth",
     });
   }
 
@@ -229,12 +439,30 @@ export function SelectedWorkShowcase() {
           <div className="casefile-stage relative min-h-[640px] overflow-hidden border border-graphite-strong bg-graphite-base">
             <div
               aria-hidden="true"
-              className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(215,247,91,0.10),transparent_28%),linear-gradient(90deg,rgba(215,247,91,0.08),transparent_28%,transparent_70%,rgba(243,240,232,0.05))]"
+              className="work-stage-field absolute -inset-[6%] bg-[radial-gradient(circle_at_50%_50%,rgba(215,247,91,0.10),transparent_28%),linear-gradient(90deg,rgba(215,247,91,0.08),transparent_28%,transparent_70%,rgba(243,240,232,0.05))]"
             />
-            <span
+            <span aria-hidden="true" className="work-stage-reticle pointer-events-none absolute inset-0 z-[1] m-auto h-56 w-56 rounded-full border border-signal/15" />
+            <div
               aria-hidden="true"
-              className="work-reel-beam pointer-events-none absolute inset-y-0 left-0 z-30 w-[18%] bg-gradient-to-r from-transparent via-signal/20 to-transparent mix-blend-screen"
-            />
+              className="absolute right-[9%] top-3 z-20 flex items-center gap-2 font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted"
+            >
+              <span>Casefile</span>
+              <span className="relative block h-3 w-5 overflow-hidden text-signal">
+                {projectVisuals.map((visual) => (
+                  <span key={visual.slug} className="work-stage-index-layer absolute inset-0">
+                    {visual.index}
+                  </span>
+                ))}
+              </span>
+              <span>/ {String(projects.length).padStart(2, "0")}</span>
+            </div>
+            {projects.slice(1).map((project) => (
+              <span
+                key={`scan-${project.slug}`}
+                aria-hidden="true"
+                className="work-transition-scan pointer-events-none absolute inset-y-0 left-0 z-30 w-[18%] bg-gradient-to-r from-transparent via-signal/25 to-transparent"
+              />
+            ))}
             <span
               aria-hidden="true"
               className="project-reel-frame-line pointer-events-none absolute left-[9%] top-8 z-20 h-px w-[82%] bg-signal/45"
@@ -253,35 +481,44 @@ export function SelectedWorkShowcase() {
                 <article
                   key={project.slug}
                   aria-hidden={activeIndex !== index}
-                  className="project-reel-card absolute left-1/2 top-1/2 h-[78%] w-[82%] overflow-hidden border border-graphite-strong bg-graphite-page/96 shadow-signal-sm will-change-transform"
+                  className={`project-reel-card absolute left-1/2 top-1/2 h-[80%] w-[84%] overflow-hidden border border-graphite-strong bg-graphite-page/96 shadow-signal-sm will-change-transform ${
+                    reducedMotion
+                      ? `-translate-x-1/2 -translate-y-1/2 ${
+                          activeIndex !== index ? "invisible opacity-0" : ""
+                        }`
+                      : "opacity-0"
+                  }`}
                 >
                   <div
                     aria-hidden="true"
                     className="absolute inset-0 bg-[linear-gradient(90deg,rgba(215,247,91,0.05),transparent_24%,transparent_72%,rgba(243,240,232,0.04))]"
                   />
+                  <span aria-hidden="true" className="absolute inset-y-0 left-0 z-10 w-px bg-signal/55" />
                   <div className="relative grid h-full grid-cols-[0.96fr_1fr] gap-6 p-6">
                     <div className="project-reel-media min-w-0 self-center will-change-transform">
-                      <ProjectMedia
-                        project={project}
-                        variant="hero"
-                        className="min-h-[400px] w-full max-w-full rounded-[6px] shadow-none"
-                      />
+                      <div className="project-reel-media-inner will-change-transform">
+                        <ProjectMedia
+                          project={project}
+                          variant="hero"
+                          className="min-h-[400px] w-full max-w-full rounded-[6px] shadow-none"
+                        />
+                      </div>
                     </div>
                     <div className="project-reel-copy flex min-w-0 flex-col justify-between py-3 will-change-transform">
                       <div>
-                        <p className="technical-label mb-5 text-signal">{visual.technicalSignal}</p>
-                        <h3 className="text-5xl font-semibold leading-none text-ink-primary wide:text-6xl">{project.name}</h3>
-                        <p className="mt-6 max-w-lg text-lg leading-[1.55] text-ink-secondary">{visual.statement}</p>
+                        <p className="project-reel-copy-item technical-label mb-5 text-signal">{visual.technicalSignal}</p>
+                        <h3 className="project-reel-copy-item text-5xl font-semibold leading-none text-ink-primary wide:text-6xl">{project.name}</h3>
+                        <p className="project-reel-copy-item mt-6 max-w-lg text-lg leading-[1.55] text-ink-secondary">{visual.statement}</p>
                       </div>
                       <div className="grid gap-5">
                         <div className="h-px bg-graphite-border" />
-                        <div className="grid grid-cols-2 gap-4 border-b border-graphite-border pb-5">
+                        <div className="project-reel-copy-item grid grid-cols-2 gap-4 border-b border-graphite-border pb-5">
                           <Meta label="Role" value={project.role} />
                           <Meta label="Status" value={visual.shortStatus} />
                         </div>
-                        <p className="text-sm leading-6 text-ink-secondary">{visual.proof}</p>
+                        <p className="project-reel-copy-item text-sm leading-6 text-ink-secondary">{visual.proof}</p>
                         <Link
-                          className="group inline-flex w-fit items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition-transform hover:-translate-y-0.5 active:translate-y-0"
+                          className="project-reel-copy-item group inline-flex w-fit items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition-transform hover:-translate-y-0.5 active:translate-y-0"
                           href={`/projects/${project.slug}`}
                           tabIndex={activeIndex === index ? 0 : -1}
                         >
@@ -301,14 +538,15 @@ export function SelectedWorkShowcase() {
           {projects.map((project, index) => {
             const visual = projectVisuals[index];
             return (
-              <motion.article
+              <article
                 key={project.slug}
-                className="overflow-hidden rounded-[10px] border border-graphite-strong bg-graphite-base shadow-signal-sm"
-                whileTap={{ scale: 0.985 }}
+                className="project-mobile-card overflow-hidden rounded-[8px] border border-graphite-strong bg-graphite-base shadow-signal-sm"
               >
                 <Link className="block p-4" href={`/projects/${project.slug}`}>
-                  <ProjectMedia project={project} variant="compact" className="shadow-none" />
-                  <div className="mt-6">
+                  <div className="project-mobile-media overflow-hidden rounded-[7px]">
+                    <ProjectMedia project={project} variant="compact" className="shadow-none" />
+                  </div>
+                  <div className="project-mobile-copy mt-6">
                     <p className="technical-label mb-3 text-signal">{visual.index} / {project.platform}</p>
                     <h3 className="text-4xl font-semibold leading-none text-ink-primary">{project.name}</h3>
                     <p className="mt-4 text-sm leading-6 text-ink-secondary">{visual.statement}</p>
@@ -323,7 +561,7 @@ export function SelectedWorkShowcase() {
                     </div>
                   </div>
                 </Link>
-              </motion.article>
+              </article>
             );
           })}
         </div>
