@@ -11,6 +11,7 @@ import {
   type SkillProject,
   type TechnicalSkill,
 } from "@/data/skills";
+import { skillsSectionContent } from "@/data/site-content";
 
 const projectMeta: Record<SkillProject, { code: string; href: string }> = {
   QuackFight: { code: "QF", href: "/projects/quackfight" },
@@ -28,17 +29,17 @@ const groupChrome: Record<
 > = {
   native: {
     axis: "IOS",
-    label: "native interaction layer",
+    label: "native engineering",
     protocol: "Motion / Persistence / Multiplayer",
   },
   web: {
     axis: "WEB",
-    label: "production delivery layer",
+    label: "full-stack delivery",
     protocol: "Inventory / Admin / Deployment",
   },
   delivery: {
     axis: "OPS",
-    label: "engineering ownership layer",
+    label: "engineering practice",
     protocol: "Review / Integration / Maintenance",
   },
 };
@@ -86,17 +87,17 @@ export function TechnicalSkillsSystem() {
       <div aria-hidden="true" className="absolute bottom-[16%] right-0 h-px w-[42%] bg-ink-primary/12" />
 
       <div className="container-grid relative z-[1]">
-        <div className="mb-12 grid gap-6 desktop:grid-cols-12 desktop:items-end">
-          <div className="desktop:col-span-7">
-            <p className="technical-label mb-5 text-ink-muted">Technical skills</p>
-            <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl desktop:text-6xl wide:text-7xl">
-              Project-backed skill signals.
+        <div className="mb-10 grid gap-7 tablet:grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] tablet:items-end desktop:gap-12">
+          <div>
+            <p className="technical-label mb-5 text-ink-muted">{skillsSectionContent.label}</p>
+            <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-5xl desktop:text-6xl wide:text-7xl">
+              {skillsSectionContent.title}
             </h2>
           </div>
 
-          <div className="desktop:col-span-4 desktop:col-start-9">
+          <div>
             <p className="max-w-xl text-base leading-[1.55] text-ink-secondary">
-              Each stack item is tied to a project, role, or shipped workflow so the signal stays grounded in work Kevin has handled.
+              {skillsSectionContent.summary}
             </p>
 
             <div className="mt-6 grid grid-cols-3 gap-px border border-graphite-border bg-graphite-border">
@@ -116,11 +117,11 @@ export function TechnicalSkillsSystem() {
           <div aria-hidden="true" className="absolute left-0 top-0 h-12 w-12 border-l border-t border-signal/45" />
           <div aria-hidden="true" className="absolute bottom-0 right-0 h-12 w-12 border-b border-r border-ink-primary/45" />
 
-          <div className="relative z-[1] grid gap-px bg-graphite-strong/75 desktop:grid-cols-[280px_minmax(0,1fr)_420px]">
-            <aside className="bg-graphite-page/95 p-4 tablet:p-5">
-              <div className="mb-5 flex items-center justify-between gap-4 border-b border-graphite-border pb-4">
+          <div className="relative z-[1] grid gap-px bg-graphite-strong/75 min-[860px]:grid-cols-[minmax(0,1.18fr)_minmax(310px,0.82fr)] desktop:grid-cols-[minmax(0,1fr)_400px]">
+            <aside className="min-w-0 bg-graphite-page/95 p-4 tablet:p-5 min-[860px]:col-span-2">
+              <div className="mb-4 flex items-center justify-between gap-4 border-b border-graphite-border pb-4">
                 <div>
-                  <p className="technical-label text-ink-muted">Signal axis</p>
+                  <p className="technical-label text-ink-muted">{skillsSectionContent.groupLabel}</p>
                   <p className="mt-2 font-mono text-sm uppercase tracking-[0.08em] text-ink-primary">
                     {groupChrome[activeGroup.id].axis} / {String(activeSkillIndex + 1).padStart(2, "0")}
                   </p>
@@ -128,7 +129,7 @@ export function TechnicalSkillsSystem() {
                 <Radio aria-hidden="true" className="text-signal" size={18} strokeWidth={1.6} />
               </div>
 
-              <div className="grid gap-2">
+              <div className="-mx-4 flex min-w-0 max-w-[calc(100%+2rem)] snap-x gap-2 overflow-x-auto px-4 pb-1 tablet:mx-0 tablet:grid tablet:max-w-full tablet:grid-cols-3 tablet:overflow-visible tablet:px-0">
                 {skillGroups.map((group, index) => {
                   const isActive = activeGroup.id === group.id;
                   const chrome = groupChrome[group.id];
@@ -138,7 +139,7 @@ export function TechnicalSkillsSystem() {
                       key={group.id}
                       aria-pressed={isActive}
                       className={cn(
-                        "group relative overflow-hidden border p-4 text-left transition",
+                        "group relative min-h-[118px] min-w-[244px] snap-start overflow-hidden border p-4 text-left transition tablet:min-w-0",
                         isActive
                           ? "border-signal/65 bg-signal/[0.045] text-ink-primary"
                           : "border-graphite-border bg-graphite-base/72 text-ink-secondary hover:border-graphite-strong hover:bg-graphite-base",
@@ -153,7 +154,7 @@ export function TechnicalSkillsSystem() {
                           isActive ? "bg-signal" : "bg-graphite-strong group-hover:bg-ink-muted",
                         )}
                       />
-                      <span className="mb-4 flex items-center justify-between gap-4 pl-2">
+                      <span className="mb-3 flex items-center justify-between gap-4 pl-2">
                         <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
                           {String(index + 1).padStart(2, "0")} / {chrome.axis}
                         </span>
@@ -164,13 +165,10 @@ export function TechnicalSkillsSystem() {
                           )}
                         />
                       </span>
-                      <span className="block pl-2 text-xl font-semibold leading-none text-ink-primary">
+                      <span className="block pl-2 text-base font-semibold leading-tight text-ink-primary desktop:text-lg">
                         {group.title}
                       </span>
-                      <span className="mt-3 block pl-2 text-sm leading-6 text-ink-secondary">
-                        {group.summary}
-                      </span>
-                      <span className="mt-5 flex items-center justify-between gap-3 pl-2 font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted">
+                      <span className="mt-4 flex items-center justify-between gap-3 pl-2 font-mono text-[0.55rem] uppercase tracking-[0.08em] text-ink-muted">
                         <span>{group.skills.length} skills</span>
                         <span>{chrome.label}</span>
                       </span>
@@ -180,8 +178,8 @@ export function TechnicalSkillsSystem() {
               </div>
             </aside>
 
-            <div className="bg-graphite-base p-4 tablet:p-6 desktop:p-7">
-              <div className="mb-6 grid gap-5 border-b border-graphite-border pb-6 laptop:grid-cols-[1fr_auto] laptop:items-start">
+            <div className="min-w-0 bg-graphite-base p-4 tablet:p-5 desktop:p-7">
+              <div className="mb-5 grid gap-5 border-b border-graphite-border pb-5 desktop:grid-cols-[1fr_auto] desktop:items-start">
                 <div>
                   <div className="mb-4 flex flex-wrap items-center gap-2">
                     <span className="technical-label text-signal">{activeGroup.title}</span>
@@ -194,13 +192,13 @@ export function TechnicalSkillsSystem() {
                 </div>
 
                 <div className="grid min-w-[220px] grid-cols-3 gap-px border border-graphite-border bg-graphite-border">
-                  <SignalMetric icon={<Cpu size={15} />} label="Mapped" value={String(activeGroup.skills.length).padStart(2, "0")} />
-                  <SignalMetric icon={<Activity size={15} />} label="Owned" value={String(directOwnershipCount).padStart(2, "0")} />
-                  <SignalMetric icon={<Braces size={15} />} label="Refs" value={String(activeGroupProjects.length).padStart(2, "0")} />
+                  <SignalMetric icon={<Cpu size={15} />} label="Skills" value={String(activeGroup.skills.length).padStart(2, "0")} />
+                  <SignalMetric icon={<Activity size={15} />} label="Direct" value={String(directOwnershipCount).padStart(2, "0")} />
+                  <SignalMetric icon={<Braces size={15} />} label="Projects" value={String(activeGroupProjects.length).padStart(2, "0")} />
                 </div>
               </div>
 
-              <div className="grid gap-3 mobile:grid-cols-2 wide:grid-cols-3">
+              <div className="grid grid-cols-2 gap-2 desktop:grid-cols-3">
                 {activeGroup.skills.map((skill, index) => {
                   const isActive = activeSkill.name === skill.name;
 
@@ -209,7 +207,7 @@ export function TechnicalSkillsSystem() {
                       key={skill.name}
                       aria-pressed={isActive}
                       className={cn(
-                        "group relative min-h-[118px] overflow-hidden border p-4 text-left transition duration-200",
+                        "group relative min-h-[98px] overflow-hidden border p-3 text-left transition duration-200 tablet:p-4",
                         isActive
                           ? "border-signal/70 bg-graphite-page shadow-[0_0_0_1px_rgba(215,247,91,0.08),0_0_28px_rgba(215,247,91,0.055)]"
                           : "border-graphite-border bg-graphite-base/72 hover:border-graphite-strong hover:bg-graphite-page/80",
@@ -238,10 +236,10 @@ export function TechnicalSkillsSystem() {
                           {shortOwnership(skill.ownership)}
                         </span>
                       </span>
-                      <span className="mt-5 block text-lg font-semibold leading-tight text-ink-primary">
+                      <span className="mt-4 block text-base font-semibold leading-tight text-ink-primary desktop:text-lg">
                         {skill.name}
                       </span>
-                      <span className="mt-4 flex flex-wrap gap-1.5">
+                      <span className="mt-3 flex flex-wrap gap-1.5">
                         {skill.projects.map((project) => (
                           <span
                             key={project}
@@ -265,14 +263,14 @@ export function TechnicalSkillsSystem() {
             <motion.aside
               key={`${activeGroup.id}-${activeSkill.name}`}
               animate={{ opacity: 1, x: 0 }}
-              className="grid min-h-[520px] content-between bg-graphite-page p-5 tablet:p-7"
+              className="grid min-h-[460px] min-w-0 content-between bg-graphite-page p-5 tablet:p-6 desktop:p-7"
               initial={{ opacity: 0, x: 18 }}
               transition={{ duration: 0.26, ease: "easeOut" }}
             >
               <div>
                 <div className="mb-6 flex items-center justify-between gap-4">
                   <div>
-                    <p className="technical-label text-ink-muted">Evidence trace</p>
+                    <p className="technical-label text-ink-muted">{skillsSectionContent.evidenceLabel}</p>
                     <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.08em] text-signal">
                       {groupChrome[activeGroup.id].axis}-{String(activeSkillIndex + 1).padStart(2, "0")} / active
                     </p>
@@ -282,20 +280,20 @@ export function TechnicalSkillsSystem() {
 
                 <div className="relative border-y border-graphite-border py-7">
                   <span aria-hidden="true" className="absolute left-0 top-0 h-px w-20 bg-signal" />
-                  <h3 className="text-4xl font-semibold leading-none text-ink-primary tablet:text-5xl">
+                  <h3 className="text-3xl font-semibold leading-none text-ink-primary tablet:text-4xl">
                     {activeSkill.name}
                   </h3>
                   <p className="mt-5 text-base leading-[1.6] text-ink-secondary">{activeSkill.evidence}</p>
                 </div>
 
                 <div className="mt-6 grid gap-px bg-graphite-border">
-                  <TraceRow label="Ownership" value={activeSkill.ownership} />
-                  <TraceRow label="Applied in" value={activeSkill.projects.join(" / ")} />
-                  <TraceRow label="Signal group" value={activeGroup.title} />
+                  <TraceRow label={skillsSectionContent.ownershipLabel} value={activeSkill.ownership} />
+                  <TraceRow label={skillsSectionContent.appliedLabel} value={activeSkill.projects.join(" / ")} />
+                  <TraceRow label={skillsSectionContent.categoryLabel} value={activeGroup.title} />
                 </div>
 
                 <div className="mt-7">
-                  <p className="technical-label mb-4 text-ink-muted">Project route</p>
+                  <p className="technical-label mb-4 text-ink-muted">{skillsSectionContent.relatedProjectsLabel}</p>
                   <div className="grid gap-2">
                     {activeSkill.projects.map((project) => (
                       <Link
@@ -318,9 +316,9 @@ export function TechnicalSkillsSystem() {
 
               <div className="mt-10">
                 <div className="mb-4 flex items-center justify-between gap-4">
-                  <span className="technical-label text-signal">Trace intensity</span>
+                  <span className="technical-label text-signal">{skillsSectionContent.coverageLabel}</span>
                   <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
-                    {String(activeSkill.projects.length).padStart(2, "0")} project ref
+                    {String(activeSkill.projects.length).padStart(2, "0")} project
                   </span>
                 </div>
                 <div className="grid grid-cols-8 gap-1">

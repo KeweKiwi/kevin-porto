@@ -9,16 +9,16 @@ export type ProjectVisual = {
 };
 
 export const projectArchiveContent = {
-  label: "Project archive",
-  title: "All project signals, ready to scan.",
+  label: "Project index",
+  title: "Compare role, scope, and technical decisions.",
   summary:
-    "The featured cases above stay cinematic. This archive rail keeps every project in the portfolio quick to browse as the body of work expands.",
-  recordLabel: "Live index",
-  recordNoun: "records",
-  sequenceLabel: "Signal sequence",
-  evidenceLabel: "Evidence signal",
-  markerLabel: "Markers",
-  openLabel: "Open case file",
+    "A concise comparison of each project's platform, contribution, delivery status, and implementation evidence.",
+  recordLabel: "Portfolio index",
+  recordNoun: "projects",
+  sequenceLabel: "Project sequence",
+  evidenceLabel: "Implementation evidence",
+  markerLabel: "Key technologies",
+  openLabel: "View project details",
   previousLabel: "Previous project",
   nextLabel: "Next project",
   metaLabels: {
@@ -35,33 +35,33 @@ export const projectVisuals: ProjectVisual[] = [
     index: "01",
     shortStatus: "Playable prototype / External TestFlight",
     statement:
-      "A motion-and-voice artillery game where the iPhone becomes part of the controller.",
+      "A turn-based iOS artillery prototype where motion, voice, haptics, and multiplayer make the iPhone part of the controller.",
     technicalSignal: "Core Motion + AVFoundation + GameKit",
     proof:
-      "Tilt aiming, voice power, local pass-and-play, and Game Center multiplayer integrated into one state-driven game flow.",
-    markers: ["Tilt aim", "Voice power", "GameKit", "Tech Lead"],
+      "As Tech Lead, Kevin owned tilt aiming, voice-based throw power, haptics, GameKit message routing, and multiplayer state-flow debugging.",
+    markers: ["Core Motion", "AVFoundation", "GameKit", "Tech Lead"],
   },
   {
     slug: "rizki-mobil",
     index: "02",
     shortStatus: "Live production system",
     statement:
-      "A multi-branch used-car dealership platform built from requirements through deployment.",
+      "A live multi-branch dealership platform independently delivered from requirements and database design through deployment.",
     technicalSignal: "Laravel + Filament + MySQL",
     proof:
-      "Public inventory discovery, admin operations, branch routing, image workflows, deployment, training, and maintenance.",
-    markers: ["Live site", "Admin panel", "Inventory", "Client delivery"],
+      "Kevin owned the public inventory experience, Filament administration, branch workflows, deployment, client training, and ongoing maintenance.",
+    markers: ["Laravel", "Filament", "MySQL", "Live production"],
   },
   {
     slug: "squeaky",
     index: "03",
     shortStatus: "Functional prototype",
     statement:
-      "A native finance prototype built around faster transaction entry and shared financial state.",
+      "A native finance prototype built around reliable transaction data and faster entry through App Shortcuts.",
     technicalSignal: "SwiftData + App Intents + MVVM",
     proof:
-      "Transaction CRUD, persistence, App Shortcuts, and cross-feature dashboard integration led through a team workflow.",
-    markers: ["SwiftData", "Shortcuts", "CRUD", "Tech Lead"],
+      "As Tech Lead, Kevin owned transaction CRUD, SwiftData persistence, App Intents, and integration of transaction data across team-owned features.",
+    markers: ["SwiftData", "App Intents", "MVVM", "Tech Lead"],
   },
 ];
 

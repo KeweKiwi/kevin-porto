@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import { profile } from "@/data/profile";
+import { contactContent } from "@/data/site-content";
 
 export function ContactClosing() {
   const hasEmail = Boolean(profile.email);
@@ -11,14 +12,14 @@ export function ContactClosing() {
       <div className="absolute left-[12%] top-0 hidden h-full w-px bg-graphite-border desktop:block" />
       <div className="container-grid grid gap-10 desktop:grid-cols-12">
         <div className="desktop:col-span-8">
-          <p className="technical-label mb-5 text-ink-muted">Next step</p>
+          <p className="technical-label mb-5 text-ink-muted">{contactContent.label}</p>
           <h2 className="max-w-5xl text-5xl font-semibold leading-[0.95] text-ink-primary tablet:text-7xl desktop:text-8xl">
-            Start with the work. The engineering story is in the case studies.
+            {contactContent.title}
           </h2>
         </div>
         <div className="grid gap-5 desktop:col-span-4 desktop:self-end">
           <p className="text-base leading-[1.55] text-ink-secondary">
-            {profile.shortName} is positioned for roles that value native Apple craft, production web delivery, and technical ownership.
+            {contactContent.summary}
           </p>
           <div className="flex flex-col gap-3">
             {hasEmail && profile.email ? (
@@ -26,7 +27,7 @@ export function ContactClosing() {
                 className="group inline-flex items-center justify-between rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page"
                 href={`mailto:${profile.email}`}
               >
-                Email Kevin
+                {contactContent.emailAction}
                 <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-1" size={16} />
               </a>
             ) : null}
@@ -35,15 +36,26 @@ export function ContactClosing() {
                 className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
                 href={profile.resumeUrl}
               >
-                View resume
+                {contactContent.resumeAction}
                 <ExternalLink aria-hidden="true" size={16} />
+              </a>
+            ) : null}
+            {profile.githubUrl ? (
+              <a
+                className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
+                href={profile.githubUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {contactContent.githubAction}
+                <Github aria-hidden="true" size={16} />
               </a>
             ) : null}
             <Link
               className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
               href="/projects/quackfight"
             >
-              Open QuackFight case study
+              {contactContent.nativeCaseAction}
               <ArrowRight aria-hidden="true" size={16} />
             </Link>
             <a
@@ -52,7 +64,7 @@ export function ContactClosing() {
               rel="noreferrer"
               target="_blank"
             >
-              View live web system
+              {contactContent.liveWorkAction}
               <ExternalLink aria-hidden="true" size={16} />
             </a>
           </div>

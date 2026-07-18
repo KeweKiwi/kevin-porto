@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { profile } from "@/data/profile";
+import { aboutContent } from "@/data/site-content";
 import { prefersReducedMotionQuery } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
@@ -15,20 +16,7 @@ const meta = [
   { icon: MapPin, label: "Location", value: "Indonesia" },
   { icon: GraduationCap, label: "Education", value: profile.education },
   { icon: Smartphone, label: "Academy", value: profile.academy },
-  { icon: Code2, label: "Focus", value: "Native Apple + Production Web" },
-] as const;
-
-const capabilityLabels = [
-  { label: "Native Apple", proof: "QuackFight / Squeaky" },
-  { label: "Production Web", proof: "Rizki Mobil" },
-  { label: "Technical Leadership", proof: "QuackFight / Squeaky" },
-  { label: "Client Delivery", proof: "Rizki Mobil" },
-] as const;
-
-const profileSignals = [
-  { label: "Build", detail: "Hands-on engineering" },
-  { label: "Lead", detail: "Technical integration" },
-  { label: "Ship", detail: "Production delivery" },
+  { icon: Code2, label: "Focus", value: aboutContent.focusLabel },
 ] as const;
 
 const calibrationBars = [72, 38, 88, 54, 64] as const;
@@ -101,7 +89,7 @@ export function PersonalIntroduction() {
             <span className="absolute bottom-5 left-5 h-7 w-7 border-b border-l border-ink-primary/35" />
             <span className="absolute bottom-5 right-5 h-7 w-7 border-b border-r border-signal/70" />
             <div className="absolute inset-x-7 bottom-7">
-              <p className="technical-label mb-4 text-signal">Profile signal</p>
+              <p className="technical-label mb-4 text-signal">{aboutContent.frameLabel}</p>
               <div className="text-[clamp(5.4rem,18vw,8.5rem)] font-semibold leading-none text-ink-primary">
                 KWF
               </div>
@@ -109,7 +97,7 @@ export function PersonalIntroduction() {
                 Kevin William Faith
               </p>
               <p className="mt-2 max-w-xs text-sm leading-6 text-ink-secondary">
-                Native Apple developer with production web delivery experience.
+                {aboutContent.frameSummary}
               </p>
             </div>
           </div>
@@ -131,21 +119,18 @@ export function PersonalIntroduction() {
         </div>
 
         <div className="desktop:col-span-6 desktop:col-start-7" data-intro-reveal>
-          <p className="technical-label mb-5 text-ink-muted">01 / About</p>
+          <p className="technical-label mb-5 text-ink-muted">{aboutContent.sectionLabel}</p>
           <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl desktop:text-7xl">
-            Native Apple Developer with Production Web Delivery.
+            {aboutContent.title}
           </h2>
           <div className="mt-8 grid gap-5 text-base leading-[1.7] text-ink-secondary tablet:text-lg">
-            <p>
-              I&apos;m Kevin William Faith, a developer focused on building native Apple experiences and production web systems.
-            </p>
-            <p>
-              I enjoy turning unclear requirements into working software, whether that means leading a multiplayer iOS project or delivering a live operational platform for a client.
-            </p>
+            {aboutContent.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
 
           <div className="mt-10 grid gap-3 tablet:grid-cols-2">
-            {capabilityLabels.map((item) => (
+            {aboutContent.capabilities.map((item) => (
               <div key={item.label} className="casefile-mini-card border border-graphite-strong bg-graphite-base p-4">
                 <div className="mb-4 flex items-center justify-between gap-4">
                   <p className="font-mono text-sm font-semibold uppercase tracking-[0.08em] text-ink-primary">
@@ -159,7 +144,7 @@ export function PersonalIntroduction() {
           </div>
 
           <div className="mt-10 grid gap-px overflow-hidden border border-graphite-strong bg-graphite-strong tablet:grid-cols-3">
-            {profileSignals.map((signal) => (
+            {aboutContent.workingRange.map((signal) => (
               <div key={signal.label} className="bg-graphite-base p-5">
                 <div className="mb-5 flex items-center justify-between gap-4">
                   <p className="text-3xl font-semibold leading-none text-ink-primary">{signal.label}</p>

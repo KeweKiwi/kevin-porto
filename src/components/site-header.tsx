@@ -70,7 +70,7 @@ export function SiteHeader() {
             className="group inline-flex min-h-10 items-center gap-2 rounded-[4px] bg-signal px-4 text-sm font-medium text-graphite-page transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
             href="/#contact"
           >
-            Let&apos;s Talk
+            Contact
             <ArrowUpRight aria-hidden="true" className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" size={15} />
           </Link>
         </div>
@@ -112,7 +112,7 @@ export function SiteHeader() {
               href="/#contact"
               onClick={() => setMenuOpen(false)}
             >
-              Let&apos;s Talk
+              Contact
               <ArrowUpRight aria-hidden="true" size={15} />
             </Link>
           </div>

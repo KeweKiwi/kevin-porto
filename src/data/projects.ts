@@ -27,7 +27,7 @@ export type Project = {
     href: string;
     isExternal?: boolean;
   };
-  repoUrl: string;
+  repoUrl: string | null;
   productSummary: string;
   caseSummary: string;
   caseHighlights: ProjectCaseHighlight[];
@@ -59,36 +59,36 @@ export const projects: Project[] = [
     status: "Completed playable prototype; External TestFlight; not released on the App Store",
     role: "Tech Lead",
     preview:
-      "A casual competitive artillery game where tilt controls, voice-powered throw power, local pass-and-play, and Game Center multiplayer turn the iPhone into part of the controller.",
+      "A turn-based iOS artillery prototype using Core Motion for aiming, AVFoundation for throw power, and GameKit for online multiplayer.",
     evidenceSignal:
-      "Unusual native interaction, multiplayer engineering, state-machine gameplay architecture, technical leadership, and external testing evidence.",
+      "Tech Lead ownership across sensor interactions, haptics, GameKit message routing, feature integration, and multiplayer state-flow debugging.",
     primaryCta: {
       label: "View case study",
       href: "/projects/quackfight",
     },
     repoUrl: "https://github.com/Quack-Fight/QuackFight",
     productSummary:
-      "QuackFight was designed to feel interactive, immersive, humorous when played together, challenging, and different from ordinary touch controls.",
+      "QuackFight explores how native iPhone sensors and system frameworks can make the device part of a multiplayer game controller.",
     caseSummary:
-      "A playable iOS artillery prototype centered on motion aiming, voice-controlled throw power, haptics, and multiplayer turn resolution.",
+      "A turn-based iOS game that combines motion input, voice input, haptics, and local or Game Center multiplayer in one state-driven flow.",
     caseHighlights: [
       {
-        label: "Contribution",
-        value: "Tech Lead for architecture decisions, code review, feature integration, and multiplayer debugging.",
+        label: "Role",
+        value: "Tech Lead responsible for architecture decisions, code review, feature integration, and multiplayer debugging.",
       },
       {
-        label: "Implementation",
-        value: "Tilt aiming, voice-powered throw power, haptics, local pass-and-play, and online state routing.",
+        label: "Direct contribution",
+        value: "Built tilt aiming, voice-based throw power, haptics, local pass-and-play, and GameKit message routing.",
       },
       {
-        label: "Evidence",
-        value: "Playable prototype, External TestFlight build, and booth testing with approximately 100 exhibition visitors.",
+        label: "Outcome",
+        value: "The team delivered a playable External TestFlight build; approximately 100 exhibition visitors played the booth version.",
       },
     ],
     caseFocus: [
-      "Motion and voice controls made the iPhone feel like part of the controller.",
-      "A state-machine turn flow kept aiming, power, throw resolution, and handoff understandable.",
-      "GameKit packet routing separated live aim/power updates from reliable locked-turn events.",
+      "Modeled the turn lifecycle as explicit aim, power, throw-resolution, and handoff states to keep local and online play aligned.",
+      "Separated low-latency live aim and power updates from reliable locked-turn events in GameKit message routing.",
+      "Integrated Core Motion, AVFoundation, and haptics into one interaction model while accounting for sensor sensitivity and background noise.",
     ],
     team: [
       "Justin - Project Manager",
@@ -195,37 +195,37 @@ export const projects: Project[] = [
     status: "Completed and live; ongoing maintenance agreement",
     role: "Independent full-stack developer",
     preview:
-      "A live multi-branch dealership platform covering public inventory discovery, administration, operational reporting, deployment, training, and ongoing maintenance.",
+      "An independently delivered Laravel platform for public inventory, dealership administration, branch workflows, and ongoing production maintenance.",
     evidenceSignal:
-      "Independent production delivery, Laravel and Filament system ownership, database design, client handover, and live operations.",
+      "End-to-end ownership from requirements and relational database design through deployment, client training, and maintenance.",
     primaryCta: {
       label: "View live website",
       href: "https://rizkimobil.com",
       isExternal: true,
     },
-    repoUrl: "https://github.com/KeweKiwi/rizkimobil",
+    repoUrl: null,
     productSummary:
-      "The client moved from primarily displaying inventory through Instagram to a managed website with public browsing, WhatsApp conversion paths, and an administration workflow.",
+      "The platform gives the dealership a managed inventory system, public vehicle discovery, branch-specific contact paths, and an administration workflow.",
     caseSummary:
-      "A production dealership platform covering requirements, database design, public inventory, admin workflows, deployment, training, and maintenance.",
+      "A live dealership platform Kevin independently took from client requirements and database design through deployment, training, and maintenance.",
     caseHighlights: [
       {
-        label: "Contribution",
-        value: "Independent full-stack ownership from requirements through deployment, handover, and maintenance.",
+        label: "Role",
+        value: "Independent full-stack developer responsible for product definition, implementation, launch, and ongoing support.",
       },
       {
-        label: "Implementation",
-        value: "Public inventory discovery, vehicle detail pages, image workflows, admin operations, and branch WhatsApp routing.",
+        label: "System",
+        value: "Built public inventory discovery, vehicle details, image workflows, Filament administration, inquiries, and branch routing.",
       },
       {
-        label: "Evidence",
-        value: "Live production site used for client-managed inventory, dealership operations, and ongoing maintenance.",
+        label: "Outcome",
+        value: "Launched a live client-managed platform with stakeholder training and an ongoing maintenance agreement.",
       },
     ],
     caseFocus: [
-      "The project translated a dealership workflow into a manageable web system, not only a brochure site.",
-      "Inventory filtering uses conditional queries, AJAX updates, pagination, and shareable URL state.",
-      "Admin tools support client-managed vehicles, media, inquiries, branches, and operational handover.",
+      "Translated dealership operations into clear data models and workflows for vehicles, branches, inquiries, users, and media.",
+      "Built conditional Eloquent queries with AJAX updates, pagination, and URL state so filtered inventory remains shareable.",
+      "Designed Filament workflows for client-managed vehicle data and images, then completed deployment, training, and handover.",
     ],
     team: ["Kevin - Independent full-stack developer"],
     kevinOwned: [
@@ -343,36 +343,36 @@ export const projects: Project[] = [
     status: "Completed functional prototype; not distributed on TestFlight; not released on the App Store",
     role: "Tech Lead",
     preview:
-      "A native finance prototype combining transaction CRUD, SwiftData persistence, App Shortcuts, budgeting modules, financial summaries, and a behavior-linked virtual pet system.",
+      "A native finance prototype where SwiftData-backed transactions and App Shortcuts feed shared budgeting and dashboard workflows.",
     evidenceSignal:
-      "Native Apple ecosystem integration, App Intents, SwiftData, product thinking, Tech Lead workflow, and cross-feature data integration.",
+      "Tech Lead ownership across transaction CRUD, SwiftData persistence, App Intents, code review, and cross-feature data integration.",
     primaryCta: {
       label: "View case study",
       href: "/projects/squeaky",
     },
     repoUrl: "https://github.com/KeweKiwi/Squeaky",
     productSummary:
-      "Squeaky was designed to help young adults manage money in a faster, lighter, and less intimidating way.",
+      "Squeaky explores a faster, less intimidating transaction-entry experience for young adults managing personal finances.",
     caseSummary:
-      "A native finance prototype where transaction CRUD, SwiftData persistence, App Shortcuts, and dashboard integration share one technical foundation.",
+      "A native finance prototype where transaction CRUD, SwiftData persistence, App Shortcuts, and team-owned features share one data foundation.",
     caseHighlights: [
       {
-        label: "Contribution",
-        value: "Tech Lead for technical decisions, integration review, and the core transaction system.",
+        label: "Role",
+        value: "Tech Lead responsible for technical decisions, code review, feature integration, and the core transaction system.",
       },
       {
-        label: "Implementation",
-        value: "Transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction-data integration.",
+        label: "Direct contribution",
+        value: "Built transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction-data integration.",
       },
       {
-        label: "Evidence",
-        value: "Functional prototype demoed to peers and mentors, with the main transaction flow working end to end.",
+        label: "Outcome",
+        value: "The team delivered a functional prototype with the main transaction and shortcut flows working end to end in team and mentor demos.",
       },
     ],
     caseFocus: [
-      "The transaction system became the shared data backbone for budget, dashboard, recap, and related modules.",
-      "App Shortcuts reduced friction by letting users add transactions through a native system surface.",
-      "Team-owned modules were integrated into one prototype flow with clear ownership boundaries.",
+      "Modeled transaction data in SwiftData so budget, dashboard, recap, and related modules could use one source of truth.",
+      "Implemented App Intents and App Shortcuts as a native entry point for creating transactions outside the main app flow.",
+      "Defined integration boundaries and reviewed team-owned modules so independently built features worked in one prototype.",
     ],
     team: [
       "Gaby - Project Manager",

@@ -65,7 +65,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               href="/#work"
             >
               <ArrowLeft aria-hidden="true" size={15} />
-              Work
+              Selected work
             </Link>
 
             <div className="mt-14 tablet:mt-20">
@@ -81,15 +81,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
-                href={project.repoUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <Github aria-hidden="true" size={17} />
-                GitHub repo
-              </a>
+              {project.repoUrl ? (
+                <a
+                  className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
+                  href={project.repoUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <Github aria-hidden="true" size={17} />
+                  View source on GitHub
+                </a>
+              ) : null}
               {project.primaryCta.isExternal ? (
                 <a
                   className="inline-flex min-h-12 items-center gap-2 rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
@@ -107,9 +109,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <aside className="self-end overflow-hidden border border-graphite-strong bg-graphite-page/72 shadow-signal-sm backdrop-blur">
             <div className="border-b border-graphite-border p-5 tablet:p-6">
               <div className="flex items-center justify-between gap-4">
-                <p className="technical-label text-signal">Project overview</p>
+                <p className="technical-label text-signal">Project summary</p>
                 <p className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
-                  Key contributions
+                  Role and results
                 </p>
               </div>
               <p className="mt-5 text-xl leading-[1.45] text-ink-primary">{project.caseSummary}</p>
@@ -158,9 +160,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <section className="py-14 tablet:py-20">
           <Container className="grid gap-10 desktop:grid-cols-[minmax(0,1fr)_360px]">
             <div className="case-reveal">
-              <p className="technical-label mb-5 text-ink-muted">Implementation focus</p>
+              <p className="technical-label mb-5 text-ink-muted">Engineering details</p>
               <h2 className="max-w-3xl text-4xl font-semibold leading-none text-ink-primary tablet:text-5xl">
-                Technical focus.
+                Key technical decisions.
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-[1.6] text-ink-secondary">{visual.proof}</p>
 
@@ -180,7 +182,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
 
             <aside className="case-reveal border-t border-graphite-border pt-6 desktop:border-l desktop:border-t-0 desktop:pl-8 desktop:pt-0">
-              <p className="technical-label text-signal">Technical frame</p>
+              <p className="technical-label text-signal">Core stack</p>
               <div className="mt-5 flex flex-wrap gap-x-4 gap-y-3">
                 {project.technologies.slice(0, 6).map((technology) => (
                   <span
@@ -203,18 +205,32 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <section className="border-t border-graphite-border py-10 tablet:py-12">
         <Container className="flex flex-col gap-5 tablet:flex-row tablet:items-center tablet:justify-between">
-          <p className="technical-label text-ink-muted">Project links</p>
+          <p className="technical-label text-ink-muted">Explore project</p>
 
           <div className="flex flex-wrap gap-3">
-            <a
-              className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
-              href={project.repoUrl}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <Github aria-hidden="true" size={17} />
-              GitHub repo
-            </a>
+            {project.repoUrl ? (
+              <a
+                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
+                href={project.repoUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <Github aria-hidden="true" size={17} />
+                View source on GitHub
+              </a>
+            ) : null}
+
+            {project.primaryCta.isExternal ? (
+              <a
+                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
+                href={project.primaryCta.href}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {project.primaryCta.label}
+                <ExternalLink aria-hidden="true" size={16} />
+              </a>
+            ) : null}
 
             <Link
               className="inline-flex min-h-12 items-center gap-2 rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"

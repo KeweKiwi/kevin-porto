@@ -8,13 +8,13 @@ import { SiteFooter } from "@/components/site-footer";
 import { SkipLink } from "@/components/skip-link";
 
 export const metadata: Metadata = {
-  title: "Kevin William Faith — iOS Developer & Web Developer",
+  title: "Kevin William Faith — iOS & Full-Stack Web Developer",
   description:
-    "Portfolio of Kevin William Faith, a developer building native Apple experiences and production web systems.",
+    "Portfolio of Kevin William Faith: native iOS engineering, technical leadership, and end-to-end full-stack web delivery.",
   openGraph: {
-    title: "Kevin William Faith — iOS Developer & Web Developer",
+    title: "Kevin William Faith — iOS & Full-Stack Web Developer",
     description:
-      "Native Apple projects, production web systems, and case studies shaped around product ownership.",
+      "Case studies covering GameKit multiplayer, SwiftData and App Intents, and an independently delivered production Laravel platform.",
     type: "website",
   },
 };

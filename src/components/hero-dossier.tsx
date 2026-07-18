@@ -14,24 +14,12 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { profile } from "@/data/profile";
+import { heroContent } from "@/data/site-content";
 import { INTRO_REVEAL_EVENT } from "@/lib/intro";
 import { prefersReducedMotionQuery } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 gsap.registerPlugin(useGSAP);
-
-const heroMeta = [
-  { label: "Based in", value: "Indonesia" },
-  { label: "Academy", value: "Apple Developer Academy @UC" },
-  { label: "Focus", value: "iOS + Web" },
-] as const;
-
-const coordinates = [
-  { label: "-06.2 / 106.8", strength: 42 },
-  { label: "build: native", strength: 72 },
-  { label: "ship: web", strength: 84 },
-  { label: "signal: ready", strength: 100 },
-] as const;
 
 export function HeroDossier() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -269,7 +257,7 @@ export function HeroDossier() {
 
       <div className="container-grid relative z-10 flex min-h-[calc(100svh-4rem)] flex-col items-center justify-center gap-8 py-12 text-center tablet:min-h-[calc(100svh-4.5rem)] tablet:gap-10 tablet:py-16">
         <div className="hero-meta flex max-w-5xl flex-wrap items-center justify-center gap-2 text-ink-muted">
-          {heroMeta.map((item) => (
+          {heroContent.meta.map((item) => (
             <span
               key={item.label}
               className="inline-flex items-center gap-2 border border-graphite-border bg-graphite-page/72 px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.08em]"
@@ -296,10 +284,10 @@ export function HeroDossier() {
           </h1>
 
           <p className="hero-positioning hero-strapline mx-auto mt-7 max-w-5xl text-balance font-semibold leading-tight text-ink-primary tablet:mt-8">
-            Native Apple Engineering. Production Web Delivery.
+            {heroContent.positioning}
           </p>
           <p className="hero-copy mx-auto mt-5 max-w-2xl text-sm leading-[1.7] text-ink-secondary tablet:text-base">
-            Developer focused on native Apple experiences, technical leadership, and production web systems.
+            {heroContent.summary}
           </p>
         </div>
 
@@ -308,7 +296,7 @@ export function HeroDossier() {
             className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] bg-signal px-5 py-3 text-sm font-medium text-graphite-page transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
             href="#work"
           >
-            View Projects
+            {heroContent.primaryAction}
             <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-1" size={16} />
           </Link>
           {profile.resumeUrl ? (
@@ -324,13 +312,13 @@ export function HeroDossier() {
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] border border-graphite-strong px-5 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
             href="#contact"
           >
-            Let&apos;s Talk
+            {heroContent.contactAction}
             <MessageCircle aria-hidden="true" size={16} />
           </Link>
         </div>
 
         <div className="hero-coordinate grid w-full max-w-4xl grid-cols-2 gap-2 pt-2 text-left tablet:grid-cols-4">
-          {coordinates.map((coordinate, index) => (
+          {heroContent.coordinates.map((coordinate, index) => (
             <div
               key={coordinate.label}
               className="casefile-coordinate border-t border-graphite-border pt-3 font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted"

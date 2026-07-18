@@ -18,9 +18,9 @@ export type SkillGroup = {
 export const skillGroups: SkillGroup[] = [
   {
     id: "native",
-    title: "Native Apple Development",
-    summary: "Apple-platform prototypes with native interaction, persistence, shortcuts, and game systems.",
-    proof: "QuackFight and Squeaky connect Kevin's Apple-platform work to shipped prototype flows, technical leadership, and cross-feature integration.",
+    title: "iOS and Apple Platform Engineering",
+    summary: "Native product work spanning interaction, persistence, system integrations, and multiplayer game systems.",
+    proof: "QuackFight and Squeaky show hands-on Apple framework experience, working prototype flows, technical leadership, and cross-feature integration.",
     skills: [
       {
         name: "SwiftUI",
@@ -86,9 +86,9 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "web",
-    title: "Web and Full-Stack Development",
-    summary: "Production web delivery from requirements through public inventory, admin workflows, deployment, and maintenance.",
-    proof: "Rizki Mobil shows Kevin's web delivery range: a live client platform delivered independently for real dealership operations.",
+    title: "Full-Stack Web Development",
+    summary: "Production delivery across requirements, data modeling, public interfaces, admin workflows, deployment, and maintenance.",
+    proof: "Rizki Mobil demonstrates independent full-stack ownership of a live platform for real multi-branch dealership operations.",
     skills: [
       {
         name: "Laravel",
@@ -154,9 +154,9 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "delivery",
-    title: "Engineering and Delivery",
-    summary: "Architecture, code review, integration, debugging, deployment, training, and maintenance across team and client work.",
-    proof: "Kevin's delivery pattern is ownership: leading technical workflows and independently shipping a live client platform.",
+    title: "Technical Leadership and Delivery",
+    summary: "Architecture, review, integration, debugging, deployment, handover, and maintenance across team and client work.",
+    proof: "Kevin has led technical workflows on two iOS projects and independently delivered a live client platform from requirements through maintenance.",
     skills: [
       {
         name: "MVVM",

@@ -9,6 +9,7 @@ import { useGSAP } from "@gsap/react";
 import { ProjectMedia } from "@/components/project-media";
 import { projects } from "@/data/projects";
 import { projectVisuals } from "@/data/project-visuals";
+import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -393,13 +394,13 @@ export function SelectedWorkShowcase() {
       <div ref={pinRef} className="container-grid py-20 tablet:py-28 desktop:min-h-screen desktop:py-20">
         <div className="mb-12 grid gap-6 desktop:grid-cols-12 desktop:items-end">
           <div className="desktop:col-span-7">
-            <p className="technical-label mb-5 text-ink-muted">Selected work</p>
+            <p className="technical-label mb-5 text-ink-muted">{selectedWorkContent.label}</p>
             <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl desktop:text-7xl">
-              Three systems, three different kinds of ownership.
+              {selectedWorkContent.title}
             </h2>
           </div>
           <p className="max-w-xl text-base leading-[1.55] text-ink-secondary desktop:col-span-4 desktop:col-start-9">
-            From sensor-heavy iOS gameplay to live dealership operations and native finance workflows, each project shows a different part of Kevin&apos;s engineering range.
+            {selectedWorkContent.summary}
           </p>
         </div>
 

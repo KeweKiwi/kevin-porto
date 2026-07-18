@@ -1,14 +1,14 @@
 export const profile = {
   name: "Kevin William Faith",
   shortName: "Kevin",
-  role: "iOS Developer & Web Developer",
-  headline: "I build native Apple experiences and production web systems.",
+  role: "iOS Developer & Full-Stack Web Developer",
+  headline: "I build native iOS experiences and production web systems.",
   intro:
-    "Hello, I'm Kevin William Faith. I lead native Apple prototypes, build production web systems, and turn unclear product requirements into software people can use.",
+    "iOS and full-stack web developer with hands-on experience in GameKit multiplayer, SwiftData, App Intents, and end-to-end Laravel delivery.",
   principle: "Build clearly. Ship responsibly.",
   email: null,
   resumeUrl: null,
-  githubUrl: null,
+  githubUrl: "https://github.com/KeweKiwi",
   linkedinUrl: null,
   education: "Information System for Business, Ciputra University",
   academy: "Apple Developer Academy @UC",
