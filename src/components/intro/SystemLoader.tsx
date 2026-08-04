@@ -430,6 +430,7 @@ export function SystemLoader({
 
     context = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      const effectiveTimeoutMs = isMobile ? Math.min(timeoutMs, 4900) : timeoutMs;
       const shouldReduceMotion = reducedMotion || prefersReducedMotion();
       const statusLines = gsap.utils.toArray<HTMLElement>(
         isMobile ? "[data-mobile-status]" : "[data-desktop-status]",
@@ -1163,7 +1164,7 @@ export function SystemLoader({
         )
         .set(root, { autoAlpha: 0 });
 
-      const runtimeBudgetMs = Math.max(1000, timeoutMs - 420);
+      const runtimeBudgetMs = Math.max(1000, effectiveTimeoutMs - 420);
       const timelineDurationMs = introTimeline.duration() * 1000;
 
       if (timelineDurationMs > runtimeBudgetMs) {
@@ -1172,7 +1173,7 @@ export function SystemLoader({
 
       fallbackTimer = window.setTimeout(() => {
         finishQuickly();
-      }, timeoutMs);
+      }, effectiveTimeoutMs);
     }, root);
 
     return () => {

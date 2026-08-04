@@ -3,23 +3,22 @@ const primarySkills = [
   "SwiftUI",
   "GameKit",
   "Core Motion",
-  "SpriteKit",
   "App Intents",
   "SwiftData",
   "Laravel",
   "Filament",
   "MySQL",
+  "GSAP",
 ] as const;
 
 const deliverySkills = [
-  "Technical Leadership",
+  "Native Apple",
   "Multiplayer Engineering",
+  "Technical Leadership",
   "Full-Stack Delivery",
-  "State-Machine Architecture",
   "Client Delivery",
   "Production Deployment",
-  "Responsive Web",
-  "Feature Integration",
+  "Product Integration",
 ] as const;
 
 export function SkillSignalMarquee() {
@@ -27,10 +26,11 @@ export function SkillSignalMarquee() {
     <section
       aria-label="Technical focus areas"
       className="skill-marquee-shell relative overflow-hidden border-b border-graphite-border bg-graphite-page"
+      data-hero-marquee
     >
       <div aria-hidden="true" className="skill-marquee-edge" />
-      <MarqueeRow items={primarySkills} tone="dark" />
-      <MarqueeRow items={deliverySkills} direction="right" tone="signal" />
+      <MarqueeRow items={primarySkills} />
+      <MarqueeRow items={deliverySkills} direction="right" />
     </section>
   );
 }
@@ -38,14 +38,12 @@ export function SkillSignalMarquee() {
 function MarqueeRow({
   direction = "left",
   items,
-  tone,
 }: {
   direction?: "left" | "right";
   items: readonly string[];
-  tone: "dark" | "signal";
 }) {
   return (
-    <div className={`skill-marquee-row skill-marquee-row-${tone}`}>
+    <div className="skill-marquee-row">
       <div className="skill-marquee-track" data-direction={direction}>
         <SkillGroup items={items} />
         <SkillGroup ariaHidden items={items} />

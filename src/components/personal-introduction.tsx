@@ -1,10 +1,12 @@
 "use client";
 
-import { Code2, GraduationCap, MapPin, Network, Smartphone } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { MediaSlot } from "@/components/media-slot";
+import { portraitAsset } from "@/data/media-assets";
 import { profile } from "@/data/profile";
 import { aboutContent } from "@/data/site-content";
 import { prefersReducedMotionQuery } from "@/lib/motion";
@@ -12,14 +14,12 @@ import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const meta = [
-  { icon: MapPin, label: "Location", value: "Indonesia" },
-  { icon: GraduationCap, label: "Education", value: profile.education },
-  { icon: Smartphone, label: "Academy", value: profile.academy },
-  { icon: Code2, label: "Focus", value: aboutContent.focusLabel },
+const metadata = [
+  { label: "Location", value: "Indonesia" },
+  { label: "Education", value: profile.education },
+  { label: "Program", value: profile.academy },
+  { label: "Focus", value: aboutContent.focusLabel },
 ] as const;
-
-const calibrationBars = [72, 38, 88, 54, 64] as const;
 
 export function PersonalIntroduction() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -31,127 +31,98 @@ export function PersonalIntroduction() {
         return;
       }
 
-      gsap.from("[data-intro-reveal]", {
-        y: 28,
-        opacity: 0,
-        duration: 0.72,
-        ease: "power3.out",
-        stagger: 0.08,
+      const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: rootRef.current,
-          start: "top 76%",
+          start: "top 72%",
           once: true,
         },
       });
 
-      gsap.to(".portrait-scan", {
-        xPercent: 116,
-        duration: 4.8,
-        ease: "none",
-        repeat: -1,
-      });
+      timeline
+        .from("[data-portrait-frame]", {
+          clipPath: "inset(0 0 100% 0)",
+          duration: 0.9,
+          ease: "power4.out",
+          scale: 1.035,
+        })
+        .from(
+          "[data-about-title] > span > span",
+          { yPercent: 110, duration: 0.66, ease: "power4.out", stagger: 0.08 },
+          "-=0.58",
+        )
+        .from(
+          "[data-about-copy], [data-about-meta]",
+          { autoAlpha: 0, x: 20, duration: 0.42, stagger: 0.06, ease: "power3.out" },
+          "-=0.28",
+        )
+        .from(
+          "[data-about-capability]",
+          { autoAlpha: 0, y: 18, duration: 0.38, stagger: 0.08, ease: "power3.out" },
+          "-=0.18",
+        )
+        .fromTo(
+          "[data-about-trace]",
+          { scaleY: 0, transformOrigin: "top center" },
+          { duration: 0.7, ease: "power3.inOut", scaleY: 1 },
+          0.12,
+        );
     },
     { scope: rootRef, dependencies: [reducedMotion] },
   );
 
-  return (
-    <section
-      ref={rootRef}
-      id="about"
-      className="relative overflow-hidden border-b border-graphite-border bg-graphite-page py-20 tablet:py-28 desktop:py-32"
-    >
-      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-16 bg-graphite-page" />
-      <div className="absolute left-[12%] top-0 hidden h-full w-px bg-graphite-border desktop:block" />
-      <div className="container-grid grid gap-10 desktop:grid-cols-12 desktop:items-start">
-        <div className="desktop:col-span-5" data-intro-reveal>
-          <div
-            aria-label="Kevin William Faith visual identity frame"
-            className="profile-casefile-frame relative aspect-[4/5] min-h-[420px] overflow-hidden border border-graphite-strong bg-graphite-base shadow-signal-sm"
-            role="img"
-          >
-            <div className="absolute inset-0 kwf-grid opacity-40" />
-            <span className="portrait-scan absolute left-[-54%] top-[43%] h-px w-[54%] bg-signal/55" />
-            <div aria-hidden="true" className="absolute right-7 top-8 grid w-20 gap-2">
-              {calibrationBars.map((bar, index) => (
-                <span key={bar} className="h-px bg-graphite-strong">
-                  <span
-                    className="block h-px bg-signal/70"
-                    style={{
-                      width: `${bar}%`,
-                      opacity: 1 - index * 0.12,
-                    }}
-                  />
-                </span>
-              ))}
-            </div>
-            <span className="absolute left-5 top-5 h-7 w-7 border-l border-t border-signal/70" />
-            <span className="absolute right-5 top-5 h-7 w-7 border-r border-t border-ink-primary/35" />
-            <span className="absolute bottom-5 left-5 h-7 w-7 border-b border-l border-ink-primary/35" />
-            <span className="absolute bottom-5 right-5 h-7 w-7 border-b border-r border-signal/70" />
-            <div className="absolute inset-x-7 bottom-7">
-              <p className="technical-label mb-4 text-signal">{aboutContent.frameLabel}</p>
-              <div className="text-[clamp(5.4rem,18vw,8.5rem)] font-semibold leading-none text-ink-primary">
-                KWF
-              </div>
-              <p className="mt-5 max-w-xs text-base font-semibold leading-tight text-ink-primary">
-                Kevin William Faith
-              </p>
-              <p className="mt-2 max-w-xs text-sm leading-6 text-ink-secondary">
-                {aboutContent.frameSummary}
-              </p>
-            </div>
-          </div>
+  const titleLines = ["Engineering with ownership,", "from architecture to delivery."];
 
-          <div className="mt-5 grid gap-px overflow-hidden border border-graphite-strong bg-graphite-strong mobile:grid-cols-2">
-            {meta.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.label} className="min-w-0 bg-graphite-base p-4">
-                  <div className="mb-3 flex items-center gap-2 text-signal">
-                    <Icon aria-hidden="true" size={15} strokeWidth={1.6} />
-                    <p className="technical-label text-ink-muted">{item.label}</p>
-                  </div>
-                  <p className="break-words text-sm leading-6 text-ink-primary">{item.value}</p>
-                </div>
-              );
-            })}
-          </div>
+  return (
+    <section ref={rootRef} id="about" className="relative overflow-hidden border-b border-graphite-border bg-graphite-page py-20 tablet:py-28 desktop:py-32">
+      <span aria-hidden="true" className="absolute right-0 top-4 hidden text-[12rem] font-semibold leading-none text-graphite-raised desktop:block">
+        02
+      </span>
+
+      <div className="container-grid relative grid gap-12 laptop:grid-cols-12 laptop:items-stretch">
+        <div className="relative laptop:col-span-5" data-portrait-frame>
+          <MediaSlot
+            asset={portraitAsset}
+            className="aspect-[4/5] min-h-[440px] border-r border-graphite-strong tablet:min-h-[620px]"
+            sizes="(max-width: 1023px) 100vw, 42vw"
+          />
+          <span aria-hidden="true" className="absolute -left-4 top-10 h-[72%] w-px bg-signal" data-about-trace />
         </div>
 
-        <div className="desktop:col-span-6 desktop:col-start-7" data-intro-reveal>
-          <p className="technical-label mb-5 text-ink-muted">{aboutContent.sectionLabel}</p>
-          <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl desktop:text-7xl">
-            {aboutContent.title}
+        <div className="relative z-10 laptop:col-span-6 laptop:col-start-7 laptop:self-center">
+          <p className="mb-6 font-mono text-xs uppercase text-signal">{aboutContent.sectionLabel}</p>
+          <h2 className="about-editorial-title uppercase text-ink-primary" data-about-title>
+            {titleLines.map((line) => (
+              <span key={line} className="block overflow-hidden">
+                <span className="block">{line}</span>
+              </span>
+            ))}
           </h2>
-          <div className="mt-8 grid gap-5 text-base leading-[1.7] text-ink-secondary tablet:text-lg">
+
+          <div className="mt-7 max-w-2xl space-y-4 text-base leading-7 text-ink-secondary tablet:text-lg tablet:leading-8" data-about-copy>
             {aboutContent.paragraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
 
-          <div className="mt-10 grid gap-3 tablet:grid-cols-2">
-            {aboutContent.capabilities.map((item) => (
-              <div key={item.label} className="casefile-mini-card border border-graphite-strong bg-graphite-base p-4">
-                <div className="mb-4 flex items-center justify-between gap-4">
-                  <p className="font-mono text-sm font-semibold uppercase tracking-[0.08em] text-ink-primary">
-                    {item.label}
-                  </p>
-                  <span className="h-px w-8 bg-signal/60" />
-                </div>
-                <p className="text-sm leading-6 text-ink-secondary">{item.proof}</p>
+          <dl className="mt-9 border-y border-graphite-strong">
+            {metadata.map((item) => (
+              <div key={item.label} className="grid gap-2 border-b border-graphite-border py-3 last:border-b-0 tablet:grid-cols-[7rem_1fr]" data-about-meta>
+                <dt className="font-mono text-[0.6rem] uppercase text-signal">{item.label}</dt>
+                <dd className="text-sm leading-6 text-ink-primary">{item.value}</dd>
               </div>
             ))}
-          </div>
+          </dl>
 
-          <div className="mt-10 grid gap-px overflow-hidden border border-graphite-strong bg-graphite-strong tablet:grid-cols-3">
-            {aboutContent.workingRange.map((signal) => (
-              <div key={signal.label} className="bg-graphite-base p-5">
-                <div className="mb-5 flex items-center justify-between gap-4">
-                  <p className="text-3xl font-semibold leading-none text-ink-primary">{signal.label}</p>
-                  <Network aria-hidden="true" className="text-signal" size={17} strokeWidth={1.6} />
+          <div className="mt-9 grid gap-6 tablet:grid-cols-3">
+            {aboutContent.capabilities.map((item) => (
+              <article key={item.label} className="border-l border-graphite-strong pl-4" data-about-capability>
+                <div className="flex items-center gap-2 text-signal">
+                  <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1.5} />
+                  <h3 className="text-lg font-semibold uppercase text-ink-primary">{item.label}</h3>
                 </div>
-                <p className="technical-label text-ink-muted">{signal.detail}</p>
-              </div>
+                <p className="mt-3 text-sm leading-6 text-ink-secondary">{item.proof}</p>
+              </article>
             ))}
           </div>
         </div>

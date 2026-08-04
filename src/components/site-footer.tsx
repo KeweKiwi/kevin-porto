@@ -7,7 +7,7 @@ export function SiteFooter() {
     <footer className="border-t border-graphite-border py-8">
       <Container className="flex flex-col gap-5 text-sm text-ink-muted tablet:flex-row tablet:items-center tablet:justify-between">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.08em] text-ink-primary">{profile.name}</p>
+          <p className="font-mono text-xs uppercase text-ink-primary">{profile.name}</p>
           <p className="mt-2">{profile.role}</p>
         </div>
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-5">

@@ -1,17 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Activity, ArrowRight, Braces, Cpu, Network, Radio } from "lucide-react";
+import { ArrowRight, Minus, Plus } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
-import { motion } from "motion/react";
-import { cn } from "@/lib/cn";
-import {
-  skillGroups,
-  type SkillGroup,
-  type SkillProject,
-  type TechnicalSkill,
-} from "@/data/skills";
+import { skillGroups, type SkillGroup, type SkillProject, type TechnicalSkill } from "@/data/skills";
 import { skillsSectionContent } from "@/data/site-content";
+import { cn } from "@/lib/cn";
 
 const projectMeta: Record<SkillProject, { code: string; href: string }> = {
   QuackFight: { code: "QF", href: "/projects/quackfight" },
@@ -19,386 +14,137 @@ const projectMeta: Record<SkillProject, { code: string; href: string }> = {
   Squeaky: { code: "SQ", href: "/projects/squeaky" },
 };
 
-const groupChrome: Record<
-  SkillGroup["id"],
-  {
-    axis: string;
-    label: string;
-    protocol: string;
-  }
-> = {
-  native: {
-    axis: "IOS",
-    label: "native engineering",
-    protocol: "Motion / Persistence / Multiplayer",
-  },
-  web: {
-    axis: "WEB",
-    label: "full-stack delivery",
-    protocol: "Inventory / Admin / Deployment",
-  },
-  delivery: {
-    axis: "OPS",
-    label: "engineering practice",
-    protocol: "Review / Integration / Maintenance",
-  },
+const groupTitles: Record<SkillGroup["id"], string> = {
+  native: "Native Apple",
+  web: "Full-Stack Web",
+  delivery: "Engineering & Delivery",
 };
 
 export function TechnicalSkillsSystem() {
-  const [activeGroupId, setActiveGroupId] = useState<SkillGroup["id"]>(skillGroups[0].id);
-  const [activeSkillName, setActiveSkillName] = useState(skillGroups[0].skills[0].name);
+  const [activeSkill, setActiveSkill] = useState<TechnicalSkill>(skillGroups[0].skills[0]);
+  const [expandedGroups, setExpandedGroups] = useState<Set<SkillGroup["id"]>>(new Set());
 
-  const activeGroup = useMemo(() => {
-    return skillGroups.find((group) => group.id === activeGroupId) ?? skillGroups[0];
-  }, [activeGroupId]);
+  const activeProjects = useMemo(() => activeSkill.projects.map((project) => ({ project, ...projectMeta[project] })), [activeSkill]);
 
-  const activeSkill = useMemo<TechnicalSkill>(() => {
-    return activeGroup.skills.find((skill) => skill.name === activeSkillName) ?? activeGroup.skills[0];
-  }, [activeGroup, activeSkillName]);
-
-  const activeSkillIndex = Math.max(
-    0,
-    activeGroup.skills.findIndex((skill) => skill.name === activeSkill.name),
-  );
-
-  const activeGroupProjects = useMemo(() => {
-    return Array.from(new Set(activeGroup.skills.flatMap((skill) => skill.projects)));
-  }, [activeGroup]);
-
-  const directOwnershipCount = useMemo(() => {
-    return activeGroup.skills.filter((skill) => skill.ownership === "Direct ownership").length;
-  }, [activeGroup]);
-
-  function selectGroup(groupId: SkillGroup["id"]) {
-    const nextGroup = skillGroups.find((group) => group.id === groupId) ?? skillGroups[0];
-    setActiveGroupId(groupId);
-    setActiveSkillName(nextGroup.skills[0].name);
+  function toggleGroup(groupId: SkillGroup["id"]) {
+    setExpandedGroups((current) => {
+      const next = new Set(current);
+      if (next.has(groupId)) {
+        next.delete(groupId);
+      } else {
+        next.add(groupId);
+      }
+      return next;
+    });
   }
 
   return (
-    <section
-      id="skills"
-      className="relative overflow-hidden border-b border-graphite-border bg-graphite-page py-20 tablet:py-24"
-    >
-      <div aria-hidden="true" className="absolute inset-0 opacity-40 kwf-field-depth" />
-      <div aria-hidden="true" className="absolute left-[9%] top-0 hidden h-full w-px bg-graphite-border/70 desktop:block" />
-      <div aria-hidden="true" className="absolute right-[12%] top-0 hidden h-full w-px bg-graphite-border/70 desktop:block" />
-      <div aria-hidden="true" className="absolute left-0 top-[32%] h-px w-[36%] bg-signal/35" />
-      <div aria-hidden="true" className="absolute bottom-[16%] right-0 h-px w-[42%] bg-ink-primary/12" />
-
-      <div className="container-grid relative z-[1]">
-        <div className="mb-10 grid gap-7 tablet:grid-cols-[minmax(0,1.35fr)_minmax(260px,0.65fr)] tablet:items-end desktop:gap-12">
+    <section id="skills" className="relative border-b border-graphite-strong bg-graphite-page py-20 tablet:py-28 desktop:py-32">
+      <div className="container-grid">
+        <header className="grid gap-6 border-b border-graphite-strong pb-9 laptop:grid-cols-[minmax(0,1.25fr)_minmax(280px,.75fr)] laptop:items-end">
           <div>
-            <p className="technical-label mb-5 text-ink-muted">{skillsSectionContent.label}</p>
-            <h2 className="max-w-4xl text-4xl font-semibold leading-none text-ink-primary tablet:text-5xl desktop:text-6xl wide:text-7xl">
+            <p className="font-mono text-xs uppercase text-signal">{skillsSectionContent.label}</p>
+            <h2 className="mt-5 max-w-5xl text-5xl font-semibold uppercase leading-[0.95] text-ink-primary tablet:text-6xl desktop:text-7xl">
               {skillsSectionContent.title}
             </h2>
           </div>
+          <p className="max-w-md text-base leading-7 text-ink-secondary laptop:justify-self-end">
+            {skillsSectionContent.summary}
+          </p>
+        </header>
 
-          <div>
-            <p className="max-w-xl text-base leading-[1.55] text-ink-secondary">
-              {skillsSectionContent.summary}
-            </p>
+        <div className="grid tablet:grid-cols-3">
+          {skillGroups.map((group, groupIndex) => {
+            const expanded = expandedGroups.has(group.id);
+            const visibleSkills = expanded ? group.skills : group.skills.slice(0, 4);
 
-            <div className="mt-6 grid grid-cols-3 gap-px border border-graphite-border bg-graphite-border">
-              <HeaderMetric label="Groups" value={String(skillGroups.length).padStart(2, "0")} />
-              <HeaderMetric
-                label="Skills"
-                value={String(skillGroups.reduce((total, group) => total + group.skills.length, 0)).padStart(2, "0")}
-              />
-              <HeaderMetric label="Projects" value="03" />
-            </div>
-          </div>
-        </div>
-
-        <div className="technical-shell relative overflow-hidden border border-graphite-strong bg-graphite-page">
-          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_right,rgba(215,247,91,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(243,240,232,0.026)_1px,transparent_1px)] bg-[size:42px_42px]" />
-          <div aria-hidden="true" className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-signal/80 to-transparent" />
-          <div aria-hidden="true" className="absolute left-0 top-0 h-12 w-12 border-l border-t border-signal/45" />
-          <div aria-hidden="true" className="absolute bottom-0 right-0 h-12 w-12 border-b border-r border-ink-primary/45" />
-
-          <div className="relative z-[1] grid gap-px bg-graphite-strong/75 min-[860px]:grid-cols-[minmax(0,1.18fr)_minmax(310px,0.82fr)] desktop:grid-cols-[minmax(0,1fr)_400px]">
-            <aside className="min-w-0 bg-graphite-page/95 p-4 tablet:p-5 min-[860px]:col-span-2">
-              <div className="mb-4 flex items-center justify-between gap-4 border-b border-graphite-border pb-4">
-                <div>
-                  <p className="technical-label text-ink-muted">{skillsSectionContent.groupLabel}</p>
-                  <p className="mt-2 font-mono text-sm uppercase tracking-[0.08em] text-ink-primary">
-                    {groupChrome[activeGroup.id].axis} / {String(activeSkillIndex + 1).padStart(2, "0")}
-                  </p>
+            return (
+              <article
+                key={group.id}
+                className={cn(
+                  "border-b border-graphite-strong py-8 tablet:px-6 tablet:py-10",
+                  groupIndex < skillGroups.length - 1 && "tablet:border-r",
+                )}
+              >
+                <div className="flex items-center gap-3 text-signal">
+                  <span className="font-mono text-xs">{String(groupIndex + 1).padStart(2, "0")}</span>
+                  <span aria-hidden="true" className="h-px flex-1 bg-graphite-strong" />
                 </div>
-                <Radio aria-hidden="true" className="text-signal" size={18} strokeWidth={1.6} />
-              </div>
+                <h3 className="mt-5 text-xl font-semibold uppercase text-ink-primary desktop:text-2xl">
+                  {groupTitles[group.id]}
+                </h3>
 
-              <div className="-mx-4 flex min-w-0 max-w-[calc(100%+2rem)] snap-x gap-2 overflow-x-auto px-4 pb-1 tablet:mx-0 tablet:grid tablet:max-w-full tablet:grid-cols-3 tablet:overflow-visible tablet:px-0">
-                {skillGroups.map((group, index) => {
-                  const isActive = activeGroup.id === group.id;
-                  const chrome = groupChrome[group.id];
-
-                  return (
-                    <button
-                      key={group.id}
-                      aria-pressed={isActive}
-                      className={cn(
-                        "group relative min-h-[118px] min-w-[244px] snap-start overflow-hidden border p-4 text-left transition tablet:min-w-0",
-                        isActive
-                          ? "border-signal/65 bg-signal/[0.045] text-ink-primary"
-                          : "border-graphite-border bg-graphite-base/72 text-ink-secondary hover:border-graphite-strong hover:bg-graphite-base",
-                      )}
-                      onClick={() => selectGroup(group.id)}
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          "absolute left-0 top-0 h-full w-1 transition",
-                          isActive ? "bg-signal" : "bg-graphite-strong group-hover:bg-ink-muted",
-                        )}
-                      />
-                      <span className="mb-3 flex items-center justify-between gap-4 pl-2">
-                        <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
-                          {String(index + 1).padStart(2, "0")} / {chrome.axis}
-                        </span>
-                        <span
+                <div className="mt-7 border-t border-graphite-border">
+                  <AnimatePresence initial={false}>
+                    {visibleSkills.map((skill) => {
+                      const selected = activeSkill.name === skill.name;
+                      return (
+                        <motion.button
+                          key={skill.name}
+                          animate={{ opacity: 1, y: 0 }}
+                          aria-pressed={selected}
                           className={cn(
-                            "h-px transition-all",
-                            isActive ? "w-12 bg-signal" : "w-6 bg-graphite-strong group-hover:w-10",
+                            "flex min-h-12 w-full items-center justify-between gap-4 border-b border-graphite-border py-3 text-left text-sm transition-colors tablet:text-base",
+                            selected ? "text-signal" : "text-ink-primary hover:text-signal",
                           )}
-                        />
-                      </span>
-                      <span className="block pl-2 text-base font-semibold leading-tight text-ink-primary desktop:text-lg">
-                        {group.title}
-                      </span>
-                      <span className="mt-4 flex items-center justify-between gap-3 pl-2 font-mono text-[0.55rem] uppercase tracking-[0.08em] text-ink-muted">
-                        <span>{group.skills.length} skills</span>
-                        <span>{chrome.label}</span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </aside>
-
-            <div className="min-w-0 bg-graphite-base p-4 tablet:p-5 desktop:p-7">
-              <div className="mb-5 grid gap-5 border-b border-graphite-border pb-5 desktop:grid-cols-[1fr_auto] desktop:items-start">
-                <div>
-                  <div className="mb-4 flex flex-wrap items-center gap-2">
-                    <span className="technical-label text-signal">{activeGroup.title}</span>
-                    <span className="h-px w-10 bg-graphite-strong" />
-                    <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
-                      {groupChrome[activeGroup.id].protocol}
-                    </span>
-                  </div>
-                  <p className="max-w-3xl text-sm leading-6 text-ink-secondary">{activeGroup.proof}</p>
-                </div>
-
-                <div className="grid min-w-[220px] grid-cols-3 gap-px border border-graphite-border bg-graphite-border">
-                  <SignalMetric icon={<Cpu size={15} />} label="Skills" value={String(activeGroup.skills.length).padStart(2, "0")} />
-                  <SignalMetric icon={<Activity size={15} />} label="Direct" value={String(directOwnershipCount).padStart(2, "0")} />
-                  <SignalMetric icon={<Braces size={15} />} label="Projects" value={String(activeGroupProjects.length).padStart(2, "0")} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 desktop:grid-cols-3">
-                {activeGroup.skills.map((skill, index) => {
-                  const isActive = activeSkill.name === skill.name;
-
-                  return (
-                    <button
-                      key={skill.name}
-                      aria-pressed={isActive}
-                      className={cn(
-                        "group relative min-h-[98px] overflow-hidden border p-3 text-left transition duration-200 tablet:p-4",
-                        isActive
-                          ? "border-signal/70 bg-graphite-page shadow-[0_0_0_1px_rgba(215,247,91,0.08),0_0_28px_rgba(215,247,91,0.055)]"
-                          : "border-graphite-border bg-graphite-base/72 hover:border-graphite-strong hover:bg-graphite-page/80",
-                      )}
-                      onClick={() => setActiveSkillName(skill.name)}
-                      onMouseEnter={() => setActiveSkillName(skill.name)}
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          "absolute left-0 top-0 h-px transition-all",
-                          isActive ? "w-full bg-signal" : "w-10 bg-graphite-strong group-hover:w-20",
-                        )}
-                      />
-                      <span className="flex items-start justify-between gap-3">
-                        <span className="font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span
-                          className={cn(
-                            "rounded-[3px] border px-2 py-1 font-mono text-[0.52rem] uppercase tracking-[0.08em]",
-                            ownershipClassName(skill.ownership),
-                          )}
+                          exit={{ opacity: 0, y: -5 }}
+                          initial={{ opacity: 0, y: 6 }}
+                          onClick={() => setActiveSkill(skill)}
+                          transition={{ duration: 0.2 }}
+                          type="button"
                         >
-                          {shortOwnership(skill.ownership)}
-                        </span>
-                      </span>
-                      <span className="mt-4 block text-base font-semibold leading-tight text-ink-primary desktop:text-lg">
-                        {skill.name}
-                      </span>
-                      <span className="mt-3 flex flex-wrap gap-1.5">
-                        {skill.projects.map((project) => (
-                          <span
-                            key={project}
-                            className={cn(
-                              "border px-2 py-1 font-mono text-[0.55rem] uppercase tracking-[0.08em]",
-                              isActive
-                                ? "border-signal/55 text-signal"
-                                : "border-graphite-strong text-ink-muted",
-                            )}
-                          >
-                            {projectMeta[project].code}
+                          <span>{skill.name}</span>
+                          <span className="font-mono text-[0.52rem] uppercase text-ink-muted">
+                            {skill.projects.map((project) => projectMeta[project].code).join(" / ")}
                           </span>
-                        ))}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <motion.aside
-              key={`${activeGroup.id}-${activeSkill.name}`}
-              animate={{ opacity: 1, x: 0 }}
-              className="grid min-h-[460px] min-w-0 content-between bg-graphite-page p-5 tablet:p-6 desktop:p-7"
-              initial={{ opacity: 0, x: 18 }}
-              transition={{ duration: 0.26, ease: "easeOut" }}
-            >
-              <div>
-                <div className="mb-6 flex items-center justify-between gap-4">
-                  <div>
-                    <p className="technical-label text-ink-muted">{skillsSectionContent.evidenceLabel}</p>
-                    <p className="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.08em] text-signal">
-                      {groupChrome[activeGroup.id].axis}-{String(activeSkillIndex + 1).padStart(2, "0")} / active
-                    </p>
-                  </div>
-                  <Network aria-hidden="true" className="text-signal" size={22} strokeWidth={1.5} />
+                        </motion.button>
+                      );
+                    })}
+                  </AnimatePresence>
                 </div>
 
-                <div className="relative border-y border-graphite-border py-7">
-                  <span aria-hidden="true" className="absolute left-0 top-0 h-px w-20 bg-signal" />
-                  <h3 className="text-3xl font-semibold leading-none text-ink-primary tablet:text-4xl">
-                    {activeSkill.name}
-                  </h3>
-                  <p className="mt-5 text-base leading-[1.6] text-ink-secondary">{activeSkill.evidence}</p>
-                </div>
-
-                <div className="mt-6 grid gap-px bg-graphite-border">
-                  <TraceRow label={skillsSectionContent.ownershipLabel} value={activeSkill.ownership} />
-                  <TraceRow label={skillsSectionContent.appliedLabel} value={activeSkill.projects.join(" / ")} />
-                  <TraceRow label={skillsSectionContent.categoryLabel} value={activeGroup.title} />
-                </div>
-
-                <div className="mt-7">
-                  <p className="technical-label mb-4 text-ink-muted">{skillsSectionContent.relatedProjectsLabel}</p>
-                  <div className="grid gap-2">
-                    {activeSkill.projects.map((project) => (
-                      <Link
-                        key={project}
-                        className="group flex items-center justify-between border border-graphite-strong bg-graphite-base/70 px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-                        href={projectMeta[project].href}
-                      >
-                        <span className="flex items-center gap-3">
-                          <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-signal">
-                            {projectMeta[project].code}
-                          </span>
-                          {project}
-                        </span>
-                        <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-1" size={16} />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-10">
-                <div className="mb-4 flex items-center justify-between gap-4">
-                  <span className="technical-label text-signal">{skillsSectionContent.coverageLabel}</span>
-                  <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
-                    {String(activeSkill.projects.length).padStart(2, "0")} project
-                  </span>
-                </div>
-                <div className="grid grid-cols-8 gap-1">
-                  {Array.from({ length: 8 }, (_, index) => (
-                    <span
-                      key={index}
-                      className={cn(
-                        "h-2 border border-graphite-strong",
-                        index <= activeSkillIndex % 8 ? "bg-signal/80" : "bg-graphite-base",
-                      )}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.aside>
-          </div>
+                <button
+                  aria-expanded={expanded}
+                  className="mt-4 inline-flex min-h-11 items-center gap-2 font-mono text-[0.6rem] uppercase text-ink-muted transition-colors hover:text-signal"
+                  onClick={() => toggleGroup(group.id)}
+                  type="button"
+                >
+                  {expanded ? <Minus aria-hidden="true" size={14} /> : <Plus aria-hidden="true" size={14} />}
+                  {expanded ? "Show essentials" : `${group.skills.length - 4} more tools`}
+                </button>
+              </article>
+            );
+          })}
         </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSkill.name}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid gap-8 border-b border-graphite-strong py-8 tablet:grid-cols-[minmax(0,1.25fr)_minmax(260px,.75fr)] tablet:items-end"
+            exit={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div>
+              <p className="font-mono text-[0.62rem] uppercase text-signal">How I use {activeSkill.name}</p>
+              <p className="mt-3 max-w-3xl text-base leading-7 text-ink-secondary tablet:text-lg">
+                {activeSkill.evidence}
+              </p>
+              <p className="mt-3 font-mono text-[0.58rem] uppercase text-ink-muted">{activeSkill.ownership}</p>
+            </div>
+            <div className="flex flex-wrap gap-3 tablet:justify-end">
+              {activeProjects.map(({ code, href, project }) => (
+                <Link key={project} className="group inline-flex min-h-11 items-center gap-4 border-b border-signal px-1 text-sm text-ink-primary hover:text-signal" href={href}>
+                  <span className="font-mono text-[0.58rem] text-signal">{code}</span>
+                  {project}
+                  <ArrowRight aria-hidden="true" className="transition-transform group-hover:translate-x-1" size={14} />
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
-}
-
-function HeaderMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-graphite-page/80 p-3">
-      <p className="font-mono text-[0.55rem] uppercase tracking-[0.08em] text-ink-muted">{label}</p>
-      <p className="mt-2 font-mono text-lg font-semibold leading-none text-ink-primary">{value}</p>
-    </div>
-  );
-}
-
-function SignalMetric({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="grid place-items-center bg-graphite-base p-3 text-center">
-      <span className="text-signal">{icon}</span>
-      <span className="mt-2 font-mono text-[0.52rem] uppercase tracking-[0.08em] text-ink-muted">{label}</span>
-      <span className="mt-1 font-mono text-sm font-semibold text-ink-primary">{value}</span>
-    </div>
-  );
-}
-
-function TraceRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid gap-2 bg-graphite-page px-4 py-4 tablet:grid-cols-[112px_1fr] tablet:gap-4">
-      <span className="technical-label text-ink-muted">{label}</span>
-      <span className="text-sm leading-6 text-ink-primary">{value}</span>
-    </div>
-  );
-}
-
-function shortOwnership(ownership: TechnicalSkill["ownership"]) {
-  switch (ownership) {
-    case "Direct ownership":
-      return "Own";
-    case "Team leadership":
-      return "Lead";
-    case "Production delivery":
-      return "Ship";
-    case "Project implementation":
-      return "Build";
-  }
-}
-
-function ownershipClassName(ownership: TechnicalSkill["ownership"]) {
-  switch (ownership) {
-    case "Direct ownership":
-      return "border-signal/60 bg-signal/[0.07] text-signal";
-    case "Team leadership":
-      return "border-ink-primary/30 bg-ink-primary/[0.04] text-ink-primary";
-    case "Production delivery":
-      return "border-signal/40 bg-signal/[0.045] text-signal";
-    case "Project implementation":
-      return "border-graphite-strong bg-graphite-base text-ink-muted";
-  }
 }

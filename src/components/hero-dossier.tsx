@@ -1,18 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ArrowRight,
-  Braces,
-  Database,
-  Download,
-  MapPin,
-  MessageCircle,
-  Smartphone,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { PortraitComposition } from "@/components/hero/portrait-composition";
+import { SegmentedName } from "@/components/hero/segmented-name";
+import { SkillSignalMarquee } from "@/components/skill-signal-marquee";
 import { profile } from "@/data/profile";
 import { heroContent } from "@/data/site-content";
 import { INTRO_REVEAL_EVENT } from "@/lib/intro";
@@ -23,6 +18,9 @@ gsap.registerPlugin(useGSAP);
 
 export function HeroDossier() {
   const rootRef = useRef<HTMLElement | null>(null);
+  const portraitRef = useRef<HTMLDivElement | null>(null);
+  const insetOneRef = useRef<HTMLDivElement | null>(null);
+  const insetTwoRef = useRef<HTMLDivElement | null>(null);
   const [introReady, setIntroReady] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
 
@@ -32,19 +30,9 @@ export function HeroDossier() {
       return;
     }
 
-    let revealed = false;
-
-    function revealHero() {
-      if (revealed) {
-        return;
-      }
-
-      revealed = true;
-      setIntroReady(true);
-    }
-
+    const revealHero = () => setIntroReady(true);
     window.addEventListener(INTRO_REVEAL_EVENT, revealHero, { once: true });
-    const fallbackTimer = window.setTimeout(revealHero, 7200);
+    const fallbackTimer = window.setTimeout(revealHero, 6500);
 
     return () => {
       window.removeEventListener(INTRO_REVEAL_EVENT, revealHero);
@@ -54,296 +42,175 @@ export function HeroDossier() {
 
   useGSAP(
     () => {
-      if (
-        !introReady ||
-        reducedMotion ||
-        window.matchMedia(prefersReducedMotionQuery).matches
-      ) {
+      if (!introReady || reducedMotion || window.matchMedia(prefersReducedMotionQuery).matches) {
         return;
       }
 
-      const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      timeline
-        .from(".hero-grid-plane", {
-          opacity: 0,
-          scale: 0.985,
-          duration: 0.75,
-        })
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+      intro
+        .from("[data-hero-greeting]", { autoAlpha: 0, duration: 0.24, x: -14 })
         .from(
-          ".hero-meta",
-          {
-            y: 16,
-            opacity: 0,
-            duration: 0.42,
-            stagger: 0.06,
-          },
-          "-=0.35",
+          "[data-hero-name-mask]",
+          { duration: 0.58, stagger: 0.055, yPercent: 108 },
+          "-=0.08",
+        )
+        .fromTo(
+          "[data-hero-stencil-middle]",
+          { x: (index) => (index % 2 === 0 ? -11 : 9) },
+          { duration: 0.42, stagger: 0.04, x: 0 },
+          "-=0.42",
         )
         .from(
-          ".hero-lockup-rail",
-          {
-            scaleX: 0,
-            opacity: 0,
-            transformOrigin: "left center",
-            duration: 0.45,
-            stagger: 0.08,
-          },
-          "-=0.22",
-        )
-        .from(
-          ".hero-name-primary",
-          {
-            clipPath: "inset(0 0 100% 0)",
-            y: 44,
-            duration: 0.82,
-          },
-          "-=0.16",
-        )
-        .from(
-          ".hero-name-outline",
-          {
-            clipPath: "inset(100% 0 0 0)",
-            y: -28,
-            opacity: 0,
-            duration: 0.78,
-          },
-          "-=0.56",
-        )
-        .from(
-          ".hero-positioning",
-          {
-            y: 18,
-            opacity: 0,
-            duration: 0.5,
-          },
-          "-=0.28",
-        )
-        .from(
-          ".hero-copy",
-          {
-            y: 16,
-            opacity: 0,
-            duration: 0.48,
-          },
-          "-=0.3",
-        )
-        .from(
-          ".hero-actions",
-          {
-            y: 14,
-            opacity: 0,
-            duration: 0.44,
-          },
-          "-=0.26",
-        )
-        .from(
-          ".hero-symbol",
-          {
-            scale: 0.88,
-            opacity: 0,
-            duration: 0.46,
-            stagger: 0.08,
-          },
+          "[data-hero-portrait]",
+          { clipPath: "inset(0 0 100% 0)", duration: 0.78, scale: 1.035 },
           "-=0.48",
         )
+        .fromTo(
+          "[data-hero-measure-path]",
+          { strokeDasharray: 1, strokeDashoffset: 1 },
+          { duration: 0.44, stagger: 0.018, strokeDashoffset: 0 },
+          "-=0.52",
+        )
+        .from("[data-hero-measurements]", { autoAlpha: 0, duration: 0.28 }, "-=0.45")
         .from(
-          ".hero-coordinate",
-          {
-            y: 10,
-            opacity: 0,
-            duration: 0.36,
-            stagger: 0.05,
-          },
+          "[data-hero-inset]",
+          { autoAlpha: 0, clipPath: "inset(100% 0 0 0)", duration: 0.46, stagger: 0.08, y: 16 },
           "-=0.34",
-        );
+        )
+        .fromTo(
+          "[data-hero-connector-path]",
+          { strokeDasharray: 1, strokeDashoffset: 1 },
+          { duration: 0.48, strokeDashoffset: 0 },
+          "-=0.36",
+        )
+        .from("[data-hero-positioning], [data-hero-summary]", {
+          autoAlpha: 0,
+          duration: 0.36,
+          stagger: 0.055,
+          y: 14,
+        }, "-=0.32")
+        .from("[data-hero-action]", { autoAlpha: 0, duration: 0.3, stagger: 0.06, y: 10 }, "-=0.22")
+        .from("[data-hero-marquee]", { autoAlpha: 0, duration: 0.32, y: 18 }, "-=0.18");
 
-      gsap.to(".hero-scanline", {
-        xPercent: 118,
-        duration: 5.6,
-        ease: "none",
-        repeat: -1,
-        stagger: 0.55,
+      const root = rootRef.current;
+      const portrait = portraitRef.current;
+      const insetOne = insetOneRef.current;
+      const insetTwo = insetTwoRef.current;
+      if (!root || !portrait || !insetOne || !insetTwo) {
+        return;
+      }
+
+      const responsiveMotion = gsap.matchMedia();
+      responsiveMotion.add("(min-width: 1024px) and (pointer: fine)", () => {
+        const portraitX = gsap.quickTo(portrait, "x", { duration: 0.72, ease: "power3.out" });
+        const portraitY = gsap.quickTo(portrait, "y", { duration: 0.72, ease: "power3.out" });
+        const insetOneX = gsap.quickTo(insetOne, "x", { duration: 0.62, ease: "power3.out" });
+        const insetOneY = gsap.quickTo(insetOne, "y", { duration: 0.62, ease: "power3.out" });
+        const insetTwoX = gsap.quickTo(insetTwo, "x", { duration: 0.58, ease: "power3.out" });
+        const insetTwoY = gsap.quickTo(insetTwo, "y", { duration: 0.58, ease: "power3.out" });
+
+        const resetPosition = () => {
+          portraitX(0);
+          portraitY(0);
+          insetOneX(0);
+          insetOneY(0);
+          insetTwoX(0);
+          insetTwoY(0);
+        };
+
+        const handlePointerMove = (event: PointerEvent) => {
+          const bounds = root.getBoundingClientRect();
+          const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+          const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+          portraitX(x * 8);
+          portraitY(y * 6);
+          insetOneX(x * 13);
+          insetOneY(y * 9);
+          insetTwoX(x * 10);
+          insetTwoY(y * 12);
+        };
+
+        root.addEventListener("pointermove", handlePointerMove, { passive: true });
+        root.addEventListener("pointerleave", resetPosition);
+        return () => {
+          root.removeEventListener("pointermove", handlePointerMove);
+          root.removeEventListener("pointerleave", resetPosition);
+        };
       });
 
-      gsap.to(".hero-pulse", {
-        opacity: 0.34,
-        scale: 0.92,
-        duration: 1.8,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.22,
-      });
-
-      gsap.to(".hero-signal-meter", {
-        scaleX: 0.58,
-        duration: 2.4,
-        ease: "sine.inOut",
-        repeat: -1,
-        yoyo: true,
-        stagger: 0.18,
-      });
+      return () => responsiveMotion.revert();
     },
     { scope: rootRef, dependencies: [introReady, reducedMotion] },
   );
 
-  function handlePointerMove(event: React.PointerEvent<HTMLElement>) {
-    if (reducedMotion || !rootRef.current) {
-      return;
-    }
-
-    const rect = rootRef.current.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-    rootRef.current.style.setProperty("--hero-x", x.toFixed(3));
-    rootRef.current.style.setProperty("--hero-y", y.toFixed(3));
-  }
-
   return (
-    <section
-      ref={rootRef}
-      className="relative isolate min-h-[100svh] overflow-hidden border-b border-graphite-border bg-graphite-page pt-16 tablet:pt-[4.5rem]"
-      onPointerMove={handlePointerMove}
-      style={
-        {
-          "--hero-x": 0,
-          "--hero-y": 0,
-        } as React.CSSProperties
-      }
-    >
-      <div aria-hidden="true" className="hero-grid-plane absolute inset-0">
-        <div className="absolute inset-0 opacity-70 kwf-grid" />
-        <div className="absolute inset-0 kwf-field-depth" />
-        <span className="hero-scanline absolute left-[-44%] top-[26%] h-px w-[44%] bg-signal/45" />
-        <span className="hero-scanline absolute left-[-52%] top-[58%] h-px w-[52%] bg-ink-primary/16" />
-        <span className="hero-scanline absolute left-[-38%] top-[76%] h-px w-[38%] bg-signal/30" />
-        <span className="absolute left-[12%] top-[19%] h-px w-[76%] bg-graphite-border" />
-        <span className="absolute bottom-[18%] left-[18%] h-px w-[64%] bg-graphite-border" />
-        <span className="absolute left-[50%] top-[12%] hidden h-[72%] w-px bg-graphite-border tablet:block" />
-      </div>
-      <div aria-hidden="true" className="kwf-corner-field absolute inset-x-4 top-20 z-[1] hidden h-[calc(100%-7rem)] tablet:block" />
+    <section ref={rootRef} className="kinetic-hero bg-graphite-page pt-16 tablet:pt-[4.5rem]">
+      <div className="kinetic-hero-artboard container-grid">
+        <span aria-hidden="true" className="hero-artboard-corner hero-artboard-corner-a" />
+        <span aria-hidden="true" className="hero-artboard-corner hero-artboard-corner-b" />
+        <span aria-hidden="true" className="hero-artboard-corner hero-artboard-corner-c" />
+        <span aria-hidden="true" className="hero-artboard-corner hero-artboard-corner-d" />
 
-      <div
-        aria-hidden="true"
-        className="hero-symbol hero-pulse absolute left-[9%] top-[28%] hidden h-12 w-12 items-center justify-center border border-graphite-strong text-signal tablet:flex"
-        style={{
-          transform:
-            "translate3d(calc(var(--hero-x) * -16px), calc(var(--hero-y) * -10px), 0)",
-        }}
-      >
-        <Braces size={18} strokeWidth={1.6} />
-      </div>
-      <div
-        aria-hidden="true"
-        className="hero-symbol hero-pulse absolute right-[12%] top-[31%] hidden h-11 w-11 items-center justify-center border border-graphite-strong text-ink-secondary laptop:flex"
-        style={{
-          transform:
-            "translate3d(calc(var(--hero-x) * 14px), calc(var(--hero-y) * 8px), 0)",
-        }}
-      >
-        <Database size={17} strokeWidth={1.6} />
-      </div>
-      <div
-        aria-hidden="true"
-        className="hero-symbol hero-pulse absolute bottom-[22%] right-[19%] hidden h-10 w-10 items-center justify-center border border-graphite-strong text-signal/90 tablet:flex"
-        style={{
-          transform:
-            "translate3d(calc(var(--hero-x) * 9px), calc(var(--hero-y) * 14px), 0)",
-        }}
-      >
-        <Smartphone size={17} strokeWidth={1.6} />
-      </div>
-
-      <div className="container-grid relative z-10 flex min-h-[calc(100svh-4rem)] flex-col items-center justify-center gap-8 py-12 text-center tablet:min-h-[calc(100svh-4.5rem)] tablet:gap-10 tablet:py-16">
-        <div className="hero-meta flex max-w-5xl flex-wrap items-center justify-center gap-2 text-ink-muted">
-          {heroContent.meta.map((item) => (
-            <span
-              key={item.label}
-              className="inline-flex items-center gap-2 border border-graphite-border bg-graphite-page/72 px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.08em]"
-            >
-              <span className="text-signal">{item.label}</span>
-              <span>{item.value}</span>
-            </span>
-          ))}
-        </div>
-
-        <div className="hero-identity-lockup relative w-full max-w-[min(1340px,100%)] px-2 tablet:px-8">
-          <span aria-hidden="true" className="hero-lockup-rail absolute left-0 top-[36%] hidden h-px w-24 bg-signal/60 tablet:block" />
-          <span aria-hidden="true" className="hero-lockup-rail absolute right-0 top-[66%] hidden h-px w-24 bg-ink-primary/30 tablet:block" />
-          <h1
-            aria-label={profile.name}
-            className="hero-name-stack select-none text-center"
-          >
-            <span className="hero-name-primary kwf-display-fill block overflow-hidden text-ink-primary" data-word="KEVIN">
-              KEVIN
-            </span>
-            <span className="hero-name-outline kwf-outline block overflow-visible text-ink-primary" data-word="WILLIAM FAITH">
-              WILLIAM FAITH
-            </span>
-          </h1>
-
-          <p className="hero-positioning hero-strapline mx-auto mt-7 max-w-5xl text-balance font-semibold leading-tight text-ink-primary tablet:mt-8">
-            {heroContent.positioning}
-          </p>
-          <p className="hero-copy mx-auto mt-5 max-w-2xl text-sm leading-[1.7] text-ink-secondary tablet:text-base">
-            {heroContent.summary}
-          </p>
-        </div>
-
-        <div className="hero-actions flex flex-col gap-3 xs:flex-row xs:flex-wrap xs:justify-center">
-          <Link
-            className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] bg-signal px-5 py-3 text-sm font-medium text-graphite-page transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
-            href="#work"
-          >
-            {heroContent.primaryAction}
-            <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-1" size={16} />
-          </Link>
-          {profile.resumeUrl ? (
-            <a
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] border border-graphite-strong px-5 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-              href={profile.resumeUrl}
-            >
-              Download Resume
-              <Download aria-hidden="true" size={16} />
-            </a>
-          ) : null}
-          <Link
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[4px] border border-graphite-strong px-5 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-            href="#contact"
-          >
-            {heroContent.contactAction}
-            <MessageCircle aria-hidden="true" size={16} />
-          </Link>
-        </div>
-
-        <div className="hero-coordinate grid w-full max-w-4xl grid-cols-2 gap-2 pt-2 text-left tablet:grid-cols-4">
-          {heroContent.coordinates.map((coordinate, index) => (
-            <div
-              key={coordinate.label}
-              className="casefile-coordinate border-t border-graphite-border pt-3 font-mono text-[0.58rem] uppercase tracking-[0.08em] text-ink-muted"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span>
-                  <span className="mr-2 text-signal">{String(index + 1).padStart(2, "0")}</span>
-                  {coordinate.label}
-                </span>
-                <span aria-hidden="true" className="h-px w-8 bg-graphite-strong">
-                  <span
-                    className="hero-signal-meter block h-px origin-left bg-signal"
-                    style={{ width: `${coordinate.strength}%` }}
-                  />
-                </span>
-              </div>
+        <div className="kinetic-hero-grid">
+          <div className="hero-identity-block">
+            <div className="hero-greeting" data-hero-greeting>
+              <span aria-hidden="true" className="hero-greeting-corner" />
+              <p>{heroContent.greeting}</p>
+              <span aria-hidden="true" className="hero-greeting-rule" />
+              <span aria-hidden="true" className="hero-greeting-node" />
             </div>
-          ))}
-        </div>
 
-        <div className="hero-meta flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
-          <MapPin aria-hidden="true" className="text-signal" size={14} />
-          Based in Indonesia
+            <SegmentedName name={profile.name} />
+          </div>
+
+          <PortraitComposition
+            insetOneRef={insetOneRef}
+            insetTwoRef={insetTwoRef}
+            portraitRef={portraitRef}
+          />
+
+          <div className="hero-copy-block">
+            <p className="hero-positioning" data-hero-positioning>
+              {heroContent.positioning}
+            </p>
+            <p className="hero-summary" data-hero-summary>
+              {heroContent.summary}
+            </p>
+
+            <div className="hero-actions">
+              <Link className="kinetic-primary-action group" data-hero-action href="#work">
+                <span>{heroContent.primaryAction}</span>
+                <ArrowRight aria-hidden="true" size={17} />
+              </Link>
+              {profile.githubUrl ? (
+                <a
+                  aria-label="View Kevin's GitHub profile"
+                  className="kinetic-secondary-action group"
+                  data-hero-action
+                  href={profile.githubUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <span>{heroContent.secondaryAction}</span>
+                  <ArrowUpRight aria-hidden="true" size={15} />
+                </a>
+              ) : null}
+            </div>
+          </div>
+
+          <svg aria-hidden="true" className="hero-connector" preserveAspectRatio="none" viewBox="0 0 1000 700">
+            <path
+              className="hero-connector-path"
+              d="M470 610H512V468H548"
+              data-hero-connector-path
+              pathLength="1"
+            />
+            <rect className="hero-connector-node" height="8" width="8" x="544" y="464" />
+          </svg>
         </div>
       </div>
+
+      <SkillSignalMarquee />
     </section>
   );
 }

@@ -1,41 +1,74 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+"use client";
+
+import { Minus, Plus } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import { workApproachContent } from "@/data/site-content";
 
 export function EvidenceAbout() {
-  return (
-    <section id="capabilities" className="relative border-b border-graphite-border py-20 tablet:py-28">
-      <div className="container-grid grid gap-10 desktop:grid-cols-12">
-        <div className="desktop:col-span-5">
-          <p className="technical-label mb-5 text-ink-muted">{workApproachContent.label}</p>
-          <h2 className="max-w-3xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl">
-            {workApproachContent.title}
-          </h2>
-          <p className="mt-7 max-w-xl text-base leading-[1.55] text-ink-secondary tablet:text-lg">
-            {workApproachContent.summary}
-          </p>
-          <Link
-            className="group mt-8 inline-flex items-center gap-2 text-sm font-medium text-ink-primary transition hover:text-signal"
-            href="#contact"
-          >
-            {workApproachContent.action}
-            <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-1" size={16} />
-          </Link>
-        </div>
+  const [activeIndex, setActiveIndex] = useState(0);
 
-        <div className="desktop:col-span-6 desktop:col-start-7">
-          <div className="grid gap-px overflow-hidden rounded-[10px] border border-graphite-strong bg-graphite-strong">
-            {workApproachContent.rows.map((row, index) => (
-              <article key={row.question} className="bg-graphite-base p-5 tablet:p-6">
-                <div className="mb-6 flex items-center justify-between gap-5">
-                  <p className="technical-label text-signal">{String(index + 1).padStart(2, "0")}</p>
-                  <p className="technical-label text-ink-muted">{row.evidence}</p>
+  return (
+    <section id="capabilities" className="border-b border-graphite-strong bg-graphite-page py-20 tablet:py-28">
+      <div className="container-grid">
+        <p className="font-mono text-xs uppercase text-signal">{workApproachContent.label}</p>
+
+        <div className="relative mt-9 grid gap-0 laptop:grid-cols-[10rem_1fr]">
+          <span aria-hidden="true" className="absolute bottom-10 left-[4.75rem] top-10 hidden w-px bg-signal laptop:block" />
+
+          {workApproachContent.rows.map((row, index) => {
+            const active = index === activeIndex;
+            return (
+              <article key={row.question} className="contents">
+                <button
+                  aria-expanded={active}
+                  className="relative flex min-h-20 items-center justify-between border-t border-graphite-strong py-4 text-left laptop:min-h-28 laptop:items-start laptop:pt-6"
+                  onClick={() => setActiveIndex(index)}
+                  type="button"
+                >
+                  <span className="font-mono text-5xl leading-none text-signal tablet:text-6xl">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="bg-graphite-page text-signal laptop:absolute laptop:left-[4.25rem] laptop:top-7">
+                    {active ? <Minus aria-hidden="true" size={17} /> : <Plus aria-hidden="true" size={17} />}
+                  </span>
+                </button>
+
+                <div className="border-t border-graphite-strong py-5 laptop:min-h-28 laptop:py-6">
+                  <button
+                    aria-expanded={active}
+                    className="flex min-h-11 w-full items-center justify-between gap-5 text-left"
+                    onClick={() => setActiveIndex(index)}
+                    type="button"
+                  >
+                    <h3 className={active ? "text-lg font-semibold uppercase text-signal tablet:text-xl" : "text-lg font-semibold uppercase text-ink-primary tablet:text-xl"}>
+                      {row.question}
+                    </h3>
+                    {active ? <Minus aria-hidden="true" className="text-signal laptop:hidden" size={17} /> : <Plus aria-hidden="true" className="text-signal laptop:hidden" size={17} />}
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {active ? (
+                      <motion.div
+                        animate={{ height: "auto", opacity: 1 }}
+                        className="overflow-hidden"
+                        exit={{ height: 0, opacity: 0 }}
+                        initial={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <p className="max-w-3xl pt-4 text-base leading-7 text-ink-secondary tablet:text-lg">
+                          {row.answer}
+                        </p>
+                        <p className="pt-5 font-mono text-[0.6rem] uppercase text-signal">
+                          Project / {row.evidence}
+                        </p>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
-                <h3 className="text-2xl font-semibold leading-tight text-ink-primary">{row.question}</h3>
-                <p className="mt-4 text-sm leading-6 text-ink-secondary">{row.answer}</p>
               </article>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>

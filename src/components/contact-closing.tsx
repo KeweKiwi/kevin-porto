@@ -1,74 +1,59 @@
-import Link from "next/link";
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { ArrowRight, ExternalLink, Github, Linkedin, Mail } from "lucide-react";
 import { profile } from "@/data/profile";
 import { contactContent } from "@/data/site-content";
 
 export function ContactClosing() {
-  const hasEmail = Boolean(profile.email);
-  const hasResume = Boolean(profile.resumeUrl);
+  const primaryHref = profile.email ? `mailto:${profile.email}` : profile.githubUrl;
+  const primaryLabel = profile.email ? contactContent.emailAction : contactContent.githubAction;
+  const PrimaryIcon = profile.email ? Mail : Github;
 
   return (
-    <section id="contact" className="relative overflow-hidden py-20 tablet:py-28 desktop:py-36">
-      <div className="absolute left-[12%] top-0 hidden h-full w-px bg-graphite-border desktop:block" />
-      <div className="container-grid grid gap-10 desktop:grid-cols-12">
-        <div className="desktop:col-span-8">
-          <p className="technical-label mb-5 text-ink-muted">{contactContent.label}</p>
-          <h2 className="max-w-5xl text-5xl font-semibold leading-[0.95] text-ink-primary tablet:text-7xl desktop:text-8xl">
-            {contactContent.title}
-          </h2>
-        </div>
-        <div className="grid gap-5 desktop:col-span-4 desktop:self-end">
-          <p className="text-base leading-[1.55] text-ink-secondary">
-            {contactContent.summary}
-          </p>
-          <div className="flex flex-col gap-3">
-            {hasEmail && profile.email ? (
+    <section id="contact" className="contact-editorial overflow-hidden bg-graphite-page pt-20 tablet:pt-28 desktop:pt-32">
+      <div className="container-grid">
+        <div className="grid gap-10 desktop:grid-cols-[minmax(0,1.2fr)_minmax(320px,.8fr)] desktop:items-end">
+          <h2 className="contact-editorial-title uppercase text-ink-primary">{contactContent.title}</h2>
+
+          <div className="grid gap-7">
+            <p className="max-w-lg text-base leading-7 text-ink-secondary tablet:text-lg tablet:leading-8">
+              {contactContent.summary}
+            </p>
+
+            {primaryHref ? (
               <a
-                className="group inline-flex items-center justify-between rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page"
-                href={`mailto:${profile.email}`}
+                className="group flex min-h-20 items-center justify-between bg-signal px-5 text-xl font-semibold uppercase text-graphite-page tablet:min-h-24 tablet:px-7 tablet:text-2xl"
+                href={primaryHref}
+                rel={profile.email ? undefined : "noreferrer"}
+                target={profile.email ? undefined : "_blank"}
               >
-                {contactContent.emailAction}
-                <ArrowRight aria-hidden="true" className="transition group-hover:translate-x-1" size={16} />
+                <span className="flex items-center gap-3">
+                  <PrimaryIcon aria-hidden="true" size={22} strokeWidth={1.7} />
+                  {primaryLabel}
+                </span>
+                <ArrowRight aria-hidden="true" className="transition-transform group-hover:translate-x-1" size={24} />
               </a>
             ) : null}
-            {hasResume && profile.resumeUrl ? (
-              <a
-                className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-                href={profile.resumeUrl}
-              >
-                {contactContent.resumeAction}
-                <ExternalLink aria-hidden="true" size={16} />
+
+            <div className="flex flex-wrap gap-x-7 gap-y-3">
+              {profile.linkedinUrl ? (
+                <a className="inline-flex min-h-11 items-center gap-2 border-b border-signal text-sm text-ink-primary hover:text-signal" href={profile.linkedinUrl} rel="noreferrer" target="_blank">
+                  <Linkedin aria-hidden="true" size={15} />
+                  {contactContent.linkedinAction}
+                </a>
+              ) : null}
+              {profile.resumeUrl ? (
+                <a className="inline-flex min-h-11 items-center gap-2 border-b border-signal text-sm text-ink-primary hover:text-signal" href={profile.resumeUrl} rel="noreferrer" target="_blank">
+                  {contactContent.resumeAction}
+                  <ExternalLink aria-hidden="true" size={14} />
+                </a>
+              ) : null}
+              <a className="inline-flex min-h-11 items-center gap-2 border-b border-signal text-sm text-ink-primary hover:text-signal" href="https://rizkimobil.com" rel="noreferrer" target="_blank">
+                {contactContent.liveWorkAction}
+                <ExternalLink aria-hidden="true" size={14} />
               </a>
-            ) : null}
-            {profile.githubUrl ? (
-              <a
-                className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-                href={profile.githubUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {contactContent.githubAction}
-                <Github aria-hidden="true" size={16} />
-              </a>
-            ) : null}
-            <Link
-              className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-              href="/projects/quackfight"
-            >
-              {contactContent.nativeCaseAction}
-              <ArrowRight aria-hidden="true" size={16} />
-            </Link>
-            <a
-              className="inline-flex items-center justify-between rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
-              href="https://rizkimobil.com"
-              rel="noreferrer"
-              target="_blank"
-            >
-              {contactContent.liveWorkAction}
-              <ExternalLink aria-hidden="true" size={16} />
-            </a>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );
