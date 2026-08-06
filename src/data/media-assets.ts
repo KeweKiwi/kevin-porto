@@ -8,6 +8,11 @@ export const portraitAsset: MediaAsset = {
   src: "/assets/profile/kevin-portrait.webp",
 };
 
+export const aboutPortraitAsset: MediaAsset = {
+  alt: "Kevin presenting the Squeaky finance prototype with his development team",
+  src: "/assets/profile/kevin-candid.webp",
+};
+
 export const architectureAssets = [
   {
     alt: "Architectural louver detail from Kevin's portrait location",
@@ -21,15 +26,41 @@ export const architectureAssets = [
 
 export const projectMediaAssets = {
   quackfight: {
-    hero: { alt: "QuackFight gameplay", src: null },
-    secondary: { alt: "QuackFight multiplayer session", src: null },
+    hero: {
+      alt: "QuackFight gameplay running on a development monitor",
+      src: "/assets/projects/quackfight/gameplay.webp",
+    },
+    secondary: {
+      alt: "QuackFight team development session at Apple Developer Academy",
+      src: "/assets/projects/quackfight/team-session.webp",
+    },
   },
   "rizki-mobil": {
-    hero: { alt: "Rizki Mobil public inventory", src: null },
-    secondary: { alt: "Rizki Mobil admin operations", src: null },
+    hero: {
+      alt: "Rizki Mobil production website homepage",
+      src: "/assets/projects/rizki-mobil/homepage.webp",
+    },
+    secondary: {
+      alt: "Rizki Mobil vehicle inventory administration",
+      src: "/assets/projects/rizki-mobil/inventory-admin.webp",
+    },
+    tertiary: {
+      alt: "Rizki Mobil administration overview",
+      src: "/assets/projects/rizki-mobil/admin-overview.webp",
+    },
   },
   squeaky: {
-    hero: { alt: "Squeaky dashboard", src: null },
-    secondary: { alt: "Squeaky App Shortcut flow", src: null },
+    hero: {
+      alt: "Squeaky finance prototype interface overview",
+      src: "/assets/projects/squeaky/overview.webp",
+    },
+    secondary: {
+      alt: "Squeaky transaction entry interface",
+      src: "/assets/projects/squeaky/transaction-entry.webp",
+    },
+    tertiary: {
+      alt: "Squeaky app icon",
+      src: "/assets/projects/squeaky/icon.webp",
+    },
   },
 } satisfies Record<string, Record<string, MediaAsset>>;

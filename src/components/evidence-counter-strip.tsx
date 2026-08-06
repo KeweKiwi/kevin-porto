@@ -12,6 +12,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 export function EvidenceCounterStrip() {
   const rootRef = useRef<HTMLElement | null>(null);
   const reducedMotion = usePrefersReducedMotion();
+  const primaryCounter = evidenceCounters.find((counter) => "prefix" in counter) ?? evidenceCounters[0];
+  const supportingCounters = evidenceCounters.filter((counter) => counter !== primaryCounter);
 
   useGSAP(
     () => {
@@ -30,9 +32,9 @@ export function EvidenceCounterStrip() {
 
         gsap.to(state, {
           value: target,
-          duration: 0.9,
-          ease: "power2.out",
-          scrollTrigger: { trigger: rootRef.current, start: "top 84%", once: true },
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: rootRef.current, start: "top 82%", once: true },
           onUpdate: () => {
             node.textContent = String(Math.round(state.value));
           },
@@ -44,34 +46,47 @@ export function EvidenceCounterStrip() {
 
       gsap.from("[data-proof-item]", {
         autoAlpha: 0,
-        duration: 0.5,
+        duration: 0.56,
         ease: "power3.out",
-        stagger: 0.07,
-        x: -14,
-        scrollTrigger: { trigger: rootRef.current, start: "top 84%", once: true },
+        stagger: 0.08,
+        y: 18,
+        scrollTrigger: { trigger: rootRef.current, start: "top 82%", once: true },
       });
     },
     { scope: rootRef, dependencies: [reducedMotion] },
   );
 
   return (
-    <section ref={rootRef} aria-label="Project highlights" className="border-b border-graphite-strong bg-graphite-page py-12 tablet:py-16">
-      <div className="container-grid grid gap-8 tablet:grid-cols-2 laptop:grid-cols-4">
-        {evidenceCounters.map((counter, index) => (
-          <article key={counter.label} className="proof-strip-item relative border-l border-graphite-strong pl-5" data-proof-item>
-            <p className="font-mono text-5xl leading-none text-signal tablet:text-6xl">
-              {"prefix" in counter ? counter.prefix : ""}
-              <span data-proof-value data-target={counter.value}>
-                {reducedMotion ? counter.value : 0}
-              </span>
-            </p>
-            <p className="mt-4 font-mono text-[0.65rem] uppercase text-ink-primary">
-              <span className="mr-2 text-ink-muted">{String(index + 1).padStart(2, "0")}</span>
-              {counter.label}
-            </p>
-            <p className="mt-2 max-w-xs text-sm leading-6 text-ink-secondary">{counter.detail}</p>
-          </article>
-        ))}
+    <section ref={rootRef} aria-label="Project evidence" className="border-b border-graphite-strong bg-graphite-page py-16 tablet:py-20">
+      <div className="container-grid grid border-y border-graphite-strong laptop:grid-cols-[minmax(0,1.25fr)_minmax(420px,.75fr)]">
+        <article className="grid gap-5 py-9 laptop:grid-cols-[auto_1fr] laptop:items-end laptop:border-r laptop:border-graphite-strong laptop:pr-10" data-proof-item>
+          <p className="font-mono text-[clamp(5.5rem,13vw,10rem)] leading-[0.72] text-signal">
+            {"prefix" in primaryCounter ? primaryCounter.prefix : ""}
+            <span data-proof-value data-target={primaryCounter.value}>
+              {reducedMotion ? primaryCounter.value : 0}
+            </span>
+          </p>
+          <div className="max-w-xs pb-1">
+            <p className="font-mono text-[0.64rem] uppercase text-ink-primary">{primaryCounter.label}</p>
+            <p className="mt-3 text-base leading-7 text-ink-secondary">{primaryCounter.detail} at the exhibition booth.</p>
+          </div>
+        </article>
+
+        <div className="grid tablet:grid-cols-3 laptop:grid-cols-1">
+          {supportingCounters.map((counter) => (
+            <article key={counter.label} className="grid grid-cols-[5rem_1fr] items-center border-t border-graphite-strong py-5 tablet:border-l tablet:border-t-0 tablet:px-5 laptop:border-l-0 laptop:border-t laptop:px-7 laptop:first:border-t-0" data-proof-item>
+              <p className="font-mono text-4xl leading-none text-ink-primary">
+                <span data-proof-value data-target={counter.value}>
+                  {reducedMotion ? counter.value : 0}
+                </span>
+              </p>
+              <div>
+                <p className="font-mono text-[0.6rem] uppercase text-signal">{counter.label}</p>
+                <p className="mt-1 text-sm leading-5 text-ink-secondary">{counter.detail}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

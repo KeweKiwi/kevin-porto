@@ -686,21 +686,23 @@ select {
   min-height: 100%;
 }
 
-.project-media-word {
-  max-width: calc(100% - 2.5rem);
-  overflow: hidden;
-  font-size: 5rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  line-height: 0.84;
-  white-space: nowrap;
+.project-media-primary,
+.project-media-inset {
+  position: absolute;
+}
+
+.project-media-vignette {
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(243, 240, 232, 0.04),
+    inset 0 -90px 100px -80px rgba(8, 9, 9, 0.78);
 }
 
 .about-editorial-title {
-  font-size: 2.7rem;
+  font-size: 2.35rem;
   font-weight: 700;
   letter-spacing: 0;
-  line-height: 0.92;
+  line-height: 0.9;
 }
 
 .contact-editorial-title {
@@ -732,12 +734,8 @@ select {
     font-size: 1rem;
   }
 
-  .project-media-word {
-    font-size: 7rem;
-  }
-
   .about-editorial-title {
-    font-size: 4.25rem;
+    font-size: 4rem;
   }
 
   .contact-editorial-title {
@@ -831,11 +829,11 @@ select {
   }
 
   .about-editorial-title {
-    font-size: 4.8rem;
+    font-size: clamp(3.7rem, 4.5vw, 4.7rem);
   }
 
   .contact-editorial-title {
-    font-size: 6rem;
+    font-size: clamp(4.4rem, 5.1vw, 5.2rem);
   }
 
   .kinetic-work-scroll {
@@ -869,38 +867,40 @@ select {
   }
 
   .contact-editorial-title {
-    font-size: 6.75rem;
+    font-size: 5.2rem;
   }
 }
 
-[data-work-media-layer],
-[data-work-copy-layer],
+[data-work-card],
+[data-work-project-media],
 [data-hero-portrait],
 [data-hero-inset] {
   will-change: transform, opacity, clip-path;
 }
 
-[data-work-media-layer][aria-hidden="true"],
-[data-work-copy-layer][aria-hidden="true"] {
+[data-work-card][aria-hidden="true"] {
   pointer-events: none;
 }
 
-[data-work-media-layer][data-work-index]:not([data-work-index="0"]),
-[data-work-copy-layer][data-work-index]:not([data-work-index="0"]) {
+[data-work-card][data-work-index]:not([data-work-index="0"]) {
   visibility: hidden;
   opacity: 0;
 }
 
-[data-reduced-motion="true"] [data-work-media-layer][aria-hidden="false"],
-[data-reduced-motion="true"] [data-work-copy-layer][aria-hidden="false"] {
+[data-reduced-motion="true"] [data-work-card][aria-hidden="false"] {
   visibility: visible;
   opacity: 1;
 }
 
-[data-reduced-motion="true"] [data-work-media-layer][aria-hidden="true"],
-[data-reduced-motion="true"] [data-work-copy-layer][aria-hidden="true"] {
+[data-reduced-motion="true"] [data-work-card][aria-hidden="true"] {
   visibility: hidden;
   opacity: 0;
+}
+
+@media (min-width: 1024px) {
+  .kinetic-work-scroll[data-reduced-motion="true"] {
+    min-height: calc(100svh - var(--nav-height));
+  }
 }
 
 .skill-marquee-row {

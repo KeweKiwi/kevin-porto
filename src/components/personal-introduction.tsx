@@ -1,12 +1,11 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { MediaSlot } from "@/components/media-slot";
-import { portraitAsset } from "@/data/media-assets";
+import { aboutPortraitAsset } from "@/data/media-assets";
 import { profile } from "@/data/profile";
 import { aboutContent } from "@/data/site-content";
 import { prefersReducedMotionQuery } from "@/lib/motion";
@@ -41,10 +40,10 @@ export function PersonalIntroduction() {
 
       timeline
         .from("[data-portrait-frame]", {
-          clipPath: "inset(0 0 100% 0)",
-          duration: 0.9,
+          clipPath: "inset(0 0 0 100%)",
+          duration: 1,
           ease: "power4.out",
-          scale: 1.035,
+          scale: 1.025,
         })
         .from(
           "[data-about-title] > span > span",
@@ -53,7 +52,7 @@ export function PersonalIntroduction() {
         )
         .from(
           "[data-about-copy], [data-about-meta]",
-          { autoAlpha: 0, x: 20, duration: 0.42, stagger: 0.06, ease: "power3.out" },
+          { autoAlpha: 0, y: 18, duration: 0.46, stagger: 0.05, ease: "power3.out" },
           "-=0.28",
         )
         .from(
@@ -63,68 +62,69 @@ export function PersonalIntroduction() {
         )
         .fromTo(
           "[data-about-trace]",
-          { scaleY: 0, transformOrigin: "top center" },
-          { duration: 0.7, ease: "power3.inOut", scaleY: 1 },
+          { scaleX: 0, transformOrigin: "left center" },
+          { duration: 0.75, ease: "power3.inOut", scaleX: 1 },
           0.12,
         );
     },
     { scope: rootRef, dependencies: [reducedMotion] },
   );
 
-  const titleLines = ["Engineering with ownership,", "from architecture to delivery."];
-
   return (
-    <section ref={rootRef} id="about" className="relative overflow-hidden border-b border-graphite-border bg-graphite-page py-20 tablet:py-28 desktop:py-32">
-      <span aria-hidden="true" className="absolute right-0 top-4 hidden text-[12rem] font-semibold leading-none text-graphite-raised desktop:block">
-        02
-      </span>
+    <section ref={rootRef} id="about" className="relative overflow-hidden border-b border-graphite-border bg-graphite-base py-20 tablet:py-28 desktop:py-32">
+      <div className="container-grid relative">
+        <div className="grid gap-12 laptop:grid-cols-12 laptop:items-center">
+          <div className="relative z-10 laptop:col-span-7">
+            <p className="mb-6 font-mono text-xs uppercase text-signal">{aboutContent.sectionLabel}</p>
+            <h2 className="about-editorial-title uppercase text-ink-primary" data-about-title>
+              {aboutContent.titleLines.map((line) => (
+                <span key={line} className="block overflow-hidden">
+                  <span className="block laptop:whitespace-nowrap">{line}</span>
+                </span>
+              ))}
+            </h2>
 
-      <div className="container-grid relative grid gap-12 laptop:grid-cols-12 laptop:items-stretch">
-        <div className="relative laptop:col-span-5" data-portrait-frame>
-          <MediaSlot
-            asset={portraitAsset}
-            className="aspect-[4/5] min-h-[440px] border-r border-graphite-strong tablet:min-h-[620px]"
-            sizes="(max-width: 1023px) 100vw, 42vw"
-          />
-          <span aria-hidden="true" className="absolute -left-4 top-10 h-[72%] w-px bg-signal" data-about-trace />
+            <span aria-hidden="true" className="mt-7 block h-px w-full max-w-xl bg-signal" data-about-trace />
+
+            <div className="mt-7 grid max-w-3xl gap-4 text-base leading-7 text-ink-secondary tablet:grid-cols-2 tablet:text-lg tablet:leading-8" data-about-copy>
+              {aboutContent.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative laptop:col-span-5" data-portrait-frame>
+            <MediaSlot
+              asset={aboutPortraitAsset}
+              className="aspect-[4/5] border border-graphite-strong"
+              imageClassName="object-cover object-center"
+              sizes="(max-width: 1023px) 100vw, 40vw"
+            />
+            <span className="absolute -bottom-px -left-px border border-graphite-strong bg-graphite-page px-4 py-3 font-mono text-[0.6rem] uppercase text-ink-secondary">
+              Team delivery / Squeaky
+            </span>
+          </div>
         </div>
 
-        <div className="relative z-10 laptop:col-span-6 laptop:col-start-7 laptop:self-center">
-          <p className="mb-6 font-mono text-xs uppercase text-signal">{aboutContent.sectionLabel}</p>
-          <h2 className="about-editorial-title uppercase text-ink-primary" data-about-title>
-            {titleLines.map((line) => (
-              <span key={line} className="block overflow-hidden">
-                <span className="block">{line}</span>
-              </span>
-            ))}
-          </h2>
+        <dl className="mt-12 grid border-y border-graphite-strong tablet:grid-cols-2 laptop:grid-cols-4">
+          {metadata.map((item) => (
+            <div key={item.label} className="border-b border-graphite-border py-5 tablet:px-5 tablet:[&:nth-last-child(-n+2)]:border-b-0 laptop:border-b-0 laptop:border-r laptop:last:border-r-0" data-about-meta>
+              <dt className="font-mono text-[0.6rem] uppercase text-signal">{item.label}</dt>
+              <dd className="mt-2 max-w-xs text-sm leading-6 text-ink-primary">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
 
-          <div className="mt-7 max-w-2xl space-y-4 text-base leading-7 text-ink-secondary tablet:text-lg tablet:leading-8" data-about-copy>
-            {aboutContent.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-
-          <dl className="mt-9 border-y border-graphite-strong">
-            {metadata.map((item) => (
-              <div key={item.label} className="grid gap-2 border-b border-graphite-border py-3 last:border-b-0 tablet:grid-cols-[7rem_1fr]" data-about-meta>
-                <dt className="font-mono text-[0.6rem] uppercase text-signal">{item.label}</dt>
-                <dd className="text-sm leading-6 text-ink-primary">{item.value}</dd>
+        <div className="grid border-b border-graphite-strong tablet:grid-cols-3">
+          {aboutContent.capabilities.map((item, index) => (
+            <article key={item.label} className="border-b border-graphite-border py-6 tablet:border-b-0 tablet:border-r tablet:px-5 tablet:last:border-r-0" data-about-capability>
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="text-xl font-semibold uppercase text-ink-primary">{item.label}</h3>
+                <span className="font-mono text-[0.6rem] text-signal">0{index + 1}</span>
               </div>
-            ))}
-          </dl>
-
-          <div className="mt-9 grid gap-6 tablet:grid-cols-3">
-            {aboutContent.capabilities.map((item) => (
-              <article key={item.label} className="border-l border-graphite-strong pl-4" data-about-capability>
-                <div className="flex items-center gap-2 text-signal">
-                  <ArrowUpRight aria-hidden="true" size={18} strokeWidth={1.5} />
-                  <h3 className="text-lg font-semibold uppercase text-ink-primary">{item.label}</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-ink-secondary">{item.proof}</p>
-              </article>
-            ))}
-          </div>
+              <p className="mt-3 max-w-sm text-sm leading-6 text-ink-secondary">{item.proof}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
