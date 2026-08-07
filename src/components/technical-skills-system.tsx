@@ -79,7 +79,7 @@ export function TechnicalSkillsSystem() {
         <header className="grid gap-6 border-b border-graphite-strong pb-9 laptop:grid-cols-[minmax(0,1.25fr)_minmax(280px,.75fr)] laptop:items-end">
           <div>
             <p className="font-mono text-xs uppercase text-signal">{skillsSectionContent.label}</p>
-            <h2 className="mt-5 max-w-5xl text-[2rem] font-semibold uppercase leading-[0.95] text-ink-primary tablet:text-6xl desktop:text-7xl">
+            <h2 className="mt-5 max-w-5xl text-balance font-display text-[clamp(2.75rem,7.5vw,4rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-ink-primary tablet:text-[clamp(4rem,6vw,5.6rem)]">
               {skillsSectionContent.title}
             </h2>
           </div>
@@ -103,8 +103,8 @@ export function TechnicalSkillsSystem() {
                   onClick={() => selectGroup(group)}
                   type="button"
                 >
-                  <span className="font-mono text-[0.62rem] text-signal">0{index + 1}</span>
-                  <span className="text-xs font-medium uppercase leading-5 laptop:text-sm">
+                  <span className="font-mono text-[0.68rem] text-signal">0{index + 1}</span>
+                  <span className="text-xs font-semibold leading-5 laptop:text-sm">
                     <span className="laptop:hidden">{groupShortTitles[group.id]}</span>
                     <span className="hidden laptop:inline">{groupTitles[group.id]}</span>
                   </span>
@@ -116,10 +116,10 @@ export function TechnicalSkillsSystem() {
           <div className="min-w-0 border-b border-graphite-strong p-5 tablet:p-7 laptop:border-b-0 laptop:border-r">
             <div className="flex items-end justify-between gap-5 border-b border-graphite-strong pb-5">
               <div>
-                <p className="font-mono text-[0.58rem] uppercase text-signal">{groupTitles[activeGroup.id]}</p>
-                <p className="mt-2 max-w-xl text-sm leading-6 text-ink-secondary">{activeGroup.summary}</p>
+                <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">{groupTitles[activeGroup.id]}</p>
+                <p className="mt-2 max-w-xl text-base leading-7 text-ink-secondary">{activeGroup.summary}</p>
               </div>
-              <span className="hidden font-mono text-[0.58rem] uppercase text-ink-muted tablet:block">Select a capability</span>
+              <span className="hidden font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted tablet:block">Select a capability</span>
             </div>
 
             <AnimatePresence initial={false} mode="popLayout">
@@ -147,7 +147,7 @@ export function TechnicalSkillsSystem() {
                       type="button"
                     >
                       <span className="text-sm font-medium tablet:text-base">{skill.name}</span>
-                      <span className={selected ? "font-mono text-[0.56rem] text-graphite-page/65" : "font-mono text-[0.56rem] text-ink-muted"}>
+                      <span className={selected ? "font-mono text-[0.64rem] text-graphite-page/65" : "font-mono text-[0.64rem] text-ink-muted"}>
                         {String(index + 1).padStart(2, "0")}
                       </span>
                     </button>
@@ -159,7 +159,7 @@ export function TechnicalSkillsSystem() {
             {skills.length > 4 ? (
               <button
                 aria-expanded={expanded}
-                className="group mt-5 inline-flex min-h-11 items-center gap-4 font-mono text-[0.62rem] uppercase text-ink-primary hover:text-signal"
+                className="group mt-5 inline-flex min-h-11 items-center gap-4 text-sm font-semibold text-ink-primary hover:text-signal"
                 onClick={toggleGroup}
                 type="button"
               >
@@ -178,13 +178,13 @@ export function TechnicalSkillsSystem() {
                 initial={reducedMotion ? false : { opacity: 0, y: 12 }}
                 transition={{ duration: reducedMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="font-mono text-[0.62rem] uppercase text-signal">Implementation evidence</p>
-                <h3 className="mt-5 text-3xl font-semibold uppercase leading-none text-ink-primary tablet:text-4xl">{activeSkill.name}</h3>
+                <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">Applied in</p>
+                <h3 className="mt-5 font-display text-3xl font-semibold leading-none tracking-[-0.035em] text-ink-primary tablet:text-4xl">{activeSkill.name}</h3>
                 <p className="mt-6 text-base leading-7 text-ink-secondary">{activeSkill.evidence}</p>
 
                 <dl className="mt-8 border-y border-graphite-strong">
                   <div className="grid grid-cols-[6rem_1fr] gap-4 py-4">
-                    <dt className="font-mono text-[0.56rem] uppercase text-ink-muted">Ownership</dt>
+                    <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Ownership</dt>
                     <dd className="text-sm text-ink-primary">{activeSkill.ownership}</dd>
                   </div>
                 </dl>

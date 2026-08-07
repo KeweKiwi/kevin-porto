@@ -76,12 +76,17 @@ export function PersonalIntroduction() {
         <div className="grid gap-12 laptop:grid-cols-12 laptop:items-center">
           <div className="relative z-10 laptop:col-span-7">
             <p className="mb-6 font-mono text-xs uppercase text-signal">{aboutContent.sectionLabel}</p>
-            <h2 className="about-editorial-title uppercase text-ink-primary" data-about-title>
-              {aboutContent.titleLines.map((line) => (
-                <span key={line} className="block overflow-hidden">
-                  <span className="block laptop:whitespace-nowrap">{line}</span>
+            <h2 className="about-editorial-title text-ink-primary" data-about-title>
+              <span className="block overflow-hidden">
+                <span className="block">
+                  {aboutContent.titleSegments.map((segment, index) => (
+                    <span key={segment}>
+                      <span className="whitespace-nowrap">{segment}</span>
+                      {index < aboutContent.titleSegments.length - 1 ? " " : null}
+                    </span>
+                  ))}
                 </span>
-              ))}
+              </span>
             </h2>
 
             <span aria-hidden="true" className="mt-7 block h-px w-full max-w-xl bg-signal" data-about-trace />
@@ -100,7 +105,7 @@ export function PersonalIntroduction() {
               imageClassName="object-cover object-center"
               sizes="(max-width: 1023px) 100vw, 40vw"
             />
-            <span className="absolute -bottom-px -left-px border border-graphite-strong bg-graphite-page px-4 py-3 font-mono text-[0.6rem] uppercase text-ink-secondary">
+            <span className="absolute -bottom-px -left-px border border-graphite-strong bg-graphite-page px-4 py-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-secondary">
               Team delivery / Squeaky
             </span>
           </div>
@@ -109,7 +114,7 @@ export function PersonalIntroduction() {
         <dl className="mt-12 grid border-y border-graphite-strong tablet:grid-cols-2 laptop:grid-cols-4">
           {metadata.map((item) => (
             <div key={item.label} className="border-b border-graphite-border py-5 tablet:px-5 tablet:[&:nth-last-child(-n+2)]:border-b-0 laptop:border-b-0 laptop:border-r laptop:last:border-r-0" data-about-meta>
-              <dt className="font-mono text-[0.6rem] uppercase text-signal">{item.label}</dt>
+              <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">{item.label}</dt>
               <dd className="mt-2 max-w-xs text-sm leading-6 text-ink-primary">{item.value}</dd>
             </div>
           ))}
@@ -119,10 +124,10 @@ export function PersonalIntroduction() {
           {aboutContent.capabilities.map((item, index) => (
             <article key={item.label} className="border-b border-graphite-border py-6 tablet:border-b-0 tablet:border-r tablet:px-5 tablet:last:border-r-0" data-about-capability>
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="text-xl font-semibold uppercase text-ink-primary">{item.label}</h3>
-                <span className="font-mono text-[0.6rem] text-signal">0{index + 1}</span>
+                <h3 className="font-display text-2xl font-semibold tracking-[-0.035em] text-ink-primary">{item.label}</h3>
+                <span className="font-mono text-[0.68rem] text-signal">0{index + 1}</span>
               </div>
-              <p className="mt-3 max-w-sm text-sm leading-6 text-ink-secondary">{item.proof}</p>
+              <p className="mt-3 max-w-sm text-base leading-7 text-ink-secondary">{item.proof}</p>
             </article>
           ))}
         </div>

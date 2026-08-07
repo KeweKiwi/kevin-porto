@@ -8,7 +8,7 @@
   z-index: 120;
   overflow: hidden;
   color: var(--color-text);
-  font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  font-family: var(--font-mono-stack);
   pointer-events: auto;
   background: transparent;
 }
@@ -509,12 +509,13 @@
 }
 
 .statusGrid {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   z-index: 2;
-  place-self: center;
   width: min(96rem, calc(100vw - (clamp(1.25rem, 4vw, 4.5rem) * 2)));
-  padding-bottom: 3.5vh;
   text-align: center;
+  transform: translate(-50%, -50%);
 }
 
 .desktopStatuses,
@@ -727,7 +728,7 @@
   isolation: isolate;
   display: inline-grid;
   grid-row: 2;
-  grid-template-columns: 0.62em 26ch;
+  grid-template-columns: 0.62em max-content 0.62em;
   align-items: center;
   justify-content: center;
   gap: 0.24em;
@@ -785,7 +786,8 @@
   position: relative;
   z-index: 1;
   display: flex;
-  width: 26ch;
+  width: max-content;
+  max-width: 26ch;
   height: 1em;
   overflow: hidden;
   flex-wrap: nowrap;
@@ -819,7 +821,7 @@
   display: inline-block;
   width: 0.1em;
   height: 0.72em;
-  margin-left: 0.08em;
+  justify-self: center;
   background: rgba(215, 247, 91, 0.86);
   box-shadow: 0 0 18px rgba(215, 247, 91, 0.34);
   transform: translateY(0.04em);
@@ -1222,7 +1224,6 @@
 
   .statusGrid {
     width: 100%;
-    padding-bottom: 4rem;
   }
 
   .desktopStatuses {
@@ -1280,7 +1281,7 @@
   }
 
   .statusCommand {
-    grid-template-columns: 0.62em 16ch;
+    grid-template-columns: 0.62em max-content 0.62em;
     gap: 0.18em;
   }
 
@@ -1297,7 +1298,7 @@
   }
 
   .statusText {
-    width: 16ch;
+    max-width: 16ch;
   }
 
   .confirmationMark {

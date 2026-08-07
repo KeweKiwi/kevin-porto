@@ -47,7 +47,7 @@ export function SiteHeader() {
     >
       <div className="container-grid flex h-16 items-center justify-between tablet:h-[4.5rem]">
         <Link
-          className="font-mono text-base font-semibold uppercase text-ink-primary transition hover:text-signal tablet:text-lg"
+          className="text-base font-semibold text-ink-primary transition hover:text-signal tablet:text-lg"
           href="/"
           onClick={() => setMenuOpen(false)}
         >
@@ -59,7 +59,7 @@ export function SiteHeader() {
             {navItems.map((item) => (
               <Link
                 key={item.href}
-                className="font-mono text-[0.7rem] font-medium uppercase text-ink-secondary transition hover:text-signal"
+                className="text-[0.82rem] font-semibold tracking-[0.025em] text-ink-secondary transition hover:text-signal"
                 href={item.href}
               >
                 {item.label}
@@ -67,7 +67,7 @@ export function SiteHeader() {
             ))}
           </nav>
           <Link
-            className="group inline-flex min-h-11 items-center gap-3 rounded-none bg-signal px-5 font-mono text-xs font-semibold uppercase text-graphite-page transition-colors duration-200 hover:bg-ink-primary"
+            className="group inline-flex min-h-11 items-center gap-3 rounded-none bg-signal px-5 text-sm font-semibold tracking-[-0.01em] text-graphite-page transition-colors duration-200 hover:bg-ink-primary"
             href="/#contact"
           >
             Contact
@@ -99,7 +99,7 @@ export function SiteHeader() {
             {navItems.map((item) => (
               <Link
                 key={item.href}
-                className="flex items-center justify-between border-b border-graphite-border py-4 font-mono text-xs font-medium uppercase text-ink-primary"
+                className="flex items-center justify-between border-b border-graphite-border py-4 text-base font-semibold text-ink-primary"
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
               >

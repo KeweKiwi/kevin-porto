@@ -61,7 +61,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <Container className="relative z-[1] grid gap-12 pb-16 desktop:grid-cols-[minmax(0,1fr)_480px] desktop:pb-24">
           <div>
             <Link
-              className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.08em] text-ink-secondary transition hover:text-signal"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-ink-secondary transition hover:text-signal"
               href="/#work"
             >
               <ArrowLeft aria-hidden="true" size={15} />
@@ -72,7 +72,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <p className="technical-label mb-5 text-signal">
                 {visual.index} / {project.platform}
               </p>
-              <h1 className="max-w-[11ch] text-[clamp(3.6rem,15vw,6.2rem)] font-bold leading-[0.84] text-ink-primary desktop:text-[clamp(6rem,8vw,8.4rem)]">
+              <h1 className="max-w-[11ch] font-display text-[clamp(3.6rem,15vw,6.2rem)] font-bold leading-[0.9] tracking-[-0.055em] text-ink-primary desktop:text-[clamp(6rem,8vw,8.4rem)]">
                 {project.name}
               </h1>
               <p className="mt-7 max-w-3xl text-lg leading-[1.55] text-ink-secondary tablet:text-xl">
@@ -110,7 +110,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <div className="border-b border-graphite-border p-5 tablet:p-6">
               <div className="flex items-center justify-between gap-4">
                 <p className="technical-label text-signal">Project summary</p>
-                <p className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
+                <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">
                   Role and results
                 </p>
               </div>
@@ -141,7 +141,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {visual.markers.map((marker, index) => (
               <span
                 key={marker}
-                className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted"
+                className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted"
               >
                 <span className="text-signal">{String(index + 1).padStart(2, "0")}</span> {marker}
               </span>
@@ -161,7 +161,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <Container className="grid gap-10 desktop:grid-cols-[minmax(0,1fr)_360px]">
             <div className="case-reveal">
               <p className="technical-label mb-5 text-ink-muted">Engineering details</p>
-              <h2 className="max-w-3xl text-4xl font-semibold leading-none text-ink-primary tablet:text-5xl">
+              <h2 className="max-w-3xl text-balance font-display text-4xl font-semibold leading-[0.98] tracking-[-0.04em] text-ink-primary tablet:text-5xl">
                 Key technical decisions.
               </h2>
               <p className="mt-5 max-w-2xl text-base leading-[1.6] text-ink-secondary">{visual.proof}</p>
@@ -172,7 +172,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     key={item}
                     className="grid gap-4 border-t border-graphite-border pt-5 first:mt-8 tablet:grid-cols-[72px_1fr]"
                   >
-                    <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-signal">
+                    <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="max-w-3xl text-xl leading-[1.45] text-ink-primary">{item}</span>
@@ -267,7 +267,7 @@ function CaseHighlightRow({
   return (
     <div className="grid gap-3 p-5 tablet:grid-cols-[48px_1fr] tablet:p-6">
       <div className="flex items-center gap-3 tablet:block">
-        <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-signal">
+        <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">
           {String(index).padStart(2, "0")}
         </span>
         <p className="technical-label text-ink-muted tablet:mt-5">{label}</p>

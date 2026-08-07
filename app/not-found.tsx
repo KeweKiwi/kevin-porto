@@ -6,7 +6,7 @@ export default function NotFound() {
     <section className="min-h-[70svh] pt-32">
       <Container>
         <p className="technical-label mb-5 text-ink-muted">404</p>
-        <h1 className="max-w-3xl text-5xl font-semibold leading-none text-ink-primary tablet:text-7xl">
+        <h1 className="max-w-3xl text-balance font-display text-5xl font-semibold leading-[0.98] tracking-[-0.04em] text-ink-primary tablet:text-7xl">
           This case file does not exist.
         </h1>
         <Link

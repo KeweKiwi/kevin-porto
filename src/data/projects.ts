@@ -74,21 +74,21 @@ export const projects: Project[] = [
     caseHighlights: [
       {
         label: "Role",
-        value: "Tech Lead responsible for architecture decisions, code review, feature integration, and multiplayer debugging.",
+        value: "I led architecture decisions, code review, feature integration, and multiplayer debugging as Tech Lead.",
       },
       {
         label: "Direct contribution",
-        value: "Built tilt aiming, voice-based throw power, haptics, local pass-and-play, and GameKit message routing.",
+        value: "I built tilt aiming, voice-based throw power, haptics, local pass-and-play, and GameKit message routing.",
       },
       {
         label: "Outcome",
-        value: "The team delivered a playable External TestFlight build; approximately 100 exhibition visitors played the booth version.",
+        value: "Our team delivered a playable External TestFlight build that approximately 100 exhibition visitors played at the booth.",
       },
     ],
     caseFocus: [
-      "Modeled the turn lifecycle as explicit aim, power, throw-resolution, and handoff states to keep local and online play aligned.",
-      "Separated low-latency live aim and power updates from reliable locked-turn events in GameKit message routing.",
-      "Integrated Core Motion, AVFoundation, and haptics into one interaction model while accounting for sensor sensitivity and background noise.",
+      "I modeled the turn lifecycle as explicit aim, power, throw-resolution, and handoff states to keep local and online play aligned.",
+      "I separated low-latency aim and power updates from reliable locked-turn events in GameKit message routing.",
+      "I integrated Core Motion, AVFoundation, and haptics into one interaction model while accounting for sensor sensitivity and background noise.",
     ],
     team: [
       "Justin - Project Manager",
@@ -207,25 +207,25 @@ export const projects: Project[] = [
     productSummary:
       "The platform gives the dealership a managed inventory system, public vehicle discovery, branch-specific contact paths, and an administration workflow.",
     caseSummary:
-      "A live dealership platform Kevin independently took from client requirements and database design through deployment, training, and maintenance.",
+      "I independently took this live dealership platform from client requirements and database design through deployment, training, and maintenance.",
     caseHighlights: [
       {
         label: "Role",
-        value: "Independent full-stack developer responsible for product definition, implementation, launch, and ongoing support.",
+        value: "I owned product definition, implementation, launch, and ongoing support as the independent full-stack developer.",
       },
       {
         label: "System",
-        value: "Built public inventory discovery, vehicle details, image workflows, Filament administration, inquiries, and branch routing.",
+        value: "I built public inventory discovery, vehicle details, image workflows, Filament administration, inquiries, and branch routing.",
       },
       {
         label: "Outcome",
-        value: "Launched a live client-managed platform with stakeholder training and an ongoing maintenance agreement.",
+        value: "I launched a live client-managed platform, trained stakeholders, and continue to support it under a maintenance agreement.",
       },
     ],
     caseFocus: [
-      "Translated dealership operations into clear data models and workflows for vehicles, branches, inquiries, users, and media.",
-      "Built conditional Eloquent queries with AJAX updates, pagination, and URL state so filtered inventory remains shareable.",
-      "Designed Filament workflows for client-managed vehicle data and images, then completed deployment, training, and handover.",
+      "I translated dealership operations into clear data models and workflows for vehicles, branches, inquiries, users, and media.",
+      "I built conditional Eloquent queries with AJAX updates, pagination, and URL state so filtered inventory remains shareable.",
+      "I designed Filament workflows for client-managed vehicle data and images, then completed deployment, training, and handover.",
     ],
     team: ["Kevin - Independent full-stack developer"],
     kevinOwned: [
@@ -358,21 +358,21 @@ export const projects: Project[] = [
     caseHighlights: [
       {
         label: "Role",
-        value: "Tech Lead responsible for technical decisions, code review, feature integration, and the core transaction system.",
+        value: "I led technical decisions, code review, feature integration, and the core transaction system as Tech Lead.",
       },
       {
         label: "Direct contribution",
-        value: "Built transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction-data integration.",
+        value: "I built transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction-data integration.",
       },
       {
         label: "Outcome",
-        value: "The team delivered a functional prototype with the main transaction and shortcut flows working end to end in team and mentor demos.",
+        value: "Our team delivered a functional prototype with the main transaction and shortcut flows working end to end in team and mentor demos.",
       },
     ],
     caseFocus: [
-      "Modeled transaction data in SwiftData so budget, dashboard, recap, and related modules could use one source of truth.",
-      "Implemented App Intents and App Shortcuts as a native entry point for creating transactions outside the main app flow.",
-      "Defined integration boundaries and reviewed team-owned modules so independently built features worked in one prototype.",
+      "I modeled transaction data in SwiftData so budget, dashboard, recap, and related modules could use one source of truth.",
+      "I implemented App Intents and App Shortcuts as a native entry point for creating transactions outside the main app flow.",
+      "I defined integration boundaries and reviewed team-owned modules so independently built features worked in one prototype.",
     ],
     team: [
       "Gaby - Project Manager",
@@ -444,7 +444,7 @@ export const projects: Project[] = [
       "Internal demos and mentor reviews did not reveal major blockers in the main transaction flow",
     ],
     outcome:
-      "Squeaky reached a functional prototype that combined transaction management, SwiftData persistence, App Shortcuts, budgeting, financial summaries, and a behavior-linked virtual pet system. Kevin's direct work covered the transaction system, persistence layer, App Intent flow, and technical integration review. The app was demonstrated to peers and mentors, with broader user testing, accessibility work, visual polish, and public distribution preparation still needed.",
+      "Squeaky reached a functional prototype that combined transaction management, SwiftData persistence, App Shortcuts, budgeting, financial summaries, and a behavior-linked virtual pet system. My direct work covered the transaction system, persistence layer, App Intent flow, and technical integration review. We demonstrated the app to peers and mentors, with broader user testing, accessibility work, visual polish, and public distribution preparation still needed.",
     limitations: [
       "Do not claim that gamification was proven to improve long-term habits",
       "Do not invent a percentage improvement for App Shortcuts",

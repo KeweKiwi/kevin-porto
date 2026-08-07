@@ -5,13 +5,13 @@ export const heroContent = {
   positioning: "I build native Apple experiences and production web systems.",
   summary:
     "I lead technical delivery across iOS projects and build operational web products for real clients.",
-  primaryAction: "View Selected Work",
+  primaryAction: "View selected work",
   secondaryAction: "GitHub",
 } as const;
 
 export const aboutContent = {
   sectionLabel: "About Kevin",
-  titleLines: ["Engineering with", "ownership, from", "architecture to", "delivery."],
+  titleSegments: ["Engineering", "with ownership,", "from architecture", "to delivery."],
   paragraphs: [
     "I'm Kevin William Faith, an Information System for Business student and Apple Developer Academy learner focused on native Apple development and production web systems.",
     "My strongest work sits where implementation meets ownership: shaping architecture, integrating features, debugging difficult flows, and carrying software through delivery.",
@@ -26,22 +26,22 @@ export const aboutContent = {
 
 export const selectedWorkContent = {
   label: "Selected work",
+  title: "Three projects showing how I build, lead, and deliver.",
   summary:
-    "Three projects across native Apple engineering, technical leadership, and independent production delivery.",
+    "Native Apple engineering, technical leadership, and independent production delivery.",
 } as const;
 
 export const skillsSectionContent = {
   label: "Technical skills",
-  title: "Skills connected to implementation evidence.",
+  title: "Tools I use to build and ship.",
   summary:
-    "Select a capability to see where it was applied, what Kevin owned, and which project demonstrates it.",
+    "Select a capability to see where I applied it, what I owned, and which project demonstrates it.",
 } as const;
 
 export const workApproachContent = {
   label: "How I work",
-  title: "Clear decisions from requirement to delivery.",
-  summary:
-    "A compact view of how Kevin turns ambiguity, integration work, and production responsibility into shipped outcomes.",
+  title: "Turning unclear requirements into shipped software.",
+  summary: "How I move from ambiguity to implementation, integration, and delivery.",
   rows: [
     {
       question: "When requirements are unclear",
@@ -56,7 +56,7 @@ export const workApproachContent = {
       evidence: "QuackFight + Squeaky / Tech Lead",
     },
     {
-      question: "When software moves to production",
+      question: "When software moves into production",
       answer:
         "I handle deployment, client training, handover, and maintenance so the system remains usable after launch.",
       evidence: "Rizki Mobil / Live production",
@@ -65,12 +65,11 @@ export const workApproachContent = {
 } as const;
 
 export const contactContent = {
-  titleLines: ["Looking for an", "engineer who can", "own the work", "through delivery?"],
+  title: "Have a product to build or a team I could contribute to?",
   summary:
-    "I'm open to native Apple and software engineering opportunities where I can contribute hands-on, collaborate across disciplines, and take responsibility for shipping reliable work.",
+    "I'm open to native Apple and software engineering opportunities where I can contribute hands-on, collaborate across disciplines, and take responsibility for delivery.",
   emailAction: "Email Kevin",
-  githubPrimaryAction: "View GitHub profile",
-  resumeAction: "View Resume",
+  resumeAction: "View resume",
   githubAction: "GitHub",
   linkedinAction: "LinkedIn",
   liveWorkAction: "View Rizki Mobil live",

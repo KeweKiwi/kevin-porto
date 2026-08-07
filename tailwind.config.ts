@@ -24,8 +24,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "Geist", "Inter", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "Geist Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+        display: ["var(--font-display)", "Arial", "sans-serif"],
+        sans: ["var(--font-body)", "Arial", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
         signal: "0 24px 80px rgba(0, 0, 0, 0.38)",

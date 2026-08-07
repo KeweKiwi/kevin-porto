@@ -184,7 +184,7 @@ export function HeroDossier() {
               </Link>
               {profile.githubUrl ? (
                 <a
-                  aria-label="View Kevin's GitHub profile"
+                  aria-label="Open GitHub profile"
                   className="kinetic-secondary-action group"
                   data-hero-action
                   href={profile.githubUrl}

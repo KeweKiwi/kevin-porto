@@ -166,8 +166,8 @@ function TerminalStatusLine({
               ))}
             </span>
           ))}
-          <span className={styles.statusCursor} data-status-cursor />
         </span>
+        <span className={styles.statusCursor} data-status-cursor />
       </span>
       <span className={styles.confirmationMark} {...confirmationProps}>
         {status.confirmation}

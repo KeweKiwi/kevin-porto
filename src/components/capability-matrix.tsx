@@ -21,7 +21,7 @@ const capabilities = [
   },
   {
     label: "Delivery Ownership",
-    proof: "Kevin has led technical workflow, integrated team features, reviewed code, and delivered a live client platform.",
+    proof: "I have led technical workflows, integrated team features, reviewed code, and delivered a live client platform.",
     projects: "All selected work",
     markers: ["Architecture", "Review", "Integration", "Training", "Handover"],
   },
@@ -36,7 +36,7 @@ export function CapabilityMatrix() {
       <div className="container-grid grid gap-10 desktop:grid-cols-12">
         <div className="desktop:col-span-5">
           <p className="technical-label mb-5 text-ink-muted">Personal signal</p>
-          <h2 className="max-w-3xl text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl">
+          <h2 className="max-w-3xl text-balance font-display text-4xl font-semibold leading-[0.98] tracking-[-0.045em] text-ink-primary tablet:text-6xl">
             Product problems first. Technical systems next.
           </h2>
           <p className="mt-7 max-w-xl text-base leading-[1.55] text-ink-secondary tablet:text-lg">
@@ -65,10 +65,10 @@ export function CapabilityMatrix() {
                 type="button"
               >
                 <div className="flex items-center justify-between gap-5">
-                  <span className="text-2xl font-semibold leading-none text-ink-primary">{capability.label}</span>
+                  <span className="font-display text-2xl font-semibold leading-none tracking-[-0.035em] text-ink-primary">{capability.label}</span>
                   <span className={activeIndex === index ? "h-px w-16 bg-signal" : "h-px w-8 bg-graphite-strong transition-all group-hover:w-16"} />
                 </div>
-                <span className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-muted">
+                <span className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">
                   {capability.projects}
                 </span>
               </button>
@@ -88,7 +88,7 @@ export function CapabilityMatrix() {
               {active.markers.map((marker) => (
                 <span
                   key={marker}
-                  className="rounded-[4px] border border-graphite-strong px-3 py-2 font-mono text-[0.6rem] uppercase tracking-[0.08em] text-ink-secondary"
+                  className="rounded-[4px] border border-graphite-strong px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-secondary"
                 >
                   {marker}
                 </span>

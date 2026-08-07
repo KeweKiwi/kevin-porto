@@ -130,10 +130,15 @@ export function SelectedWorkShowcase() {
       <div className="kinetic-work-stage">
         <header className="container-grid flex min-h-20 items-center justify-between gap-8 border-b border-graphite-strong">
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[0.62rem] text-signal">03</span>
-            <h2 className="text-2xl font-semibold uppercase text-ink-primary tablet:text-3xl">{selectedWorkContent.label}</h2>
+            <span className="font-mono text-[0.68rem] text-signal">03</span>
+            <div>
+              <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">{selectedWorkContent.label}</p>
+              <h2 className="mt-1 max-w-[30ch] font-display text-xl font-semibold leading-tight tracking-[-0.035em] text-ink-primary tablet:text-2xl">
+                {selectedWorkContent.title}
+              </h2>
+            </div>
           </div>
-          <p className="hidden max-w-xl text-right text-sm leading-6 text-ink-secondary tablet:block">
+          <p className="hidden max-w-xl text-right text-base leading-7 text-ink-secondary tablet:block">
             {selectedWorkContent.summary}
           </p>
         </header>
@@ -153,10 +158,10 @@ export function SelectedWorkShowcase() {
                 tabIndex={activeIndex === index ? 0 : -1}
               >
                 <div className="flex min-w-0 flex-col justify-center border-r border-graphite-strong px-9 desktop:px-12" data-work-copy>
-                  <p className="font-mono text-[0.65rem] uppercase text-signal">
+                  <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">
                     Project {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                   </p>
-                  <h3 className="mt-5 text-5xl font-semibold uppercase leading-[0.9] text-ink-primary desktop:text-6xl">
+                  <h3 className="mt-5 font-display text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-ink-primary desktop:text-6xl">
                     {project.name}
                   </h3>
                   <p className="mt-6 max-w-md text-base leading-7 text-ink-secondary desktop:text-lg">
@@ -165,16 +170,16 @@ export function SelectedWorkShowcase() {
 
                   <dl className="mt-8 grid grid-cols-2 border-y border-graphite-strong py-5">
                     <div className="border-r border-graphite-border pr-4">
-                      <dt className="font-mono text-[0.56rem] uppercase text-ink-muted">Role</dt>
+                      <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Role</dt>
                       <dd className="mt-2 text-sm leading-6 text-ink-primary">{project.role}</dd>
                     </div>
                     <div className="pl-4">
-                      <dt className="font-mono text-[0.56rem] uppercase text-ink-muted">Status</dt>
+                      <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Status</dt>
                       <dd className="mt-2 text-sm leading-6 text-ink-primary">{visual.shortStatus}</dd>
                     </div>
                   </dl>
 
-                  <p className="mt-6 font-mono text-[0.6rem] uppercase leading-6 text-signal">
+                  <p className="mt-6 font-mono text-[0.68rem] font-medium uppercase leading-6 tracking-[0.065em] text-signal">
                     {visual.markers.slice(0, 3).join(" / ")}
                   </p>
 
@@ -207,8 +212,8 @@ export function SelectedWorkShowcase() {
                 onClick={() => selectProject(index)}
                 type="button"
               >
-                <span className="font-mono text-[0.62rem] text-signal">{String(index + 1).padStart(2, "0")}</span>
-                <span className="text-sm font-medium uppercase">{project.name}</span>
+                <span className="font-mono text-[0.68rem] text-signal">{String(index + 1).padStart(2, "0")}</span>
+                <span className="text-sm font-semibold">{project.name}</span>
                 <span className={activeIndex === index ? "h-px w-8 bg-signal" : "h-px w-8 bg-graphite-strong transition-colors group-hover:bg-signal"} />
               </button>
             ))}
@@ -234,11 +239,11 @@ export function SelectedWorkShowcase() {
                         {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                       </p>
                       <div className="mt-3 flex items-end justify-between gap-5">
-                        <h3 className="text-4xl font-semibold uppercase leading-none text-ink-primary tablet:text-6xl">{project.name}</h3>
+                        <h3 className="font-display text-4xl font-semibold leading-[0.95] tracking-[-0.04em] text-ink-primary tablet:text-6xl">{project.name}</h3>
                         <ArrowRight aria-hidden="true" className="shrink-0 text-signal transition-transform group-active:translate-x-1" size={22} />
                       </div>
                       <p className="mt-4 max-w-xl text-base leading-7 text-ink-secondary">{visual.statement}</p>
-                      <div className="mt-6 grid gap-3 border-t border-graphite-border pt-4 font-mono text-[0.6rem] uppercase text-ink-muted xs:grid-cols-2">
+                      <div className="mt-6 grid gap-3 border-t border-graphite-border pt-4 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted xs:grid-cols-2">
                         <span>{project.role}</span>
                         <span className="xs:text-right">{visual.shortStatus}</span>
                       </div>

@@ -48,7 +48,7 @@ export function MediaSlot({
       )}
 
       {label ? (
-        <span className="absolute bottom-4 left-4 z-10 font-mono text-[0.58rem] uppercase text-ink-secondary">
+        <span className="absolute bottom-4 left-4 z-10 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-secondary">
           {label}
         </span>
       ) : null}

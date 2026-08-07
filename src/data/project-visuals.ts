@@ -38,7 +38,7 @@ export const projectVisuals: ProjectVisual[] = [
       "A turn-based iOS artillery prototype where motion, voice, haptics, and multiplayer make the iPhone part of the controller.",
     technicalSignal: "Core Motion + AVFoundation + GameKit",
     proof:
-      "As Tech Lead, Kevin owned tilt aiming, voice-based throw power, haptics, GameKit message routing, and multiplayer state-flow debugging.",
+      "As Tech Lead, I owned tilt aiming, voice-based throw power, haptics, GameKit message routing, and multiplayer state-flow debugging.",
     markers: ["Core Motion", "AVFoundation", "GameKit", "Tech Lead"],
   },
   {
@@ -49,7 +49,7 @@ export const projectVisuals: ProjectVisual[] = [
       "A live multi-branch dealership platform independently delivered from requirements and database design through deployment.",
     technicalSignal: "Laravel + Filament + MySQL",
     proof:
-      "Kevin owned the public inventory experience, Filament administration, branch workflows, deployment, client training, and ongoing maintenance.",
+      "I owned the public inventory experience, Filament administration, branch workflows, deployment, client training, and ongoing maintenance.",
     markers: ["Laravel", "Filament", "MySQL", "Live production"],
   },
   {
@@ -60,7 +60,7 @@ export const projectVisuals: ProjectVisual[] = [
       "A native finance prototype built around reliable transaction data and faster entry through App Shortcuts.",
     technicalSignal: "SwiftData + App Intents + MVVM",
     proof:
-      "As Tech Lead, Kevin owned transaction CRUD, SwiftData persistence, App Intents, and integration of transaction data across team-owned features.",
+      "As Tech Lead, I owned transaction CRUD, SwiftData persistence, App Intents, and the integration of transaction data across team-owned features.",
     markers: ["SwiftData", "App Intents", "MVVM", "Tech Lead"],
   },
 ];

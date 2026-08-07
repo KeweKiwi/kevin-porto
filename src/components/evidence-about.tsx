@@ -47,7 +47,7 @@ export function EvidenceAbout() {
         <div className="grid gap-6 laptop:grid-cols-[minmax(0,1fr)_minmax(300px,.6fr)] laptop:items-end">
           <div>
             <p className="font-mono text-xs uppercase text-signal">{workApproachContent.label}</p>
-            <h2 className="mt-5 max-w-4xl text-4xl font-semibold uppercase leading-[0.95] text-ink-primary tablet:text-6xl">
+            <h2 className="mt-5 max-w-4xl text-balance font-display text-[clamp(2.75rem,7.5vw,4rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-ink-primary tablet:text-[clamp(4rem,6vw,5.6rem)]">
               {workApproachContent.title}
             </h2>
           </div>
@@ -73,7 +73,7 @@ export function EvidenceAbout() {
                 type="button"
               >
                 <span className="font-mono text-sm text-signal">0{index + 1}</span>
-                <span className="text-base font-medium uppercase leading-6">{row.question}</span>
+                <span className="text-base font-semibold leading-6">{row.question}</span>
                 <ArrowRight aria-hidden="true" className={active ? "ml-auto mt-1 shrink-0 text-signal" : "ml-auto mt-1 shrink-0 text-graphite-strong transition-colors group-hover:text-signal"} size={16} />
               </button>
             );
@@ -94,7 +94,7 @@ export function EvidenceAbout() {
                 {activeRow.answer}
               </p>
               <div className="border-l border-signal pl-5">
-                <p className="font-mono text-[0.6rem] uppercase text-ink-muted">Project reference</p>
+                <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Project reference</p>
                 <p className="mt-3 text-base text-ink-primary">{activeRow.evidence}</p>
               </div>
             </motion.div>

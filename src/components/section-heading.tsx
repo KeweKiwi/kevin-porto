@@ -11,7 +11,7 @@ export function SectionHeading({ eyebrow, title, body, className }: SectionHeadi
   return (
     <div className={cn("max-w-4xl", className)}>
       <p className="technical-label mb-5 text-ink-muted">{eyebrow}</p>
-      <h2 className="text-4xl font-semibold leading-none text-ink-primary tablet:text-6xl desktop:text-7xl">
+      <h2 className="text-balance font-display text-4xl font-semibold leading-[0.98] tracking-[-0.045em] text-ink-primary tablet:text-6xl desktop:text-7xl">
         {title}
       </h2>
       {body ? (

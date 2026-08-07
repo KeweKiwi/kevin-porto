@@ -42,7 +42,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
 
       <div aria-hidden="true" className="project-media-vignette absolute inset-0 z-[2]" />
 
-      <div className="absolute left-4 top-4 z-10 flex min-h-9 items-center border border-graphite-strong bg-graphite-page/90 px-3 font-mono text-[0.56rem] uppercase text-ink-primary tablet:left-6 tablet:top-6">
+      <div className="absolute left-4 top-4 z-10 flex min-h-9 items-center border border-graphite-strong bg-graphite-page/90 px-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary tablet:left-6 tablet:top-6">
         {project.platform} / {visual?.technicalSignal}
       </div>
 
@@ -71,7 +71,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
         />
       ) : null}
 
-      <div className="absolute bottom-4 left-4 z-10 border-l border-signal bg-graphite-page/90 px-3 py-2 font-mono text-[0.55rem] uppercase text-ink-primary tablet:bottom-6 tablet:left-6">
+      <div className="absolute bottom-4 left-4 z-10 border-l border-signal bg-graphite-page/90 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary tablet:bottom-6 tablet:left-6">
         Production evidence / {project.name}
       </div>
     </div>

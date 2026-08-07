@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { GeistMono } from "geist/font/mono";
-import { GeistPixelLine, GeistPixelSquare } from "geist/font/pixel";
-import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SkipLink } from "@/components/skip-link";
+import { bodyFont, displayFont, monoFont } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Kevin William Faith — iOS & Full-Stack Web Developer",
@@ -27,7 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable} ${GeistPixelLine.variable}`}
+      className={`${bodyFont.variable} ${displayFont.variable} ${monoFont.variable}`}
       data-scroll-behavior="smooth"
     >
       <body>

@@ -64,7 +64,7 @@ export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarous
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(215,247,91,0.14),transparent_34%),linear-gradient(180deg,rgba(8,9,9,0)_38%,rgba(8,9,9,0.82)_100%)]"
         />
 
-        <div className="absolute left-4 top-4 border border-graphite-strong bg-graphite-page/86 px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.08em] text-ink-primary backdrop-blur tablet:left-5 tablet:top-5">
+        <div className="absolute left-4 top-4 border border-graphite-strong bg-graphite-page/86 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary backdrop-blur tablet:left-5 tablet:top-5">
           {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
         </div>
 
@@ -93,7 +93,7 @@ export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarous
           <p className="technical-label mb-3 text-signal">
             Project visualization
           </p>
-          <h3 className="text-2xl font-semibold leading-tight text-ink-primary tablet:text-3xl">
+          <h3 className="font-display text-2xl font-semibold leading-tight tracking-[-0.035em] text-ink-primary tablet:text-3xl">
             {activeSlide.label}
           </h3>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-secondary">{activeSlide.detail}</p>
