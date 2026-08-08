@@ -65,6 +65,7 @@ export function HeroDossier() {
           { clipPath: "inset(0 0 100% 0)", duration: 0.78, scale: 1.035 },
           "-=0.48",
         )
+        .from("[data-hero-tech-surface]", { autoAlpha: 0, duration: 0.3 }, "-=0.2")
         .fromTo(
           "[data-hero-measure-path]",
           { strokeDasharray: 1, strokeDashoffset: 1 },
@@ -92,53 +93,6 @@ export function HeroDossier() {
         .from("[data-hero-action]", { autoAlpha: 0, duration: 0.3, stagger: 0.06, y: 10 }, "-=0.22")
         .from("[data-hero-marquee]", { autoAlpha: 0, duration: 0.32, y: 18 }, "-=0.18");
 
-      const root = rootRef.current;
-      const portrait = portraitRef.current;
-      const insetOne = insetOneRef.current;
-      const insetTwo = insetTwoRef.current;
-      if (!root || !portrait || !insetOne || !insetTwo) {
-        return;
-      }
-
-      const responsiveMotion = gsap.matchMedia();
-      responsiveMotion.add("(min-width: 1024px) and (hover: hover) and (pointer: fine)", () => {
-        const portraitX = gsap.quickTo(portrait, "x", { duration: 0.72, ease: "power3.out" });
-        const portraitY = gsap.quickTo(portrait, "y", { duration: 0.72, ease: "power3.out" });
-        const insetOneX = gsap.quickTo(insetOne, "x", { duration: 0.62, ease: "power3.out" });
-        const insetOneY = gsap.quickTo(insetOne, "y", { duration: 0.62, ease: "power3.out" });
-        const insetTwoX = gsap.quickTo(insetTwo, "x", { duration: 0.58, ease: "power3.out" });
-        const insetTwoY = gsap.quickTo(insetTwo, "y", { duration: 0.58, ease: "power3.out" });
-
-        const resetPosition = () => {
-          portraitX(0);
-          portraitY(0);
-          insetOneX(0);
-          insetOneY(0);
-          insetTwoX(0);
-          insetTwoY(0);
-        };
-
-        const handlePointerMove = (event: PointerEvent) => {
-          const bounds = root.getBoundingClientRect();
-          const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-          const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-          portraitX(x * 8);
-          portraitY(y * 6);
-          insetOneX(x * 13);
-          insetOneY(y * 9);
-          insetTwoX(x * 10);
-          insetTwoY(y * 12);
-        };
-
-        root.addEventListener("pointermove", handlePointerMove, { passive: true });
-        root.addEventListener("pointerleave", resetPosition);
-        return () => {
-          root.removeEventListener("pointermove", handlePointerMove);
-          root.removeEventListener("pointerleave", resetPosition);
-        };
-      });
-
-      return () => responsiveMotion.revert();
     },
     { scope: rootRef, dependencies: [introReady, reducedMotion] },
   );

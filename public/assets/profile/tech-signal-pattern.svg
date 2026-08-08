@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250">
+  <g fill="none" stroke="#fff" stroke-linecap="square" stroke-linejoin="miter">
+    <g opacity=".72" stroke-width="5">
+      <path d="M88 110 42 148l46 38M142 110l46 38-46 38" />
+      <path d="M112 92 95 202" opacity=".48" />
+      <path d="M54 218h96" opacity=".32" />
+    </g>
+
+    <g opacity=".56" stroke-width="4">
+      <path d="M752 74h-54v86h54M876 74h54v86h-54" />
+      <path d="M784 104h18M828 104h18M784 132h62" opacity=".7" />
+      <rect x="944" y="62" width="10" height="10" fill="#fff" stroke="none" />
+    </g>
+
+    <g opacity=".64">
+      <path d="m84 434 54-54M112 454l72-72" stroke-width="6" />
+      <path d="M48 486h128" stroke-width="3" opacity=".42" />
+      <circle cx="48" cy="486" r="7" fill="#fff" stroke="none" />
+      <circle cx="176" cy="486" r="5" fill="#fff" stroke="none" opacity=".72" />
+    </g>
+
+    <g fill="#fff" stroke="none" opacity=".54">
+      <rect x="816" y="358" width="11" height="11" />
+      <rect x="842" y="358" width="6" height="6" opacity=".62" />
+      <rect x="868" y="358" width="11" height="11" />
+      <rect x="894" y="358" width="6" height="6" opacity=".62" />
+      <rect x="816" y="384" width="6" height="6" opacity=".62" />
+      <rect x="842" y="384" width="11" height="11" />
+      <rect x="868" y="384" width="6" height="6" opacity=".62" />
+      <rect x="894" y="384" width="11" height="11" />
+      <rect x="816" y="410" width="11" height="11" />
+      <rect x="842" y="410" width="6" height="6" opacity=".62" />
+      <rect x="868" y="410" width="11" height="11" />
+    </g>
+
+    <g opacity=".62" stroke-width="4">
+      <path d="M390 538h-48v96h48M520 538h48v96h-48" />
+      <path d="M412 566h76M412 596h48" opacity=".55" />
+      <rect x="500" y="588" width="10" height="10" fill="#fff" stroke="none" />
+    </g>
+
+    <g opacity=".58" stroke-width="4">
+      <path d="M86 778h104v74H86z" />
+      <path d="M64 806h22M190 824h38M116 760v18" opacity=".52" />
+      <circle cx="64" cy="806" r="6" fill="#fff" stroke="none" />
+      <circle cx="228" cy="824" r="6" fill="#fff" stroke="none" />
+      <path d="M116 876h48" opacity=".38" />
+    </g>
+
+    <g opacity=".68" stroke-width="5">
+      <path d="M746 744v100M696 794h100" />
+      <path d="m850 752 74 74M924 752l-74 74" opacity=".72" />
+      <path d="M684 864h248" stroke-width="3" opacity=".3" />
+    </g>
+
+    <g opacity=".52" stroke-width="4">
+      <path d="M402 1014h-62v84h62M548 1014h62v84h-62" />
+      <path d="M436 1034h22M486 1034h22M436 1062h72" opacity=".62" />
+      <path d="M446 1118v42M502 1118v42M418 1139h112" opacity=".42" />
+      <circle cx="446" cy="1160" r="6" fill="#fff" stroke="none" />
+      <circle cx="502" cy="1160" r="6" fill="#fff" stroke="none" />
+    </g>
+
+    <g fill="#fff" stroke="none" opacity=".42">
+      <circle cx="956" cy="1032" r="6" />
+      <circle cx="924" cy="1066" r="4" />
+      <circle cx="964" cy="1098" r="8" />
+      <rect x="900" y="1118" width="10" height="10" />
+      <rect x="936" y="1152" width="6" height="6" />
+      <rect x="978" y="1188" width="12" height="12" />
+    </g>
+
+    <g opacity=".58" stroke-width="4">
+      <path d="M746 1006h58v36h34v38h68" />
+      <path d="M770 1108h116M824 1080v58" opacity=".66" />
+      <path d="M732 1178h54M904 1148h68" opacity=".4" />
+      <rect x="720" y="1166" width="12" height="12" fill="#fff" stroke="none" />
+      <rect x="972" y="1138" width="10" height="10" fill="#fff" stroke="none" />
+    </g>
+  </g>
+</svg>
