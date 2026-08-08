@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ExternalLink, Github } from "lucide-react";
 import { CaseStudyMotion } from "@/components/case-study-motion";
 import { Container } from "@/components/container";
+import { InteractiveAnchor, InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { ProjectGalleryCarousel } from "@/components/project-gallery-carousel";
 import { getProjectVisual } from "@/data/project-visuals";
 import { projects, getProject } from "@/data/projects";
@@ -60,13 +60,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <Container className="relative z-[1] grid gap-12 pb-16 desktop:grid-cols-[minmax(0,1fr)_480px] desktop:pb-24">
           <div>
-            <Link
+            <InteractiveLink
               className="inline-flex items-center gap-2 text-sm font-semibold text-ink-secondary transition hover:text-signal"
               href="/#work"
+              interactionLevel="subtle"
             >
-              <ArrowLeft aria-hidden="true" size={15} />
+              <MotionArrow direction="left"><ArrowLeft size={15} /></MotionArrow>
               Selected work
-            </Link>
+            </InteractiveLink>
 
             <div className="mt-14 tablet:mt-20">
               <p className="technical-label mb-5 text-signal">
@@ -82,26 +83,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             <div className="mt-8 flex flex-wrap gap-3">
               {project.repoUrl ? (
-                <a
-                  className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
+                <InteractiveAnchor
+                  className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page hover:bg-ink-primary"
                   href={project.repoUrl}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <Github aria-hidden="true" size={17} />
                   View source on GitHub
-                </a>
+                </InteractiveAnchor>
               ) : null}
               {project.primaryCta.isExternal ? (
-                <a
+                <InteractiveAnchor
                   className="inline-flex min-h-12 items-center gap-2 rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
                   href={project.primaryCta.href}
                   rel="noreferrer"
                   target="_blank"
                 >
                   {project.primaryCta.label}
-                  <ExternalLink aria-hidden="true" size={16} />
-                </a>
+                  <MotionArrow direction="up-right"><ExternalLink size={16} /></MotionArrow>
+                </InteractiveAnchor>
               ) : null}
             </div>
           </div>
@@ -209,36 +210,36 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
           <div className="flex flex-wrap gap-3">
             {project.repoUrl ? (
-              <a
-                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
+              <InteractiveAnchor
+                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page hover:bg-ink-primary"
                 href={project.repoUrl}
                 rel="noreferrer"
                 target="_blank"
               >
                 <Github aria-hidden="true" size={17} />
                 View source on GitHub
-              </a>
+              </InteractiveAnchor>
             ) : null}
 
             {project.primaryCta.isExternal ? (
-              <a
-                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page transition hover:-translate-y-0.5"
+              <InteractiveAnchor
+                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page hover:bg-ink-primary"
                 href={project.primaryCta.href}
                 rel="noreferrer"
                 target="_blank"
               >
                 {project.primaryCta.label}
-                <ExternalLink aria-hidden="true" size={16} />
-              </a>
+                <MotionArrow direction="up-right"><ExternalLink size={16} /></MotionArrow>
+              </InteractiveAnchor>
             ) : null}
 
-            <Link
+            <InteractiveLink
               className="inline-flex min-h-12 items-center gap-2 rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
               href={`/projects/${nextProject.slug}`}
             >
               Open {nextProject.name}
-              <ArrowRight aria-hidden="true" size={16} />
-            </Link>
+              <MotionArrow><ArrowRight size={16} /></MotionArrow>
+            </InteractiveLink>
           </div>
         </Container>
       </section>

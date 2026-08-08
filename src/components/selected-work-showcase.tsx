@@ -8,12 +8,16 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ProjectMedia } from "@/components/project-media";
+import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { projects } from "@/data/projects";
 import { projectVisuals } from "@/data/project-visuals";
 import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
+import { interactionScale, motionDurations, motionSprings } from "@/lib/motion";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+const MotionLink = motion.create(Link);
 
 export function SelectedWorkShowcase() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -41,11 +45,10 @@ export function SelectedWorkShowcase() {
 
         const timeline = gsap.timeline({
           onUpdate: () => {
-            const nextIndex = cards.reduce((bestIndex, card, index) => {
-              const opacity = Number(gsap.getProperty(card, "opacity"));
-              const bestOpacity = Number(gsap.getProperty(cards[bestIndex], "opacity"));
-              return opacity > bestOpacity ? index : bestIndex;
-            }, 0);
+            const nextIndex = Math.min(
+              stepCount,
+              Math.max(0, Math.round(timeline.progress() * stepCount)),
+            );
 
             if (nextIndex !== activeIndexRef.current) {
               activeIndexRef.current = nextIndex;
@@ -147,7 +150,7 @@ export function SelectedWorkShowcase() {
           {projects.map((project, index) => {
             const visual = projectVisuals[index];
             return (
-              <Link
+              <MotionLink
                 key={project.slug}
                 aria-hidden={activeIndex !== index}
                 aria-label={`View ${project.name} case study`}
@@ -156,6 +159,9 @@ export function SelectedWorkShowcase() {
                 data-work-index={index}
                 href={`/projects/${project.slug}`}
                 tabIndex={activeIndex === index ? 0 : -1}
+                transition={motionSprings.gentle}
+                whileHover={reducedMotion ? undefined : { y: -2 }}
+                whileTap={reducedMotion ? undefined : { scale: 0.995 }}
               >
                 <div className="flex min-w-0 flex-col justify-center border-r border-graphite-strong px-9 desktop:px-12" data-work-copy>
                   <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">
@@ -192,12 +198,11 @@ export function SelectedWorkShowcase() {
                 <div className="min-w-0 p-5 desktop:p-7" data-work-project-media>
                   <ProjectMedia
                     className="h-full min-h-full w-full"
-                    priority={index === 0}
                     project={project}
                     variant="hero"
                   />
                 </div>
-              </Link>
+              </MotionLink>
             );
           })}
 
@@ -212,9 +217,24 @@ export function SelectedWorkShowcase() {
                 onClick={() => selectProject(index)}
                 type="button"
               >
-                <span className="font-mono text-[0.68rem] text-signal">{String(index + 1).padStart(2, "0")}</span>
+                <motion.span
+                  animate={{ opacity: activeIndex === index ? 1 : 0.62, x: activeIndex === index ? 2 : 0 }}
+                  className="font-mono text-[0.68rem] text-signal"
+                  transition={motionSprings.snappy}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </motion.span>
                 <span className="text-sm font-semibold">{project.name}</span>
-                <span className={activeIndex === index ? "h-px w-8 bg-signal" : "h-px w-8 bg-graphite-strong transition-colors group-hover:bg-signal"} />
+                <span className="relative h-px w-8 bg-graphite-strong group-hover:bg-signal">
+                  {activeIndex === index ? (
+                    <motion.span
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-signal"
+                      layoutId="selected-work-active-indicator"
+                      transition={motionSprings.layout}
+                    />
+                  ) : null}
+                </span>
               </button>
             ))}
           </nav>
@@ -227,20 +247,31 @@ export function SelectedWorkShowcase() {
               <motion.article
                 key={project.slug}
                 initial={reducedMotion ? false : { opacity: 0, y: 24 }}
-                transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  opacity: { duration: reducedMotion ? 0 : motionDurations.content },
+                  y: reducedMotion ? { duration: 0 } : motionSprings.gentle,
+                }}
                 viewport={{ amount: 0.18, once: true }}
                 whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
               >
-                <Link className="group block border-b border-graphite-strong py-10" href={`/projects/${project.slug}`}>
+                <InteractiveLink
+                  className="group block touch-manipulation border-b border-graphite-strong py-10"
+                  href={`/projects/${project.slug}`}
+                >
                   <div className="container-grid">
-                    <ProjectMedia className="w-full" priority={index === 0} project={project} variant="compact" />
+                    <motion.div
+                      transition={motionSprings.gentle}
+                      whileTap={reducedMotion ? undefined : { scale: interactionScale.card }}
+                    >
+                      <ProjectMedia className="w-full" project={project} variant="compact" />
+                    </motion.div>
                     <div className="pt-6">
                       <p className="font-mono text-xs text-signal">
                         {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                       </p>
                       <div className="mt-3 flex items-end justify-between gap-5">
                         <h3 className="font-display text-4xl font-semibold leading-[0.95] tracking-[-0.04em] text-ink-primary tablet:text-6xl">{project.name}</h3>
-                        <ArrowRight aria-hidden="true" className="shrink-0 text-signal transition-transform group-active:translate-x-1" size={22} />
+                        <MotionArrow><ArrowRight className="text-signal" size={22} /></MotionArrow>
                       </div>
                       <p className="mt-4 max-w-xl text-base leading-7 text-ink-secondary">{visual.statement}</p>
                       <div className="mt-6 grid gap-3 border-t border-graphite-border pt-4 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted xs:grid-cols-2">
@@ -249,7 +280,7 @@ export function SelectedWorkShowcase() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </InteractiveLink>
               </motion.article>
             );
           })}

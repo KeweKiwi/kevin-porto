@@ -1,12 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
+import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { skillGroups, type SkillGroup, type SkillProject, type TechnicalSkill } from "@/data/skills";
 import { skillsSectionContent } from "@/data/site-content";
 import { cn } from "@/lib/cn";
+import { interactionScale, motionDurations, motionEasings, motionSprings } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 const projectLinks: Record<SkillProject, string> = {
@@ -60,6 +61,10 @@ export function TechnicalSkillsSystem() {
   }
 
   function toggleGroup() {
+    if (expanded && !skills.slice(0, 4).some((skill) => skill.name === activeSkill.name)) {
+      setActiveSkill(skills[0]);
+    }
+
     setExpandedGroups((current) => {
       const next = new Set(current);
       if (next.has(activeGroup.id)) {
@@ -93,22 +98,32 @@ export function TechnicalSkillsSystem() {
             {skillGroups.map((group, index) => {
               const active = group.id === activeGroup.id;
               return (
-                <button
+                <motion.button
                   key={group.id}
                   aria-pressed={active}
                   className={cn(
-                    "group grid min-h-20 grid-cols-1 content-center gap-2 border-r border-graphite-border px-3 text-left last:border-r-0 laptop:grid-cols-[2rem_1fr] laptop:items-center laptop:gap-3 laptop:border-b laptop:border-r-0 laptop:px-4 laptop:last:border-b-0",
-                    active ? "bg-graphite-raised text-ink-primary" : "text-ink-muted hover:text-ink-primary",
+                    "group relative isolate grid min-h-20 grid-cols-1 content-center gap-2 overflow-hidden border-r border-graphite-border px-3 text-left last:border-r-0 laptop:grid-cols-[2rem_1fr] laptop:items-center laptop:gap-3 laptop:border-b laptop:border-r-0 laptop:px-4 laptop:last:border-b-0",
+                    active ? "text-ink-primary" : "text-ink-muted hover:text-ink-primary",
                   )}
                   onClick={() => selectGroup(group)}
+                  transition={motionSprings.snappy}
                   type="button"
+                  whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
                 >
-                  <span className="font-mono text-[0.68rem] text-signal">0{index + 1}</span>
-                  <span className="text-xs font-semibold leading-5 laptop:text-sm">
+                  {active ? (
+                    <motion.span
+                      aria-hidden="true"
+                      className="absolute inset-0 z-0 bg-graphite-raised"
+                      layoutId="skill-category-active"
+                      transition={motionSprings.layout}
+                    />
+                  ) : null}
+                  <span className="relative z-10 font-mono text-[0.68rem] text-signal">0{index + 1}</span>
+                  <span className="relative z-10 text-xs font-semibold leading-5 laptop:text-sm">
                     <span className="laptop:hidden">{groupShortTitles[group.id]}</span>
                     <span className="hidden laptop:inline">{groupTitles[group.id]}</span>
                   </span>
-                </button>
+                </motion.button>
               );
             })}
           </nav>
@@ -122,50 +137,76 @@ export function TechnicalSkillsSystem() {
               <span className="hidden font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted tablet:block">Select a capability</span>
             </div>
 
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.div
-                key={`${activeGroup.id}-${expanded ? "expanded" : "essential"}`}
-                className="grid tablet:grid-cols-2"
-                initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: reducedMotion ? 0 : 0.24 }}
-              >
+            <motion.div
+              className="grid tablet:grid-cols-2"
+              layout={!reducedMotion}
+              transition={motionSprings.layout}
+            >
+              <AnimatePresence initial={false} mode="popLayout">
                 {visibleSkills.map((skill, index) => {
                   const selected = activeSkill.name === skill.name;
                   return (
-                    <button
-                      key={skill.name}
+                    <motion.button
+                      key={`${activeGroup.id}-${skill.name}`}
                       aria-pressed={selected}
                       className={cn(
-                        "flex min-h-20 items-center justify-between gap-4 border-b border-graphite-border px-3 py-4 text-left tablet:odd:border-r",
-                        selected ? "bg-signal text-graphite-page" : "text-ink-primary hover:bg-graphite-raised hover:text-signal focus-visible:bg-graphite-raised focus-visible:text-signal",
+                        "relative isolate flex min-h-20 items-center justify-between gap-4 overflow-hidden border-b border-graphite-border px-3 py-4 text-left tablet:odd:border-r",
+                        selected ? "text-graphite-page" : "text-ink-primary hover:bg-graphite-raised hover:text-signal focus-visible:bg-graphite-raised focus-visible:text-signal",
                       )}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
+                      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+                      layout={!reducedMotion}
                       onClick={() => setActiveSkill(skill)}
                       onFocus={() => setActiveSkill(skill)}
-                      onMouseEnter={() => setActiveSkill(skill)}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : {
+                            layout: motionSprings.layout,
+                            opacity: { duration: motionDurations.feedback },
+                            y: { duration: motionDurations.feedback, ease: motionEasings.precise },
+                          }
+                      }
                       type="button"
+                      whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
                     >
-                      <span className="text-sm font-medium tablet:text-base">{skill.name}</span>
-                      <span className={selected ? "font-mono text-[0.64rem] text-graphite-page/65" : "font-mono text-[0.64rem] text-ink-muted"}>
+                      {selected ? (
+                        <motion.span
+                          aria-hidden="true"
+                          className="absolute inset-0 z-0 bg-signal"
+                          layoutId="skill-capability-active"
+                          transition={motionSprings.layout}
+                        />
+                      ) : null}
+                      <span className="relative z-10 text-sm font-medium tablet:text-base">{skill.name}</span>
+                      <span className={selected ? "relative z-10 font-mono text-[0.64rem] text-graphite-page/65" : "relative z-10 font-mono text-[0.64rem] text-ink-muted"}>
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                    </button>
+                    </motion.button>
                   );
                 })}
-              </motion.div>
-            </AnimatePresence>
+              </AnimatePresence>
+            </motion.div>
 
             {skills.length > 4 ? (
-              <button
+              <motion.button
                 aria-expanded={expanded}
                 className="group mt-5 inline-flex min-h-11 items-center gap-4 text-sm font-semibold text-ink-primary hover:text-signal"
                 onClick={toggleGroup}
+                transition={motionSprings.snappy}
                 type="button"
+                whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
               >
                 {expanded ? "Show essentials" : `View ${skills.length - 4} more`}
-                <ArrowRight aria-hidden="true" className={expanded ? "rotate-180 transition-transform" : "transition-transform group-hover:translate-x-1"} size={14} />
-              </button>
+                <motion.span
+                  animate={{ rotate: expanded ? -90 : 0, x: expanded ? 0 : 2 }}
+                  className="inline-flex"
+                  transition={reducedMotion ? { duration: 0 } : motionSprings.snappy}
+                >
+                  <ArrowRight aria-hidden="true" size={14} />
+                </motion.span>
+              </motion.button>
             ) : null}
           </div>
 
@@ -176,7 +217,7 @@ export function TechnicalSkillsSystem() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={reducedMotion ? undefined : { opacity: 0, y: -10 }}
                 initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-                transition={{ duration: reducedMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: reducedMotion ? 0 : motionDurations.content, ease: motionEasings.precise }}
               >
                 <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">Applied in</p>
                 <h3 className="mt-5 font-display text-3xl font-semibold leading-none tracking-[-0.035em] text-ink-primary tablet:text-4xl">{activeSkill.name}</h3>
@@ -191,10 +232,10 @@ export function TechnicalSkillsSystem() {
 
                 <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
                   {activeSkill.projects.map((project) => (
-                    <Link key={project} className="group inline-flex min-h-11 items-center gap-3 border-b border-signal text-sm text-ink-primary hover:text-signal" href={projectLinks[project]}>
+                    <InteractiveLink key={project} className="inline-flex min-h-11 items-center gap-3 border-b border-signal text-sm text-ink-primary hover:text-signal" href={projectLinks[project]} interactionLevel="subtle">
                       {project}
-                      <ArrowRight aria-hidden="true" className="transition-transform group-hover:translate-x-1" size={14} />
-                    </Link>
+                      <MotionArrow><ArrowRight size={14} /></MotionArrow>
+                    </InteractiveLink>
                   ))}
                 </div>
               </motion.div>

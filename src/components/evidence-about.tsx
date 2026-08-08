@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { workApproachContent } from "@/data/site-content";
 import { cn } from "@/lib/cn";
+import { motionDurations, motionEasings, motionSprings } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -65,16 +66,38 @@ export function EvidenceAbout() {
                 key={row.question}
                 aria-pressed={active}
                 className={cn(
-                  "group relative flex min-h-28 items-start gap-5 border-b border-graphite-border px-1 py-6 text-left tablet:border-b-0 tablet:border-r tablet:px-6 tablet:last:border-r-0",
-                  active ? "bg-graphite-raised text-ink-primary" : "text-ink-muted hover:text-ink-primary",
+                  "group relative isolate flex min-h-28 items-start gap-5 overflow-hidden border-b border-graphite-border px-1 py-6 text-left tablet:border-b-0 tablet:border-r tablet:px-6 tablet:last:border-r-0",
+                  active ? "text-ink-primary" : "text-ink-muted hover:text-ink-primary",
                 )}
                 data-process-step
                 onClick={() => setActiveIndex(index)}
                 type="button"
               >
-                <span className="font-mono text-sm text-signal">0{index + 1}</span>
-                <span className="text-base font-semibold leading-6">{row.question}</span>
-                <ArrowRight aria-hidden="true" className={active ? "ml-auto mt-1 shrink-0 text-signal" : "ml-auto mt-1 shrink-0 text-graphite-strong transition-colors group-hover:text-signal"} size={16} />
+                {active ? (
+                  <motion.span
+                    aria-hidden="true"
+                    className="absolute inset-0 z-0 bg-graphite-raised"
+                    layoutId="work-approach-active-surface"
+                    transition={motionSprings.layout}
+                  />
+                ) : null}
+                <span className="relative z-10 font-mono text-sm text-signal">0{index + 1}</span>
+                <span className="relative z-10 text-base font-semibold leading-6">{row.question}</span>
+                <motion.span
+                  animate={{ color: active ? "#D7F75B" : "#3A413F", x: active ? 3 : 0 }}
+                  className="relative z-10 ml-auto mt-1 inline-flex shrink-0 group-hover:text-signal"
+                  transition={motionSprings.snappy}
+                >
+                  <ArrowRight aria-hidden="true" size={16} />
+                </motion.span>
+                {active ? (
+                  <motion.span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 z-10 h-px bg-signal"
+                    layoutId="work-approach-active-rail"
+                    transition={motionSprings.layout}
+                  />
+                ) : null}
               </button>
             );
           })}
@@ -88,7 +111,7 @@ export function EvidenceAbout() {
               className="grid gap-8 laptop:grid-cols-[minmax(0,1.25fr)_minmax(300px,.75fr)] laptop:items-end"
               exit={reducedMotion ? undefined : { opacity: 0, y: -12 }}
               initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-              transition={{ duration: reducedMotion ? 0 : 0.34, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: reducedMotion ? 0 : motionDurations.content, ease: motionEasings.precise }}
             >
               <p className="max-w-4xl text-2xl font-medium leading-[1.25] text-ink-primary tablet:text-4xl">
                 {activeRow.answer}

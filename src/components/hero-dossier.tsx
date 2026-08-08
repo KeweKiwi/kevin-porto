@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { InteractiveAnchor, InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { PortraitComposition } from "@/components/hero/portrait-composition";
 import { SegmentedName } from "@/components/hero/segmented-name";
 import { SkillSignalMarquee } from "@/components/skill-signal-marquee";
@@ -101,7 +101,7 @@ export function HeroDossier() {
       }
 
       const responsiveMotion = gsap.matchMedia();
-      responsiveMotion.add("(min-width: 1024px) and (pointer: fine)", () => {
+      responsiveMotion.add("(min-width: 1024px) and (hover: hover) and (pointer: fine)", () => {
         const portraitX = gsap.quickTo(portrait, "x", { duration: 0.72, ease: "power3.out" });
         const portraitY = gsap.quickTo(portrait, "y", { duration: 0.72, ease: "power3.out" });
         const insetOneX = gsap.quickTo(insetOne, "x", { duration: 0.62, ease: "power3.out" });
@@ -178,22 +178,30 @@ export function HeroDossier() {
             </p>
 
             <div className="hero-actions">
-              <Link className="kinetic-primary-action group" data-hero-action href="#work">
-                <span>{heroContent.primaryAction}</span>
-                <ArrowRight aria-hidden="true" size={17} />
-              </Link>
+              <span className="inline-flex" data-hero-action>
+                <InteractiveLink className="kinetic-primary-action" href="#work">
+                  <span>{heroContent.primaryAction}</span>
+                  <MotionArrow>
+                    <ArrowRight size={17} />
+                  </MotionArrow>
+                </InteractiveLink>
+              </span>
               {profile.githubUrl ? (
-                <a
-                  aria-label="Open GitHub profile"
-                  className="kinetic-secondary-action group"
-                  data-hero-action
-                  href={profile.githubUrl}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <span>{heroContent.secondaryAction}</span>
-                  <ArrowUpRight aria-hidden="true" size={15} />
-                </a>
+                <span className="inline-flex" data-hero-action>
+                  <InteractiveAnchor
+                    aria-label="Open GitHub profile"
+                    className="kinetic-secondary-action"
+                    href={profile.githubUrl}
+                    interactionLevel="subtle"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    <span>{heroContent.secondaryAction}</span>
+                    <MotionArrow direction="up-right">
+                      <ArrowUpRight size={15} />
+                    </MotionArrow>
+                  </InteractiveAnchor>
+                </span>
               ) : null}
             </div>
           </div>

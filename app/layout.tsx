@@ -3,6 +3,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SkipLink } from "@/components/skip-link";
+import { MotionProvider } from "@/components/motion-provider";
 import { bodyFont, displayFont, monoFont } from "@/lib/fonts";
 
 export const metadata: Metadata = {
@@ -29,12 +30,14 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body>
-        <div className="site-shell">
-          <SkipLink />
-          <SiteHeader />
-          <main id="main-content">{children}</main>
-          <SiteFooter />
-        </div>
+        <MotionProvider>
+          <div className="site-shell">
+            <SkipLink />
+            <SiteHeader />
+            <main id="main-content">{children}</main>
+            <SiteFooter />
+          </div>
+        </MotionProvider>
       </body>
     </html>
   );

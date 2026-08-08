@@ -1,4 +1,5 @@
 import { ArrowRight, ExternalLink, Github, Linkedin, Mail } from "lucide-react";
+import { InteractiveAnchor, MotionArrow } from "@/components/interactive-link";
 import { profile } from "@/data/profile";
 import { contactContent } from "@/data/site-content";
 
@@ -24,16 +25,18 @@ export function ContactClosing() {
             </div>
 
             {emailHref ? (
-              <a
-                className="group flex min-h-20 items-center justify-between bg-signal px-5 text-lg font-semibold tracking-[-0.01em] text-graphite-page tablet:min-h-24 tablet:px-7 tablet:text-xl"
+              <InteractiveAnchor
+                className="flex min-h-20 items-center justify-between bg-signal px-5 text-lg font-semibold tracking-[-0.01em] text-graphite-page hover:bg-ink-primary tablet:min-h-24 tablet:px-7 tablet:text-xl"
                 href={emailHref}
               >
                 <span className="flex items-center gap-3">
                   <Mail aria-hidden="true" size={21} strokeWidth={1.7} />
                   {contactContent.emailAction}
                 </span>
-                <ArrowRight aria-hidden="true" className="transition-transform group-hover:translate-x-1" size={22} />
-              </a>
+                <MotionArrow>
+                  <ArrowRight size={22} />
+                </MotionArrow>
+              </InteractiveAnchor>
             ) : null}
           </div>
         </div>
@@ -45,30 +48,30 @@ export function ContactClosing() {
           </div>
 
           {profile.resumeUrl ? (
-            <a className="group flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.resumeUrl} rel="noreferrer" target="_blank">
+            <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.resumeUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
               {contactContent.resumeAction}
-              <ExternalLink aria-hidden="true" size={14} />
-            </a>
+              <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
+            </InteractiveAnchor>
           ) : null}
 
           {profile.linkedinUrl ? (
-            <a className="group flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.linkedinUrl} rel="noreferrer" target="_blank">
+            <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.linkedinUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
               <span className="flex items-center gap-2"><Linkedin aria-hidden="true" size={15} />{contactContent.linkedinAction}</span>
-              <ExternalLink aria-hidden="true" size={14} />
-            </a>
+              <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
+            </InteractiveAnchor>
           ) : null}
 
           {profile.githubUrl ? (
-            <a className="group flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm font-semibold text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.githubUrl} rel="noreferrer" target="_blank">
+            <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm font-semibold text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.githubUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
               <span className="flex items-center gap-2"><Github aria-hidden="true" size={15} />{contactContent.githubAction}</span>
-              <ExternalLink aria-hidden="true" size={14} />
-            </a>
+              <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
+            </InteractiveAnchor>
           ) : null}
 
-          <a className="group flex min-h-20 items-center justify-between py-5 text-sm text-ink-primary hover:text-signal tablet:px-5" href="https://rizkimobil.com" rel="noreferrer" target="_blank">
+          <InteractiveAnchor className="flex min-h-20 items-center justify-between py-5 text-sm text-ink-primary hover:text-signal tablet:px-5" href="https://rizkimobil.com" interactionLevel="subtle" rel="noreferrer" target="_blank">
             {contactContent.liveWorkAction}
-            <ExternalLink aria-hidden="true" className="transition-transform group-hover:translate-x-1" size={14} />
-          </a>
+            <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
+          </InteractiveAnchor>
         </div>
       </div>
     </section>

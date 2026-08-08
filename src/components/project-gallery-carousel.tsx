@@ -1,11 +1,14 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { ProjectMedia } from "@/components/project-media";
 import type { Project } from "@/data/projects";
 import type { ProjectVisual } from "@/data/project-visuals";
 import { cn } from "@/lib/cn";
+import { interactionScale, motionDurations, motionEasings, motionSprings } from "@/lib/motion";
+import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 type ProjectGalleryCarouselProps = {
   project: Project;
@@ -19,6 +22,7 @@ type GallerySlide = {
 };
 
 export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarouselProps) {
+  const reducedMotion = usePrefersReducedMotion();
   const slides = useMemo<GallerySlide[]>(() => {
     const mediaSlots = project.assetSlots
       .filter((slot) => slot.status === "available")
@@ -70,33 +74,47 @@ export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarous
 
         {hasMultipleSlides ? (
           <div className="absolute right-4 top-4 flex items-center gap-2 tablet:right-5 tablet:top-5">
-            <button
+            <motion.button
               aria-label="Previous media"
               className="grid h-10 w-10 place-items-center border border-graphite-strong bg-graphite-page/86 text-ink-primary backdrop-blur transition hover:border-signal hover:text-signal"
               onClick={showPreviousSlide}
+              transition={motionSprings.snappy}
               type="button"
+              whileHover={reducedMotion ? undefined : { y: -2 }}
+              whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
             >
               <ChevronLeft aria-hidden="true" size={18} />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               aria-label="Next media"
-              className="grid h-10 w-10 place-items-center border border-signal bg-signal text-graphite-page transition hover:-translate-y-0.5"
+              className="grid h-10 w-10 place-items-center border border-signal bg-signal text-graphite-page hover:bg-ink-primary"
               onClick={showNextSlide}
+              transition={motionSprings.snappy}
               type="button"
+              whileHover={reducedMotion ? undefined : { y: -2 }}
+              whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
             >
               <ChevronRight aria-hidden="true" size={18} />
-            </button>
+            </motion.button>
           </div>
         ) : null}
 
         <div className="border-t border-graphite-border bg-graphite-page p-4 tablet:absolute tablet:bottom-5 tablet:left-5 tablet:max-w-xl tablet:border tablet:border-graphite-strong tablet:bg-graphite-page/88 tablet:p-5 tablet:backdrop-blur">
-          <p className="technical-label mb-3 text-signal">
-            Project visualization
-          </p>
-          <h3 className="font-display text-2xl font-semibold leading-tight tracking-[-0.035em] text-ink-primary tablet:text-3xl">
-            {activeSlide.label}
-          </h3>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-secondary">{activeSlide.detail}</p>
+          <p className="technical-label mb-3 text-signal">Project visualization</p>
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={activeSlide.id}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+              transition={{ duration: reducedMotion ? 0 : motionDurations.content, ease: motionEasings.precise }}
+            >
+              <h3 className="font-display text-2xl font-semibold leading-tight tracking-[-0.035em] text-ink-primary tablet:text-3xl">
+                {activeSlide.label}
+              </h3>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-ink-secondary">{activeSlide.detail}</p>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {hasMultipleSlides ? (
@@ -105,16 +123,19 @@ export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarous
               const isActive = index === activeIndex;
 
               return (
-                <button
+                <motion.button
                   key={slide.id}
                   aria-label={`Open media ${index + 1}: ${slide.label}`}
                   aria-current={isActive ? "true" : undefined}
                   className={cn(
-                    "h-2.5 rounded-full border border-graphite-strong transition-all",
+                    "h-2.5 rounded-full border border-graphite-strong",
                     isActive ? "w-9 border-signal bg-signal" : "w-2.5 bg-graphite-page/80 hover:border-signal",
                   )}
+                  layout={!reducedMotion}
                   onClick={() => setActiveIndex(index)}
+                  transition={motionSprings.layout}
                   type="button"
+                  whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
                 />
               );
             })}

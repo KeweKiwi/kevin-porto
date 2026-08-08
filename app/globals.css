@@ -403,16 +403,8 @@ select {
   white-space: nowrap;
 }
 
-.kinetic-primary-action svg {
-  transition: transform 180ms ease;
-}
-
 .kinetic-primary-action:hover {
   background: var(--color-text);
-}
-
-.kinetic-primary-action:hover svg {
-  transform: translateX(4px);
 }
 
 .kinetic-secondary-action {
