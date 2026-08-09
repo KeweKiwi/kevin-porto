@@ -87,8 +87,13 @@ export function InteractivePortrait({
     const current = createNeutralValues();
     const target = createNeutralValues();
     let animationFrame: number | null = null;
+    let ambientInView = true;
     let lastFrameTime = 0;
     let enabled = pointerCapability.matches && !reducedMotion && !reducedMotionCapability.matches;
+
+    function updateAmbientVisibility() {
+      interactionElement.dataset.portraitVisible = String(ambientInView && !document.hidden);
+    }
 
     function stopAnimation() {
       if (animationFrame !== null) {
@@ -181,10 +186,28 @@ export function InteractivePortrait({
       if (document.hidden) {
         resetImmediately();
       }
+      updateAmbientVisibility();
     }
 
+    const visibilityObserver =
+      typeof IntersectionObserver === "undefined"
+        ? null
+        : new IntersectionObserver(
+            ([entry]) => {
+              ambientInView = entry.isIntersecting;
+              updateAmbientVisibility();
+            },
+            { rootMargin: "160px 0px" },
+          );
+
     interactionElement.dataset.portraitMotion = "idle";
+    interactionElement.dataset.portraitVisible = "false";
     applyMotionValues(interactionElement, current);
+    if (visibilityObserver) {
+      visibilityObserver.observe(interactionElement);
+    } else {
+      updateAmbientVisibility();
+    }
     interactionElement.addEventListener("pointerenter", updateTarget, { passive: true });
     interactionElement.addEventListener("pointermove", updateTarget, { passive: true });
     interactionElement.addEventListener("pointerleave", returnToNeutral);
@@ -199,6 +222,7 @@ export function InteractivePortrait({
       pointerCapability.removeEventListener("change", updateCapability);
       reducedMotionCapability.removeEventListener("change", updateCapability);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      visibilityObserver?.disconnect();
       stopAnimation();
     };
   }, [reducedMotion]);
@@ -209,6 +233,7 @@ export function InteractivePortrait({
       className={styles.interactionRoot}
       data-interactive-portrait
       data-portrait-motion="idle"
+      data-portrait-visible="false"
     >
       <div className={styles.tiltSurface}>
         <div aria-hidden="true" className={styles.behindGlow} />
@@ -232,6 +257,7 @@ export function InteractivePortrait({
             className={styles.techPatternBase}
             data-hero-tech-surface
           />
+          <span aria-hidden="true" className={styles.techPatternAmbient} />
           <span aria-hidden="true" className={styles.techPatternReactive} />
           <span aria-hidden="true" className={styles.digitalGrain} />
           <span aria-hidden="true" className={styles.techShimmer} />
