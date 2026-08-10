@@ -47,141 +47,73 @@
 
 .behindGlow {
   position: absolute;
-  inset: 6% 7% 4% 6%;
+  inset: 8% 9% 6%;
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
     circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(215, 247, 91, 0.11),
-    transparent 48%
+    rgba(112, 231, 203, 0.08),
+    rgba(215, 247, 91, 0.035) 24%,
+    transparent 52%
   );
-  filter: blur(24px);
-  opacity: calc(var(--portrait-interaction) * 0.8);
+  filter: blur(18px);
+  opacity: calc(var(--portrait-interaction) * 0.7);
 }
 
+.glyphField,
 .directionalGlare,
-.signalHighlight,
-.techPatternBase,
-.techPatternAmbient,
-.techPatternReactive,
-.digitalGrain,
-.techShimmer {
+.signalHighlight {
   position: absolute;
   inset: 0;
   display: block;
   pointer-events: none;
 }
 
-.techPatternBase,
-.techPatternAmbient,
-.techPatternReactive,
-.digitalGrain,
-.techShimmer {
+.glyphField {
   z-index: 3;
-  -webkit-mask-image: url("/assets/profile/tech-signal-pattern.svg");
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: cover;
-  mask-image: url("/assets/profile/tech-signal-pattern.svg");
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: cover;
-  mix-blend-mode: screen;
+  overflow: hidden;
 }
 
-.techPatternBase {
-  background:
-    linear-gradient(132deg, rgba(243, 240, 232, 0.72), rgba(119, 118, 110, 0.28) 48%, rgba(215, 247, 91, 0.56)),
-    repeating-linear-gradient(90deg, rgba(243, 240, 232, 0.18) 0 1px, transparent 1px 5px);
-  opacity: 0.16;
+.glyphTopLeft {
+  --glyph-mask-position: 7% 9%;
+  --glyph-mask-size: 29% auto;
+  --glyph-spectrum-x: 18%;
+  --glyph-spectrum-y: 19%;
 }
 
-.techPatternAmbient {
-  background: linear-gradient(
-    115deg,
-    rgba(243, 240, 232, 0.14) 12%,
-    rgba(119, 118, 110, 0.09) 30%,
-    rgba(215, 247, 91, 0.36) 45%,
-    rgba(243, 240, 232, 0.3) 52%,
-    rgba(215, 247, 91, 0.13) 66%,
-    rgba(243, 240, 232, 0.08) 82%
-  );
-  background-position: 88% 76%;
-  background-size: 260% 260%;
-  opacity: 0.56;
-  animation: ambientSignalScan 12s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+.glyphTopRight {
+  --glyph-mask-position: 103% 7%;
+  --glyph-mask-size: 43% auto;
+  --glyph-spectrum-x: 86%;
+  --glyph-spectrum-y: 19%;
 }
 
-.techPatternAmbient::before,
-.techPatternAmbient::after {
-  position: absolute;
-  inset: 0;
-  content: "";
+.glyphMidLeft {
+  --glyph-mask-position: 5% 44%;
+  --glyph-mask-size: 19% auto;
+  --glyph-spectrum-x: 11%;
+  --glyph-spectrum-y: 48%;
 }
 
-.techPatternAmbient::before {
-  background:
-    radial-gradient(circle at 18% 22%, rgba(215, 247, 91, 0.38), transparent 24%),
-    radial-gradient(circle at 76% 68%, rgba(243, 240, 232, 0.26), transparent 28%);
-  background-position: 0% 0%, 100% 100%;
-  background-size: 150% 150%, 165% 165%;
-  opacity: 0.52;
-  animation: ambientHotspotDrift 19s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+.glyphMidRight {
+  --glyph-mask-position: 92% 47%;
+  --glyph-mask-size: 36% auto;
+  --glyph-spectrum-x: 84%;
+  --glyph-spectrum-y: 51%;
 }
 
-.techPatternAmbient::after {
-  background-image: radial-gradient(
-    circle,
-    rgba(243, 240, 232, 0.54) 0 0.55px,
-    transparent 0.75px
-  );
-  background-size: 4px 4px;
-  opacity: 0.16;
-  animation: ambientClusterBreathe 16s ease-in-out infinite;
+.glyphLowerLeft {
+  --glyph-mask-position: 2% 78%;
+  --glyph-mask-size: 29% auto;
+  --glyph-spectrum-x: 12%;
+  --glyph-spectrum-y: 78%;
 }
 
-.techPatternReactive {
-  background: radial-gradient(
-    circle 180px at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(243, 240, 232, 0.96) 0,
-    rgba(215, 247, 91, 0.72) 19%,
-    rgba(215, 247, 91, 0.22) 48%,
-    transparent 74%
-  );
-  filter: drop-shadow(0 0 4px rgba(215, 247, 91, 0.22));
-  opacity: calc(var(--portrait-interaction) * 0.94);
-}
-
-.digitalGrain {
-  z-index: 4;
-  background-image:
-    radial-gradient(circle, rgba(243, 240, 232, 0.58) 0 0.65px, transparent 0.8px),
-    radial-gradient(
-      circle at var(--portrait-glare-x) var(--portrait-glare-y),
-      rgba(215, 247, 91, 0.2),
-      transparent 56%
-    );
-  background-size: 3px 3px, 100% 100%;
-  opacity: calc(0.045 + var(--portrait-interaction) * 0.135);
-}
-
-.techShimmer {
-  z-index: 4;
-  background: linear-gradient(
-    112deg,
-    transparent 18%,
-    rgba(119, 118, 110, 0.08) 37%,
-    rgba(243, 240, 232, 0.34) 48%,
-    rgba(215, 247, 91, 0.24) 54%,
-    transparent 72%
-  );
-  background-position: var(--portrait-glare-x) var(--portrait-glare-y);
-  background-size: 220% 220%;
-  opacity: calc(var(--portrait-interaction) * 0.3);
-}
-
-.interactionRoot[data-portrait-motion="active"] .techShimmer {
-  animation: techSignalSweep 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+.glyphLowerRight {
+  --glyph-mask-position: 103% 90%;
+  --glyph-mask-size: 31% auto;
+  --glyph-spectrum-x: 88%;
+  --glyph-spectrum-y: 88%;
 }
 
 .directionalGlare,
@@ -192,22 +124,22 @@
 .directionalGlare {
   background: radial-gradient(
     circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(243, 240, 232, 0.12) 0,
-    rgba(243, 240, 232, 0.055) 18%,
-    transparent 46%
+    rgba(243, 240, 232, 0.075) 0,
+    rgba(159, 233, 229, 0.035) 20%,
+    transparent 47%
   );
   mix-blend-mode: screen;
-  opacity: calc(var(--portrait-interaction) * 0.82);
+  opacity: calc(var(--portrait-interaction) * 0.72);
 }
 
 .signalHighlight {
   background: radial-gradient(
     circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(215, 247, 91, 0.16) 0,
-    rgba(215, 247, 91, 0.06) 22%,
+    rgba(215, 247, 91, 0.08) 0,
+    rgba(112, 231, 203, 0.025) 24%,
     transparent 52%
   );
-  opacity: calc(var(--portrait-interaction) * 0.66);
+  opacity: calc(var(--portrait-interaction) * 0.56);
 }
 
 .insetSignal {
@@ -217,103 +149,70 @@
   display: block;
   pointer-events: none;
   border: 1px solid rgba(215, 247, 91, 0.58);
-  opacity: calc(var(--portrait-interaction) * 0.44);
 }
 
 .insetSignal::before {
   position: absolute;
   inset: 0;
   content: "";
-  background: rgba(215, 247, 91, 0.5);
-  -webkit-mask-image: url("/assets/profile/tech-signal-pattern.svg");
-  -webkit-mask-position: center;
+  background: radial-gradient(
+    circle at 28% 72%,
+    rgba(243, 240, 232, 0.68),
+    rgba(159, 233, 229, 0.38) 17%,
+    rgba(215, 247, 91, 0.16) 30%,
+    transparent 48%
+  );
+  -webkit-mask-image: url("/assets/profile/holo-particles.webp?surface=2");
+  -webkit-mask-position: 24% 72%;
   -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 210% 210%;
-  mask-image: url("/assets/profile/tech-signal-pattern.svg");
-  mask-position: center;
+  -webkit-mask-size: 310% 310%;
+  mask-image: url("/assets/profile/holo-particles.webp?surface=2");
+  mask-position: 24% 72%;
   mask-repeat: no-repeat;
-  mask-size: 210% 210%;
+  mask-size: 310% 310%;
+  filter: drop-shadow(0 0 2px rgba(159, 233, 229, 0.18));
   mix-blend-mode: screen;
-  opacity: 0.5;
+  opacity: calc(0.16 + var(--portrait-interaction) * 0.04);
+  animation: insetParticleDrift 23s ease-in-out infinite alternate;
+}
+
+:global(.hero-architecture-inset-two) .insetSignal::before {
+  background: radial-gradient(
+    circle at 78% 34%,
+    rgba(243, 240, 232, 0.52),
+    rgba(116, 169, 255, 0.24) 20%,
+    rgba(215, 247, 91, 0.1) 32%,
+    transparent 47%
+  );
+  -webkit-mask-position: 78% 34%;
+  -webkit-mask-size: 380% 380%;
+  mask-position: 78% 34%;
+  mask-size: 380% 380%;
+  opacity: calc(0.1 + var(--portrait-interaction) * 0.03);
 }
 
 .insetSignal::after {
   position: absolute;
   top: 7px;
   right: 7px;
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   content: "";
   background: var(--color-accent);
-  box-shadow: 0 0 10px rgba(215, 247, 91, 0.5);
+  box-shadow: 0 0 4px rgba(215, 247, 91, 0.42);
 }
 
-@keyframes techSignalSweep {
+@keyframes insetParticleDrift {
   from {
-    background-position: 88% 92%;
+    filter: brightness(0.82);
   }
 
   to {
-    background-position: 12% 8%;
+    filter: brightness(1.12);
   }
 }
 
-@keyframes ambientSignalScan {
-  0% {
-    background-position: 92% 82%;
-    opacity: 0.46;
-  }
-
-  42% {
-    opacity: 0.58;
-  }
-
-  100% {
-    background-position: 8% 18%;
-    opacity: 0.5;
-  }
-}
-
-@keyframes ambientHotspotDrift {
-  0%,
-  100% {
-    background-position: 0% 0%, 100% 100%;
-    opacity: 0.34;
-  }
-
-  37% {
-    background-position: 42% 18%, 70% 82%;
-    opacity: 0.58;
-  }
-
-  71% {
-    background-position: 78% 62%, 26% 44%;
-    opacity: 0.42;
-  }
-}
-
-@keyframes ambientClusterBreathe {
-  0%,
-  100% {
-    opacity: 0.1;
-  }
-
-  28% {
-    opacity: 0.19;
-  }
-
-  61% {
-    opacity: 0.13;
-  }
-
-  84% {
-    opacity: 0.21;
-  }
-}
-
-.interactionRoot[data-portrait-visible="false"] .techPatternAmbient,
-.interactionRoot[data-portrait-visible="false"] .techPatternAmbient::before,
-.interactionRoot[data-portrait-visible="false"] .techPatternAmbient::after {
+.interactionRoot[data-portrait-visible="false"] .insetSignal::before {
   animation-play-state: paused;
 }
 
@@ -352,26 +251,32 @@
 }
 
 @media (max-width: 767px) {
-  .techPatternBase {
-    opacity: 0.15;
+  .glyphTopLeft {
+    --glyph-mask-position: 4% 10%;
+    --glyph-mask-size: 38% auto;
   }
 
-  .techPatternAmbient {
-    opacity: 0.42;
-    animation-duration: 15s;
+  .glyphTopRight {
+    --glyph-mask-position: 104% 9%;
+    --glyph-mask-size: 46% auto;
   }
 
-  .techPatternAmbient::before {
-    animation-duration: 23s;
+  .glyphMidRight {
+    --glyph-mask-position: 96% 91%;
+    --glyph-mask-size: 38% auto;
   }
 
-  .techPatternAmbient::after {
-    opacity: 0.12;
-    animation-duration: 19s;
+  .glyphLowerLeft {
+    --glyph-mask-position: 10% 73%;
+    --glyph-mask-size: 35% auto;
   }
 
-  .digitalGrain {
-    opacity: 0.03;
+  .glyphMobileHidden {
+    display: none;
+  }
+
+  .insetSignal::before {
+    animation-duration: 27s;
   }
 }
 
@@ -385,31 +290,11 @@
 
   .behindGlow,
   .directionalGlare,
-  .signalHighlight,
-  .techPatternReactive,
-  .digitalGrain,
-  .techShimmer,
-  .insetSignal {
+  .signalHighlight {
     opacity: 0;
   }
 
-  .techPatternBase {
-    opacity: 0.15;
-  }
-
-  .techPatternAmbient,
-  .techPatternAmbient::before,
-  .techPatternAmbient::after {
+  .insetSignal::before {
     animation: none;
-  }
-
-  .techPatternAmbient {
-    background-position: 50% 50%;
-    opacity: 0.18;
-  }
-
-  .techPatternAmbient::before,
-  .techPatternAmbient::after {
-    opacity: 0;
   }
 }

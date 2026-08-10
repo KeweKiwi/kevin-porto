@@ -2,6 +2,7 @@
 
 import type { RefObject } from "react";
 import { useEffect, useRef } from "react";
+import { HoloGlyph } from "@/components/hero/holo-glyph";
 import { MediaSlot } from "@/components/media-slot";
 import { TechnicalMeasurements } from "@/components/hero/technical-measurements";
 import { architectureAssets, portraitAsset } from "@/data/media-assets";
@@ -252,15 +253,48 @@ export function InteractivePortrait({
               sizes="(max-width: 767px) 92vw, (max-width: 1023px) 68vw, 46vw"
             />
           </div>
-          <span
+          <div
             aria-hidden="true"
-            className={styles.techPatternBase}
+            className={styles.glyphField}
             data-hero-tech-surface
-          />
-          <span aria-hidden="true" className={styles.techPatternAmbient} />
-          <span aria-hidden="true" className={styles.techPatternReactive} />
-          <span aria-hidden="true" className={styles.digitalGrain} />
-          <span aria-hidden="true" className={styles.techShimmer} />
+          >
+            <HoloGlyph
+              className={styles.glyphTopLeft}
+              delay={-2}
+              idleOpacity={0.25}
+              variant="angle"
+            />
+            <HoloGlyph
+              className={styles.glyphTopRight}
+              delay={-5}
+              idleOpacity={0.3}
+              variant="slash"
+            />
+            <HoloGlyph
+              className={`${styles.glyphMidLeft} ${styles.glyphMobileHidden}`}
+              delay={-8}
+              idleOpacity={0.14}
+              variant="fragment"
+            />
+            <HoloGlyph
+              className={styles.glyphMidRight}
+              delay={-4}
+              idleOpacity={0.22}
+              variant="brace"
+            />
+            <HoloGlyph
+              className={styles.glyphLowerLeft}
+              delay={-7}
+              idleOpacity={0.16}
+              variant="terminal"
+            />
+            <HoloGlyph
+              className={`${styles.glyphLowerRight} ${styles.glyphMobileHidden}`}
+              delay={-10}
+              idleOpacity={0.12}
+              variant="bracket"
+            />
+          </div>
           <span aria-hidden="true" className={styles.directionalGlare} />
           <span aria-hidden="true" className={styles.signalHighlight} />
         </div>
