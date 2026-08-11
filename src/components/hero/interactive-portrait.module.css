@@ -47,7 +47,7 @@
 
 .behindGlow {
   position: absolute;
-  inset: 8% 9% 6%;
+  inset: 3% 4% 1%;
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
@@ -56,13 +56,11 @@
     rgba(215, 247, 91, 0.035) 24%,
     transparent 52%
   );
-  filter: blur(18px);
   opacity: calc(var(--portrait-interaction) * 0.7);
 }
 
 .glyphField,
-.directionalGlare,
-.signalHighlight {
+.directionalGlare {
   position: absolute;
   inset: 0;
   display: block;
@@ -71,6 +69,7 @@
 
 .glyphField {
   z-index: 3;
+  contain: paint;
   overflow: hidden;
 }
 
@@ -116,30 +115,17 @@
   --glyph-spectrum-y: 88%;
 }
 
-.directionalGlare,
-.signalHighlight {
-  z-index: 5;
-}
-
 .directionalGlare {
+  z-index: 5;
   background: radial-gradient(
     circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(243, 240, 232, 0.075) 0,
-    rgba(159, 233, 229, 0.035) 20%,
-    transparent 47%
+    rgba(243, 240, 232, 0.085) 0,
+    rgba(159, 233, 229, 0.04) 18%,
+    rgba(215, 247, 91, 0.022) 31%,
+    transparent 48%
   );
   mix-blend-mode: screen;
   opacity: calc(var(--portrait-interaction) * 0.72);
-}
-
-.signalHighlight {
-  background: radial-gradient(
-    circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(215, 247, 91, 0.08) 0,
-    rgba(112, 231, 203, 0.025) 24%,
-    transparent 52%
-  );
-  opacity: calc(var(--portrait-interaction) * 0.56);
 }
 
 .insetSignal {
@@ -170,10 +156,8 @@
   mask-position: 24% 72%;
   mask-repeat: no-repeat;
   mask-size: 310% 310%;
-  filter: drop-shadow(0 0 2px rgba(159, 233, 229, 0.18));
   mix-blend-mode: screen;
   opacity: calc(0.16 + var(--portrait-interaction) * 0.04);
-  animation: insetParticleDrift 23s ease-in-out infinite alternate;
 }
 
 :global(.hero-architecture-inset-two) .insetSignal::before {
@@ -202,24 +186,20 @@
   box-shadow: 0 0 4px rgba(215, 247, 91, 0.42);
 }
 
-@keyframes insetParticleDrift {
-  from {
-    filter: brightness(0.82);
-  }
-
-  to {
-    filter: brightness(1.12);
-  }
+.interactionRoot[data-portrait-visible="false"] .behindGlow,
+.interactionRoot[data-portrait-visible="false"] .directionalGlare,
+.interactionRoot[data-portrait-visible="false"] .insetSignal::before {
+  visibility: hidden;
 }
 
-.interactionRoot[data-portrait-visible="false"] .insetSignal::before {
-  animation-play-state: paused;
+.interactionRoot[data-portrait-visible="false"] .glyphField {
+  content-visibility: hidden;
+  visibility: hidden !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tiltSurface {
     transform: rotateX(var(--portrait-rotate-x)) rotateY(var(--portrait-rotate-y));
-    will-change: transform;
   }
 
   .portraitDepth {
@@ -228,7 +208,6 @@
       var(--portrait-parallax-y),
       10px
     ) scale(var(--portrait-scale));
-    will-change: transform;
   }
 
   .insetDepthOne {
@@ -237,7 +216,6 @@
       var(--portrait-inset-one-y),
       18px
     ) scale(var(--portrait-inset-one-scale));
-    will-change: transform;
   }
 
   .insetDepthTwo {
@@ -246,6 +224,12 @@
       var(--portrait-inset-two-y),
       24px
     ) scale(var(--portrait-inset-two-scale));
+  }
+
+  .interactionRoot[data-portrait-motion="active"] .tiltSurface,
+  .interactionRoot[data-portrait-motion="active"] .portraitDepth,
+  .interactionRoot[data-portrait-motion="active"] .insetDepthOne,
+  .interactionRoot[data-portrait-motion="active"] .insetDepthTwo {
     will-change: transform;
   }
 }
@@ -274,10 +258,6 @@
   .glyphMobileHidden {
     display: none;
   }
-
-  .insetSignal::before {
-    animation-duration: 27s;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -289,12 +269,7 @@
   }
 
   .behindGlow,
-  .directionalGlare,
-  .signalHighlight {
+  .directionalGlare {
     opacity: 0;
-  }
-
-  .insetSignal::before {
-    animation: none;
   }
 }

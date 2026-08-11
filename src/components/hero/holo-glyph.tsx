@@ -60,7 +60,6 @@ export function HoloGlyph({
     >
       <span aria-hidden="true" className={styles.glyphBase} />
       <span aria-hidden="true" className={styles.glyphAmbient} />
-      <span aria-hidden="true" className={styles.glyphReactive} />
       <span aria-hidden="true" className={styles.glyphSpecular} />
     </div>
   );

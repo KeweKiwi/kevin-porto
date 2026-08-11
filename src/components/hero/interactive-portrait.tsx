@@ -31,6 +31,19 @@ type PortraitMotionValues = {
 };
 
 const finePointerQuery = "(hover: hover) and (pointer: fine)";
+const motionValueKeys: Array<keyof PortraitMotionValues> = [
+  "glareX",
+  "glareY",
+  "insetOneX",
+  "insetOneY",
+  "insetTwoX",
+  "insetTwoY",
+  "intensity",
+  "portraitX",
+  "portraitY",
+  "rotateX",
+  "rotateY",
+];
 
 function createNeutralValues(): PortraitMotionValues {
   return {
@@ -53,20 +66,22 @@ function clamp(value: number, minimum: number, maximum: number) {
 }
 
 function applyMotionValues(element: HTMLDivElement, values: PortraitMotionValues) {
-  element.style.setProperty("--portrait-glare-x", `${values.glareX}%`);
-  element.style.setProperty("--portrait-glare-y", `${values.glareY}%`);
-  element.style.setProperty("--portrait-inset-one-x", `${values.insetOneX}px`);
-  element.style.setProperty("--portrait-inset-one-y", `${values.insetOneY}px`);
-  element.style.setProperty("--portrait-inset-two-x", `${values.insetTwoX}px`);
-  element.style.setProperty("--portrait-inset-two-y", `${values.insetTwoY}px`);
-  element.style.setProperty("--portrait-interaction", values.intensity.toFixed(3));
-  element.style.setProperty("--portrait-inset-one-scale", `${1 + values.intensity * 0.045}`);
-  element.style.setProperty("--portrait-inset-two-scale", `${1 + values.intensity * 0.055}`);
-  element.style.setProperty("--portrait-parallax-x", `${values.portraitX}px`);
-  element.style.setProperty("--portrait-parallax-y", `${values.portraitY}px`);
-  element.style.setProperty("--portrait-rotate-x", `${values.rotateX}deg`);
-  element.style.setProperty("--portrait-rotate-y", `${values.rotateY}deg`);
-  element.style.setProperty("--portrait-scale", `${1 + values.intensity * 0.018}`);
+  element.style.cssText = `
+    --portrait-glare-x: ${values.glareX.toFixed(2)}%;
+    --portrait-glare-y: ${values.glareY.toFixed(2)}%;
+    --portrait-inset-one-x: ${values.insetOneX.toFixed(2)}px;
+    --portrait-inset-one-y: ${values.insetOneY.toFixed(2)}px;
+    --portrait-inset-two-x: ${values.insetTwoX.toFixed(2)}px;
+    --portrait-inset-two-y: ${values.insetTwoY.toFixed(2)}px;
+    --portrait-interaction: ${values.intensity.toFixed(3)};
+    --portrait-inset-one-scale: ${(1 + values.intensity * 0.045).toFixed(4)};
+    --portrait-inset-two-scale: ${(1 + values.intensity * 0.055).toFixed(4)};
+    --portrait-parallax-x: ${values.portraitX.toFixed(2)}px;
+    --portrait-parallax-y: ${values.portraitY.toFixed(2)}px;
+    --portrait-rotate-x: ${values.rotateX.toFixed(2)}deg;
+    --portrait-rotate-y: ${values.rotateY.toFixed(2)}deg;
+    --portrait-scale: ${(1 + values.intensity * 0.018).toFixed(4)};
+  `;
 }
 
 export function InteractivePortrait({
@@ -89,8 +104,13 @@ export function InteractivePortrait({
     const target = createNeutralValues();
     let animationFrame: number | null = null;
     let ambientInView = true;
+    let interactionBounds: DOMRect | null = null;
     let lastFrameTime = 0;
-    let enabled = pointerCapability.matches && !reducedMotion && !reducedMotionCapability.matches;
+    let enabled =
+      pointerCapability.matches &&
+      !reducedMotion &&
+      !reducedMotionCapability.matches &&
+      !document.hidden;
 
     function updateAmbientVisibility() {
       interactionElement.dataset.portraitVisible = String(ambientInView && !document.hidden);
@@ -117,7 +137,7 @@ export function InteractivePortrait({
       const blend = 1 - Math.exp(-elapsed / 86);
       let largestDelta = 0;
 
-      for (const key of Object.keys(current) as Array<keyof PortraitMotionValues>) {
+      for (const key of motionValueKeys) {
         const delta = target[key] - current[key];
         current[key] += delta * blend;
         largestDelta = Math.max(largestDelta, Math.abs(delta));
@@ -137,7 +157,7 @@ export function InteractivePortrait({
     }
 
     function startAnimation() {
-      if (!enabled || document.hidden || animationFrame !== null) {
+      if (!enabled || !ambientInView || document.hidden || animationFrame !== null) {
         return;
       }
       interactionElement.dataset.portraitMotion = "active";
@@ -149,7 +169,8 @@ export function InteractivePortrait({
         return;
       }
 
-      const bounds = interactionElement.getBoundingClientRect();
+      const bounds = interactionBounds ?? interactionElement.getBoundingClientRect();
+      interactionBounds = bounds;
       if (bounds.width === 0 || bounds.height === 0) {
         return;
       }
@@ -172,12 +193,30 @@ export function InteractivePortrait({
     }
 
     function returnToNeutral() {
+      interactionBounds = null;
       Object.assign(target, createNeutralValues());
       startAnimation();
     }
 
+    function handlePointerEnter(event: PointerEvent) {
+      interactionBounds = interactionElement.getBoundingClientRect();
+      updateTarget(event);
+    }
+
+    function handleViewportChange() {
+      interactionBounds = null;
+      if (animationFrame !== null || current.intensity > 0.001) {
+        resetImmediately();
+      }
+    }
+
     function updateCapability() {
-      enabled = pointerCapability.matches && !reducedMotion && !reducedMotionCapability.matches;
+      enabled =
+        pointerCapability.matches &&
+        !reducedMotion &&
+        !reducedMotionCapability.matches &&
+        ambientInView &&
+        !document.hidden;
       if (!enabled) {
         resetImmediately();
       }
@@ -188,6 +227,7 @@ export function InteractivePortrait({
         resetImmediately();
       }
       updateAmbientVisibility();
+      updateCapability();
     }
 
     const visibilityObserver =
@@ -197,9 +237,17 @@ export function InteractivePortrait({
             ([entry]) => {
               ambientInView = entry.isIntersecting;
               updateAmbientVisibility();
+              updateCapability();
             },
-            { rootMargin: "160px 0px" },
+            { rootMargin: "80px 0px" },
           );
+
+    const resizeObserver =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(() => {
+            interactionBounds = null;
+          });
 
     interactionElement.dataset.portraitMotion = "idle";
     interactionElement.dataset.portraitVisible = "false";
@@ -209,21 +257,25 @@ export function InteractivePortrait({
     } else {
       updateAmbientVisibility();
     }
-    interactionElement.addEventListener("pointerenter", updateTarget, { passive: true });
+    resizeObserver?.observe(interactionElement);
+    interactionElement.addEventListener("pointerenter", handlePointerEnter, { passive: true });
     interactionElement.addEventListener("pointermove", updateTarget, { passive: true });
     interactionElement.addEventListener("pointerleave", returnToNeutral);
+    window.addEventListener("scroll", handleViewportChange, { passive: true });
     pointerCapability.addEventListener("change", updateCapability);
     reducedMotionCapability.addEventListener("change", updateCapability);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      interactionElement.removeEventListener("pointerenter", updateTarget);
+      interactionElement.removeEventListener("pointerenter", handlePointerEnter);
       interactionElement.removeEventListener("pointermove", updateTarget);
       interactionElement.removeEventListener("pointerleave", returnToNeutral);
+      window.removeEventListener("scroll", handleViewportChange);
       pointerCapability.removeEventListener("change", updateCapability);
       reducedMotionCapability.removeEventListener("change", updateCapability);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       visibilityObserver?.disconnect();
+      resizeObserver?.disconnect();
       stopAnimation();
     };
   }, [reducedMotion]);
@@ -296,7 +348,6 @@ export function InteractivePortrait({
             />
           </div>
           <span aria-hidden="true" className={styles.directionalGlare} />
-          <span aria-hidden="true" className={styles.signalHighlight} />
         </div>
 
         <TechnicalMeasurements />

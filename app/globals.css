@@ -518,7 +518,6 @@ select {
   overflow: hidden;
   border: 1px solid rgba(243, 240, 232, 0.52);
   background: var(--color-base);
-  will-change: transform, clip-path;
 }
 
 .hero-portrait-frame::after {
@@ -546,7 +545,6 @@ select {
   border: 1px solid rgba(243, 240, 232, 0.62);
   background: var(--color-page);
   box-shadow: 0 0 0 8px rgba(8, 9, 9, 0.92);
-  will-change: transform, opacity, clip-path;
 }
 
 .hero-architecture-inset-one {
@@ -879,9 +877,7 @@ select {
 }
 
 [data-work-card],
-[data-work-project-media],
-[data-hero-portrait],
-[data-hero-inset] {
+[data-work-project-media] {
   will-change: transform, opacity, clip-path;
 }
 
