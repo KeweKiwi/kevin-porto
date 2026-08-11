@@ -40,9 +40,9 @@ export function HoloGlyph({
   idleOpacity,
   variant,
 }: HoloGlyphProps) {
-  const ambientOpacity = Math.min(idleOpacity * 1.3, 0.42);
-  const baseOpacity = Math.min(idleOpacity * 2.5, 0.82);
-  const specularOpacity = Math.min(idleOpacity * 1.2, 0.38);
+  const ambientOpacity = Math.min(idleOpacity * 0.72, 0.2);
+  const baseOpacity = Math.min(idleOpacity, 0.24);
+  const specularOpacity = Math.min(idleOpacity * 0.9, 0.2);
   const style: HoloGlyphStyle = {
     "--glyph-ambient": ambientOpacity,
     "--glyph-delay": `${delay}s`,

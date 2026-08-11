@@ -531,6 +531,7 @@ select {
 
 .hero-portrait-image,
 .hero-architecture-image {
+  object-fit: cover;
   filter: grayscale(1) contrast(1.15) brightness(0.82);
 }
 
@@ -542,9 +543,9 @@ select {
   position: absolute;
   z-index: 5;
   overflow: visible;
-  border: 1px solid rgba(243, 240, 232, 0.62);
+  border: 1px solid rgba(243, 240, 232, 0.44);
   background: var(--color-page);
-  box-shadow: 0 0 0 8px rgba(8, 9, 9, 0.92);
+  box-shadow: 0 0 0 7px rgba(8, 9, 9, 0.94);
 }
 
 .hero-architecture-inset-one {

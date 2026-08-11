@@ -5,8 +5,19 @@ export type MediaAsset = {
 
 export const portraitAsset: MediaAsset = {
   alt: "Portrait of Kevin William Faith",
-  src: "/assets/profile/kevin-portrait.webp",
+  src: "/assets/profile/kevin-photo.jpg",
 };
+
+export const portraitDetailAssets = [
+  {
+    alt: "Ornate chair detail from Kevin's portrait",
+    src: "/assets/profile/kevin-photo.jpg",
+  },
+  {
+    alt: "Shoe, denim, and floor detail from Kevin's portrait",
+    src: "/assets/profile/kevin-photo.jpg",
+  },
+] satisfies readonly MediaAsset[];
 
 export const aboutPortraitAsset: MediaAsset = {
   alt: "Kevin presenting the Squeaky finance prototype with his development team",

@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { HoloGlyph } from "@/components/hero/holo-glyph";
 import { MediaSlot } from "@/components/media-slot";
 import { TechnicalMeasurements } from "@/components/hero/technical-measurements";
-import { architectureAssets, portraitAsset } from "@/data/media-assets";
+import { portraitAsset, portraitDetailAssets } from "@/data/media-assets";
 import { prefersReducedMotionQuery } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import styles from "./interactive-portrait.module.css";
@@ -311,40 +311,34 @@ export function InteractivePortrait({
             data-hero-tech-surface
           >
             <HoloGlyph
-              className={styles.glyphTopLeft}
-              delay={-2}
-              idleOpacity={0.25}
-              variant="angle"
+              className={`${styles.glyphTopLeft} ${styles.glyphMobileHidden}`}
+              delay={-4}
+              idleOpacity={0.15}
+              variant="bracket"
             />
             <HoloGlyph
               className={styles.glyphTopRight}
-              delay={-5}
-              idleOpacity={0.3}
+              delay={-7}
+              idleOpacity={0.22}
+              variant="angle"
+            />
+            <HoloGlyph
+              className={`${styles.glyphMidRight} ${styles.glyphMobileHidden}`}
+              delay={-10}
+              idleOpacity={0.09}
               variant="slash"
             />
             <HoloGlyph
-              className={`${styles.glyphMidLeft} ${styles.glyphMobileHidden}`}
-              delay={-8}
-              idleOpacity={0.14}
-              variant="fragment"
-            />
-            <HoloGlyph
-              className={styles.glyphMidRight}
-              delay={-4}
-              idleOpacity={0.22}
-              variant="brace"
-            />
-            <HoloGlyph
               className={styles.glyphLowerLeft}
-              delay={-7}
-              idleOpacity={0.16}
+              delay={-2}
+              idleOpacity={0.13}
               variant="terminal"
             />
             <HoloGlyph
-              className={`${styles.glyphLowerRight} ${styles.glyphMobileHidden}`}
-              delay={-10}
-              idleOpacity={0.12}
-              variant="bracket"
+              className={styles.glyphLowerRight}
+              delay={-12}
+              idleOpacity={0.075}
+              variant="fragment"
             />
           </div>
           <span aria-hidden="true" className={styles.directionalGlare} />
@@ -359,9 +353,9 @@ export function InteractivePortrait({
         >
           <div className={`${styles.insetDepth} ${styles.insetDepthOne}`}>
             <MediaSlot
-              asset={architectureAssets[0]}
+              asset={portraitDetailAssets[0]}
               className="h-full w-full"
-              imageClassName="hero-architecture-image"
+              imageClassName={`hero-architecture-image ${styles.insetImage} ${styles.insetChairImage}`}
               sizes="(max-width: 767px) 38vw, 22vw"
             />
           </div>
@@ -377,9 +371,9 @@ export function InteractivePortrait({
         >
           <div className={`${styles.insetDepth} ${styles.insetDepthTwo}`}>
             <MediaSlot
-              asset={architectureAssets[1]}
+              asset={portraitDetailAssets[1]}
               className="h-full w-full"
-              imageClassName="hero-architecture-image"
+              imageClassName={`hero-architecture-image ${styles.insetImage} ${styles.insetPersonalImage}`}
               sizes="18vw"
             />
           </div>
