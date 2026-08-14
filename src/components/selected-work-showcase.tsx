@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { motion } from "motion/react";
+import {
+  motion,
+  type MotionValue,
+  useMotionTemplate,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { ProjectMedia } from "@/components/project-media";
 import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { projects } from "@/data/projects";
@@ -15,93 +20,237 @@ import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { interactionScale, motionDurations, motionSprings } from "@/lib/motion";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
-
 const MotionLink = motion.create(Link);
+const workTransitionWindows = [
+  { start: 0.08, end: 0.42 },
+  { start: 0.58, end: 0.92 },
+] as const;
+
+type WorkProject = (typeof projects)[number];
+type WorkVisual = (typeof projectVisuals)[number];
+
+const cardMotionRanges = [
+  {
+    input: [0, 0.08, 0.25, 1],
+    topInset: [0, 0, 49.9, 49.9],
+    bottomInset: [0, 0, 49.9, 49.9],
+    contentOpacity: [1, 1, 0, 0],
+    copyY: [0, 0, -12, -12],
+    mediaScale: [1, 1, 0.975, 0.975],
+    mediaY: [0, 0, -6, -6],
+  },
+  {
+    input: [0, 0.25, 0.42, 0.58, 0.75, 1],
+    topInset: [49.9, 49.9, 0, 0, 49.9, 49.9],
+    bottomInset: [49.9, 49.9, 0, 0, 49.9, 49.9],
+    contentOpacity: [0, 0, 1, 1, 0, 0],
+    copyY: [12, 12, 0, 0, -12, -12],
+    mediaScale: [1.025, 1.025, 1, 1, 0.975, 0.975],
+    mediaY: [6, 6, 0, 0, -6, -6],
+  },
+  {
+    input: [0, 0.75, 0.92, 1],
+    topInset: [49.9, 49.9, 0, 0],
+    bottomInset: [49.9, 49.9, 0, 0],
+    contentOpacity: [0, 0, 1, 1],
+    copyY: [12, 12, 0, 0],
+    mediaScale: [1.025, 1.025, 1, 1],
+    mediaY: [6, 6, 0, 0],
+  },
+];
+
+function WorkSignalHandoff({
+  index,
+  progress,
+  project,
+}: {
+  index: number;
+  progress: MotionValue<number>;
+  project: WorkProject;
+}) {
+  const transitionWindow = workTransitionWindows[index];
+  const midpoint = (transitionWindow.start + transitionWindow.end) / 2;
+  const phaseOpacity = useTransform(
+    progress,
+    [
+      transitionWindow.start,
+      transitionWindow.start + 0.035,
+      transitionWindow.end - 0.045,
+      transitionWindow.end,
+    ],
+    [0, 1, 1, 0],
+  );
+  const lineScale = useTransform(
+    progress,
+    [transitionWindow.start, midpoint, transitionWindow.end],
+    [0.04, 1, 0.04],
+  );
+  const coreOpacity = useTransform(
+    progress,
+    [transitionWindow.start, midpoint - 0.065, midpoint + 0.065, transitionWindow.end],
+    [0, 1, 1, 0],
+  );
+  const coreY = useTransform(
+    progress,
+    [transitionWindow.start, midpoint, transitionWindow.end],
+    [8, 0, -8],
+  );
+  const coreScale = useTransform(
+    progress,
+    [transitionWindow.start, midpoint, transitionWindow.end],
+    [0.98, 1, 0.98],
+  );
+
+  return (
+    <motion.div
+      className="work-shutter-phase"
+      data-work-handoff={index}
+      style={{ opacity: phaseOpacity }}
+    >
+      <motion.span className="work-shutter-line" style={{ scaleX: lineScale }} />
+      <motion.div
+        className="work-shutter-core"
+        style={{ opacity: coreOpacity, scale: coreScale, y: coreY }}
+      >
+        <span className="work-shutter-index">{String(index + 2).padStart(2, "0")}</span>
+        <span className="work-shutter-status">Signal handoff</span>
+        <strong className="work-shutter-project">{project.name}</strong>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function DesktopWorkCard({
+  activeIndex,
+  index,
+  progress,
+  project,
+  reducedMotion,
+  visual,
+}: {
+  activeIndex: number;
+  index: number;
+  progress: MotionValue<number>;
+  project: WorkProject;
+  reducedMotion: boolean;
+  visual: WorkVisual;
+}) {
+  const motionRange = cardMotionRanges[index];
+  const topInset = useTransform(progress, motionRange.input, motionRange.topInset);
+  const bottomInset = useTransform(progress, motionRange.input, motionRange.bottomInset);
+  const clipPath = useMotionTemplate`inset(${topInset}% 0 ${bottomInset}% 0)`;
+  const contentOpacity = useTransform(progress, motionRange.input, motionRange.contentOpacity);
+  const copyY = useTransform(progress, motionRange.input, motionRange.copyY);
+  const mediaScale = useTransform(progress, motionRange.input, motionRange.mediaScale);
+  const mediaY = useTransform(progress, motionRange.input, motionRange.mediaY);
+  const isActive = activeIndex === index;
+
+  return (
+    <MotionLink
+      aria-hidden={!isActive}
+      aria-label={`View ${project.name} case study`}
+      className="work-project-card absolute inset-x-0 bottom-20 top-0 grid grid-cols-[minmax(330px,.72fr)_minmax(0,1.5fr)]"
+      data-work-card
+      data-work-index={index}
+      href={`/projects/${project.slug}`}
+      style={
+        reducedMotion
+          ? {
+              clipPath: isActive ? "inset(0% 0 0% 0)" : "inset(100% 0 0% 0)",
+              opacity: isActive ? 1 : 0,
+              pointerEvents: isActive ? "auto" : "none",
+              visibility: isActive ? "visible" : "hidden",
+            }
+          : {
+              clipPath,
+              opacity: 1,
+              pointerEvents: isActive ? "auto" : "none",
+              visibility: "visible",
+            }
+      }
+      tabIndex={isActive ? 0 : -1}
+      transition={motionSprings.gentle}
+      whileHover={reducedMotion ? undefined : { y: -2 }}
+      whileTap={reducedMotion ? undefined : { scale: 0.995 }}
+    >
+      <motion.div
+        className="work-copy-console flex min-w-0 flex-col justify-center border-r border-graphite-strong px-9 desktop:px-12"
+        data-work-copy
+        style={reducedMotion ? undefined : { opacity: contentOpacity, y: copyY }}
+      >
+        <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">
+          Project {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+        </p>
+        <h3 className="mt-5 font-display text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-ink-primary desktop:text-6xl">
+          {project.name}
+        </h3>
+        <p className="mt-6 max-w-md text-base leading-7 text-ink-secondary desktop:text-lg">
+          {visual.statement}
+        </p>
+
+        <dl className="mt-8 grid grid-cols-2 border-y border-graphite-strong py-5">
+          <div className="border-r border-graphite-border pr-4">
+            <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Role</dt>
+            <dd className="mt-2 text-sm leading-6 text-ink-primary">{project.role}</dd>
+          </div>
+          <div className="pl-4">
+            <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Status</dt>
+            <dd className="mt-2 text-sm leading-6 text-ink-primary">{visual.shortStatus}</dd>
+          </div>
+        </dl>
+
+        <p className="mt-6 font-mono text-[0.68rem] font-medium uppercase leading-6 tracking-[0.065em] text-signal">
+          {visual.markers.slice(0, 3).join(" / ")}
+        </p>
+
+        <span className="mt-8 inline-flex min-h-12 w-fit items-center gap-8 border-b border-signal text-sm font-medium text-ink-primary">
+          View case study
+          <ArrowRight aria-hidden="true" size={16} />
+        </span>
+      </motion.div>
+
+      <motion.div
+        className="work-media-shell min-w-0 p-5 desktop:p-7"
+        data-work-project-media
+        style={reducedMotion ? undefined : { opacity: contentOpacity, scale: mediaScale, y: mediaY }}
+      >
+        <ProjectMedia
+          className="h-full min-h-full w-full"
+          project={project}
+          variant="hero"
+        />
+      </motion.div>
+    </MotionLink>
+  );
+}
 
 export function SelectedWorkShowcase() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const reducedMotion = usePrefersReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+  const smoothProgress = useSpring(scrollYProgress, {
+    damping: 34,
+    mass: 0.22,
+    restDelta: 0.0005,
+    stiffness: 320,
+  });
 
-  useGSAP(
-    () => {
-      if (reducedMotion) {
-        return;
-      }
+  useMotionValueEvent(smoothProgress, "change", (progress) => {
+    if (reducedMotion || window.innerWidth < 1024) {
+      return;
+    }
 
-      const responsiveMotion = gsap.matchMedia();
-      responsiveMotion.add("(min-width: 1024px)", () => {
-        const cards = gsap.utils.toArray<HTMLElement>("[data-work-card]");
-        const stepCount = projects.length - 1;
-
-        gsap.set(cards.slice(1), {
-          autoAlpha: 0,
-          clipPath: "inset(100% 0 0 0)",
-          pointerEvents: "none",
-        });
-        gsap.set("[data-work-progress]", { scaleX: 0, transformOrigin: "left center" });
-
-        const timeline = gsap.timeline({
-          onUpdate: () => {
-            const nextIndex = Math.min(
-              stepCount,
-              Math.max(0, Math.round(timeline.progress() * stepCount)),
-            );
-
-            if (nextIndex !== activeIndexRef.current) {
-              activeIndexRef.current = nextIndex;
-              setActiveIndex(nextIndex);
-            }
-          },
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.8,
-          },
-        });
-
-        timeline.to("[data-work-progress]", { duration: stepCount, ease: "none", scaleX: 1 }, 0);
-
-        projects.slice(1).forEach((_, stepIndex) => {
-          const outgoing = cards[stepIndex];
-          const incoming = cards[stepIndex + 1];
-          const outgoingCopy = outgoing.querySelector("[data-work-copy]");
-          const incomingCopy = incoming.querySelector("[data-work-copy]");
-          const outgoingMedia = outgoing.querySelector("[data-work-project-media]");
-          const incomingMedia = incoming.querySelector("[data-work-project-media]");
-
-          timeline
-            .to(outgoingCopy, { autoAlpha: 0, duration: 0.24, ease: "power2.in", y: -18 }, stepIndex + 0.04)
-            .to(outgoingMedia, { duration: 0.48, ease: "power3.inOut", scale: 0.985, xPercent: -1.5 }, stepIndex + 0.02)
-            .to(outgoing, { autoAlpha: 0, clipPath: "inset(0 0 100% 0)", duration: 0.52, ease: "power4.inOut", pointerEvents: "none" }, stepIndex + 0.08)
-            .fromTo(
-              incoming,
-              { autoAlpha: 1, clipPath: "inset(100% 0 0 0)", pointerEvents: "none" },
-              { autoAlpha: 1, clipPath: "inset(0% 0 0 0)", duration: 0.62, ease: "power4.inOut", immediateRender: false, pointerEvents: "auto" },
-              stepIndex + 0.12,
-            )
-            .fromTo(
-              incomingMedia,
-              { scale: 1.035, xPercent: 1.5 },
-              { duration: 0.72, ease: "power3.out", immediateRender: false, scale: 1, xPercent: 0 },
-              stepIndex + 0.15,
-            )
-            .fromTo(
-              incomingCopy,
-              { autoAlpha: 0, y: 28 },
-              { autoAlpha: 1, duration: 0.46, ease: "power3.out", immediateRender: false, y: 0 },
-              stepIndex + 0.34,
-            );
-        });
-      });
-
-      return () => responsiveMotion.revert();
-    },
-    { scope: sectionRef, dependencies: [reducedMotion] },
-  );
+    const nextIndex = progress < 0.25 ? 0 : progress < 0.75 ? 1 : 2;
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex;
+      setActiveIndex(nextIndex);
+    }
+  });
 
   function selectProject(index: number) {
     if (reducedMotion || window.innerWidth < 1024) {
@@ -128,10 +277,18 @@ export function SelectedWorkShowcase() {
       ref={sectionRef}
       id="work"
       className="kinetic-work-scroll relative border-b border-graphite-border bg-graphite-page"
+      data-active-work={activeIndex}
       data-reduced-motion={reducedMotion}
     >
       <div className="kinetic-work-stage">
-        <header className="container-grid flex min-h-20 items-center justify-between gap-8 border-b border-graphite-strong">
+        <div aria-hidden="true" className="work-signal-field">
+          <span className="work-signal-grid" />
+          <span className="work-signal-trace work-signal-trace-a" />
+          <span className="work-signal-trace work-signal-trace-b" />
+          <span className="work-signal-trace work-signal-trace-c" />
+        </div>
+
+        <header className="work-signal-header container-grid relative z-10 flex min-h-20 items-center justify-between gap-8 border-b border-graphite-strong">
           <div className="flex items-center gap-4">
             <span className="font-mono text-[0.68rem] text-signal">03</span>
             <div>
@@ -146,74 +303,46 @@ export function SelectedWorkShowcase() {
           </p>
         </header>
 
-        <div className="kinetic-work-desktop-grid relative hidden laptop:block">
+        <div className="kinetic-work-desktop-grid relative z-10 hidden laptop:block">
+          <div aria-hidden="true" className="work-shutter-handoffs">
+            {projects.slice(1).map((project, index) => (
+              <WorkSignalHandoff
+                key={project.slug}
+                index={index}
+                progress={smoothProgress}
+                project={project}
+              />
+            ))}
+          </div>
+
           {projects.map((project, index) => {
             const visual = projectVisuals[index];
             return (
-              <MotionLink
+              <DesktopWorkCard
                 key={project.slug}
-                aria-hidden={activeIndex !== index}
-                aria-label={`View ${project.name} case study`}
-                className="work-project-card absolute inset-x-0 bottom-20 top-0 grid grid-cols-[minmax(330px,.72fr)_minmax(0,1.5fr)]"
-                data-work-card
-                data-work-index={index}
-                href={`/projects/${project.slug}`}
-                tabIndex={activeIndex === index ? 0 : -1}
-                transition={motionSprings.gentle}
-                whileHover={reducedMotion ? undefined : { y: -2 }}
-                whileTap={reducedMotion ? undefined : { scale: 0.995 }}
-              >
-                <div className="flex min-w-0 flex-col justify-center border-r border-graphite-strong px-9 desktop:px-12" data-work-copy>
-                  <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-signal">
-                    Project {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
-                  </p>
-                  <h3 className="mt-5 font-display text-5xl font-semibold leading-[0.95] tracking-[-0.04em] text-ink-primary desktop:text-6xl">
-                    {project.name}
-                  </h3>
-                  <p className="mt-6 max-w-md text-base leading-7 text-ink-secondary desktop:text-lg">
-                    {visual.statement}
-                  </p>
-
-                  <dl className="mt-8 grid grid-cols-2 border-y border-graphite-strong py-5">
-                    <div className="border-r border-graphite-border pr-4">
-                      <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Role</dt>
-                      <dd className="mt-2 text-sm leading-6 text-ink-primary">{project.role}</dd>
-                    </div>
-                    <div className="pl-4">
-                      <dt className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Status</dt>
-                      <dd className="mt-2 text-sm leading-6 text-ink-primary">{visual.shortStatus}</dd>
-                    </div>
-                  </dl>
-
-                  <p className="mt-6 font-mono text-[0.68rem] font-medium uppercase leading-6 tracking-[0.065em] text-signal">
-                    {visual.markers.slice(0, 3).join(" / ")}
-                  </p>
-
-                  <span className="mt-8 inline-flex min-h-12 w-fit items-center gap-8 border-b border-signal text-sm font-medium text-ink-primary">
-                    View case study
-                    <ArrowRight aria-hidden="true" size={16} />
-                  </span>
-                </div>
-
-                <div className="min-w-0 p-5 desktop:p-7" data-work-project-media>
-                  <ProjectMedia
-                    className="h-full min-h-full w-full"
-                    project={project}
-                    variant="hero"
-                  />
-                </div>
-              </MotionLink>
+                activeIndex={activeIndex}
+                index={index}
+                progress={smoothProgress}
+                project={project}
+                reducedMotion={reducedMotion}
+                visual={visual}
+              />
             );
           })}
 
-          <nav aria-label="Featured projects" className="absolute inset-x-0 bottom-0 z-20 grid h-20 grid-cols-3 border-t border-graphite-strong bg-graphite-page">
-            <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px origin-left bg-signal" data-work-progress />
+          <nav aria-label="Featured projects" className="work-signal-nav absolute inset-x-0 bottom-0 z-20 grid h-20 grid-cols-3 border-t border-graphite-strong bg-graphite-page">
+            <motion.span
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-px origin-left bg-signal"
+              style={{ scaleX: reducedMotion ? activeIndex / Math.max(projects.length - 1, 1) : smoothProgress }}
+            />
             {projects.map((project, index) => (
               <button
                 key={project.slug}
                 aria-label={`Show ${project.name}`}
                 aria-pressed={activeIndex === index}
-                className={activeIndex === index ? "group flex min-h-11 items-center justify-between border-r border-graphite-strong px-7 text-left text-ink-primary last:border-r-0" : "group flex min-h-11 items-center justify-between border-r border-graphite-strong px-7 text-left text-ink-muted last:border-r-0 hover:text-ink-primary"}
+                className={activeIndex === index ? "work-signal-tab group flex min-h-11 items-center justify-between border-r border-graphite-strong px-7 text-left text-ink-primary last:border-r-0" : "work-signal-tab group flex min-h-11 items-center justify-between border-r border-graphite-strong px-7 text-left text-ink-muted last:border-r-0 hover:text-ink-primary"}
+                data-active={activeIndex === index}
                 onClick={() => selectProject(index)}
                 type="button"
               >
@@ -240,7 +369,7 @@ export function SelectedWorkShowcase() {
           </nav>
         </div>
 
-        <div className="grid laptop:hidden">
+        <div className="relative z-10 grid laptop:hidden">
           {projects.map((project, index) => {
             const visual = projectVisuals[index];
             return (

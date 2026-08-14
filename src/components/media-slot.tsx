@@ -34,6 +34,7 @@ export function MediaSlot({
           alt={asset.alt}
           className={cn(imageClassName ? undefined : "object-cover", imageClassName)}
           fill
+          fetchPriority={priority ? "high" : undefined}
           priority={priority}
           sizes={sizes}
           src={asset.src}

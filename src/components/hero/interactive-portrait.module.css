@@ -68,9 +68,9 @@
   pointer-events: none;
   background: radial-gradient(
     circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(243, 240, 232, 0.075),
-    rgba(185, 181, 170, 0.04) 23%,
-    rgba(215, 247, 91, 0.025) 34%,
+    rgba(243, 240, 232, 0.08),
+    rgba(231, 250, 157, 0.045) 23%,
+    rgba(215, 247, 91, 0.04) 34%,
     transparent 54%
   );
   opacity: calc(var(--portrait-interaction) * 0.6);
@@ -91,36 +91,36 @@
 }
 
 .glyphTopLeft {
-  --glyph-mask-position: -5% 14%;
-  --glyph-mask-size: 27% auto;
+  --glyph-mask-position: -3% 14%;
+  --glyph-mask-size: 25% auto;
   --glyph-spectrum-x: 13%;
   --glyph-spectrum-y: 22%;
 }
 
 .glyphTopRight {
-  --glyph-mask-position: 108% 4%;
-  --glyph-mask-size: 46% auto;
+  --glyph-mask-position: 97% 7%;
+  --glyph-mask-size: 39% auto;
   --glyph-spectrum-x: 83%;
   --glyph-spectrum-y: 18%;
 }
 
 .glyphMidRight {
-  --glyph-mask-position: 100% 51%;
-  --glyph-mask-size: 18% auto;
+  --glyph-mask-position: 101% 50%;
+  --glyph-mask-size: 17% auto;
   --glyph-spectrum-x: 87%;
   --glyph-spectrum-y: 54%;
 }
 
 .glyphLowerLeft {
-  --glyph-mask-position: -4% 68%;
-  --glyph-mask-size: 26% auto;
+  --glyph-mask-position: -3% 69%;
+  --glyph-mask-size: 25% auto;
   --glyph-spectrum-x: 11%;
   --glyph-spectrum-y: 72%;
 }
 
 .glyphLowerRight {
-  --glyph-mask-position: 98% 94%;
-  --glyph-mask-size: 22% auto;
+  --glyph-mask-position: 97% 92%;
+  --glyph-mask-size: 19% auto;
   --glyph-spectrum-x: 87%;
   --glyph-spectrum-y: 88%;
 }
@@ -129,9 +129,9 @@
   z-index: 5;
   background: radial-gradient(
     circle at var(--portrait-glare-x) var(--portrait-glare-y),
-    rgba(243, 240, 232, 0.1) 0,
-    rgba(185, 181, 170, 0.045) 18%,
-    rgba(215, 247, 91, 0.026) 31%,
+    rgba(243, 240, 232, 0.11) 0,
+    rgba(231, 250, 157, 0.065) 18%,
+    rgba(215, 247, 91, 0.04) 31%,
     transparent 49%
   );
   mix-blend-mode: screen;
@@ -154,9 +154,9 @@
   content: "";
   background: radial-gradient(
     circle at 28% 72%,
-    rgba(243, 240, 232, 0.64),
-    rgba(185, 181, 170, 0.3) 19%,
-    rgba(215, 247, 91, 0.1) 32%,
+    rgba(243, 240, 232, 0.58),
+    rgba(231, 250, 157, 0.42) 18%,
+    rgba(215, 247, 91, 0.28) 32%,
     transparent 49%
   );
   -webkit-mask-image: url("/assets/profile/holo-particles.webp?surface=2");
@@ -167,23 +167,24 @@
   mask-position: 24% 72%;
   mask-repeat: no-repeat;
   mask-size: 310% 310%;
-  mix-blend-mode: screen;
-  opacity: calc(0.1 + var(--portrait-interaction) * 0.035);
+  filter: drop-shadow(0 0 0.7px rgba(8, 9, 9, 0.35));
+  mix-blend-mode: normal;
+  opacity: calc(0.16 + var(--portrait-interaction) * 0.03);
 }
 
 :global(.hero-architecture-inset-two) .insetSignal::before {
   background: radial-gradient(
     circle at 78% 34%,
-    rgba(243, 240, 232, 0.44),
-    rgba(119, 118, 110, 0.2) 21%,
-    rgba(215, 247, 91, 0.075) 34%,
+    rgba(243, 240, 232, 0.42),
+    rgba(231, 250, 157, 0.28) 21%,
+    rgba(215, 247, 91, 0.2) 34%,
     transparent 48%
   );
   -webkit-mask-position: 78% 34%;
   -webkit-mask-size: 380% 380%;
   mask-position: 78% 34%;
   mask-size: 380% 380%;
-  opacity: calc(0.065 + var(--portrait-interaction) * 0.025);
+  opacity: calc(0.09 + var(--portrait-interaction) * 0.02);
 }
 
 .insetSignal::after {
@@ -247,8 +248,8 @@
 
 @media (max-width: 767px) {
   .glyphTopRight {
-    --glyph-mask-position: 110% 5%;
-    --glyph-mask-size: 48% auto;
+    --glyph-mask-position: 98% 7%;
+    --glyph-mask-size: 40% auto;
   }
 
   .glyphLowerLeft {
@@ -257,8 +258,8 @@
   }
 
   .glyphLowerRight {
-    --glyph-mask-position: 100% 93%;
-    --glyph-mask-size: 22% auto;
+    --glyph-mask-position: 98% 92%;
+    --glyph-mask-size: 20% auto;
   }
 
   .glyphMobileHidden {

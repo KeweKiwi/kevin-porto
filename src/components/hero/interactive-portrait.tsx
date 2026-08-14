@@ -313,32 +313,32 @@ export function InteractivePortrait({
             <HoloGlyph
               className={`${styles.glyphTopLeft} ${styles.glyphMobileHidden}`}
               delay={-4}
-              idleOpacity={0.15}
-              variant="bracket"
+              idleOpacity={0.32}
+              variant="brace"
             />
             <HoloGlyph
               className={styles.glyphTopRight}
               delay={-7}
-              idleOpacity={0.22}
-              variant="angle"
+              idleOpacity={0.45}
+              variant="slash"
             />
             <HoloGlyph
               className={`${styles.glyphMidRight} ${styles.glyphMobileHidden}`}
               delay={-10}
-              idleOpacity={0.09}
-              variant="slash"
+              idleOpacity={0.28}
+              variant="bracket"
             />
             <HoloGlyph
               className={styles.glyphLowerLeft}
               delay={-2}
-              idleOpacity={0.13}
+              idleOpacity={0.22}
               variant="terminal"
             />
             <HoloGlyph
               className={styles.glyphLowerRight}
               delay={-12}
-              idleOpacity={0.075}
-              variant="fragment"
+              idleOpacity={0.16}
+              variant="slash"
             />
           </div>
           <span aria-hidden="true" className={styles.directionalGlare} />
