@@ -82,4 +82,18 @@ export const projectMediaAssets = {
       src: "/assets/projects/squeaky/icon.webp",
     },
   },
+  lekha: {
+    onePager: {
+      alt: "Lekha iPadOS learning prototype one-pager showing Balinese-script handwriting practice and mini tests",
+      src: "/assets/projects/lekha/one-pager.png",
+    },
+    hero: {
+      alt: "Lekha iPadOS learning prototype one-pager",
+      src: "/assets/projects/lekha/one-pager.png",
+    },
+    secondary: {
+      alt: "Lekha guided handwriting and recall-test interfaces",
+      src: "/assets/projects/lekha/one-pager.png",
+    },
+  },
 } satisfies Record<string, Record<string, MediaAsset>>;

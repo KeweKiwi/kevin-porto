@@ -1,3 +1,10 @@
+export type ArchiveProjectAction = {
+  label: string;
+  href: string;
+  kind: "detail" | "source" | "live" | "testflight";
+  isExternal?: boolean;
+};
+
 export type ArchiveProject = {
   name: string;
   platform: string;
@@ -7,9 +14,7 @@ export type ArchiveProject = {
   signal: string;
   image: string;
   imageAlt: string;
-  href: string;
-  actionLabel: string;
-  isExternal?: boolean;
+  actions: ArchiveProjectAction[];
   imageFit?: "contain" | "cover";
 };
 
@@ -31,8 +36,19 @@ export const archiveProjects: ArchiveProject[] = [
     signal: "Core Motion / AVFoundation / GameKit",
     image: "/assets/projects/quackfight/one-pager.jpg",
     imageAlt: "QuackFight project one-pager",
-    href: "/projects/quackfight",
-    actionLabel: "View case study",
+    actions: [
+      {
+        label: "Case study",
+        href: "/projects/quackfight",
+        kind: "detail",
+      },
+      {
+        label: "Source code",
+        href: "https://github.com/Quack-Fight/QuackFight",
+        kind: "source",
+        isExternal: true,
+      },
+    ],
   },
   {
     name: "Rizki Mobil",
@@ -44,9 +60,19 @@ export const archiveProjects: ArchiveProject[] = [
     signal: "Laravel / Filament / MySQL",
     image: "/assets/projects/rizki-mobil/homepage.webp",
     imageAlt: "Rizki Mobil production website homepage",
-    href: "https://rizkimobil.com",
-    actionLabel: "Open live website",
-    isExternal: true,
+    actions: [
+      {
+        label: "Case study",
+        href: "/projects/rizki-mobil",
+        kind: "detail",
+      },
+      {
+        label: "Live website",
+        href: "https://rizkimobil.com",
+        kind: "live",
+        isExternal: true,
+      },
+    ],
     imageFit: "cover",
   },
   {
@@ -59,8 +85,19 @@ export const archiveProjects: ArchiveProject[] = [
     signal: "SwiftData / App Intents / MVVM",
     image: "/assets/projects/squeaky/one-pager.png",
     imageAlt: "Squeaky finance prototype one-pager",
-    href: "/projects/squeaky",
-    actionLabel: "View case study",
+    actions: [
+      {
+        label: "Case study",
+        href: "/projects/squeaky",
+        kind: "detail",
+      },
+      {
+        label: "Source code",
+        href: "https://github.com/KeweKiwi/Squeaky",
+        kind: "source",
+        isExternal: true,
+      },
+    ],
   },
   {
     name: "Lekha",
@@ -72,8 +109,18 @@ export const archiveProjects: ArchiveProject[] = [
     signal: "SwiftUI / SwiftData / PencilKit",
     image: "/assets/projects/lekha/one-pager.png",
     imageAlt: "Lekha Balinese script learning project one-pager",
-    href: "https://testflight.apple.com/join/ACVvsY9y",
-    actionLabel: "Open TestFlight",
-    isExternal: true,
+    actions: [
+      {
+        label: "Case study",
+        href: "/projects/lekha",
+        kind: "detail",
+      },
+      {
+        label: "TestFlight",
+        href: "https://testflight.apple.com/join/ACVvsY9y",
+        kind: "testflight",
+        isExternal: true,
+      },
+    ],
   },
 ];

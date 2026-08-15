@@ -2,10 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Github, Globe2 } from "lucide-react";
 import { AnimatePresence, motion, type PanInfo } from "motion/react";
-import { useState, type KeyboardEvent } from "react";
-import { archiveProjects, projectArchiveContent, type ArchiveProject } from "@/data/project-archive";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import {
+  archiveProjects,
+  projectArchiveContent,
+  type ArchiveProjectAction,
+} from "@/data/project-archive";
 import { cn } from "@/lib/cn";
 import { motionSprings } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
@@ -30,30 +34,46 @@ const mediaVariants = {
   }),
 };
 
-function ProjectAction({ project }: { project: ArchiveProject }) {
-  const className =
-    "group inline-flex min-h-12 w-fit items-center gap-7 border-b border-signal pb-1 text-sm font-semibold text-ink-primary transition-colors hover:text-signal";
+function ProjectAction({ action }: { action: ArchiveProjectAction }) {
+  const isPrimary = action.kind === "detail";
+  const className = cn(
+    "group inline-flex min-h-11 items-center gap-2 rounded-[4px] px-3.5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-signal",
+    isPrimary
+      ? "border border-signal bg-signal text-graphite-page hover:bg-ink-primary"
+      : "border border-graphite-strong text-ink-primary hover:border-signal hover:text-signal",
+  );
+  const icon =
+    action.kind === "source" ? (
+      <Github aria-hidden="true" size={16} />
+    ) : action.kind === "live" ? (
+      <Globe2 aria-hidden="true" size={16} />
+    ) : action.kind === "testflight" ? (
+      <ExternalLink aria-hidden="true" size={16} />
+    ) : null;
   const content = (
     <>
-      {project.actionLabel}
-      <ArrowUpRight
-        aria-hidden="true"
-        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-        size={17}
-      />
+      {icon}
+      <span className="whitespace-nowrap">{action.label}</span>
+      {isPrimary ? (
+        <ArrowUpRight
+          aria-hidden="true"
+          className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          size={16}
+        />
+      ) : null}
     </>
   );
 
-  if (project.isExternal) {
+  if (action.isExternal) {
     return (
-      <a className={className} href={project.href} rel="noreferrer" target="_blank">
+      <a className={className} href={action.href} rel="noreferrer" target="_blank">
         {content}
       </a>
     );
   }
 
   return (
-    <Link className={className} href={project.href}>
+    <Link className={className} href={action.href}>
       {content}
     </Link>
   );
@@ -63,8 +83,23 @@ export function ProjectArchiveCarousel() {
   const reducedMotion = usePrefersReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const indexRailRef = useRef<HTMLDivElement | null>(null);
   const activeProject = archiveProjects[activeIndex];
   const total = archiveProjects.length;
+
+  useEffect(() => {
+    const rail = indexRailRef.current;
+    const activeTab = rail?.querySelector<HTMLElement>(`[data-archive-index="${activeIndex}"]`);
+    if (!rail || !activeTab) {
+      return;
+    }
+
+    const centeredPosition = activeTab.offsetLeft - (rail.clientWidth - activeTab.offsetWidth) / 2;
+    rail.scrollTo({
+      behavior: reducedMotion ? "auto" : "smooth",
+      left: Math.max(0, centeredPosition),
+    });
+  }, [activeIndex, reducedMotion]);
 
   function selectProject(index: number, nextDirection?: number) {
     const wrappedIndex = (index + total) % total;
@@ -131,15 +166,20 @@ export function ProjectArchiveCarousel() {
           </p>
         </header>
 
-        <div className="project-archive-stage relative grid border-b border-graphite-strong desktop:grid-cols-[minmax(300px,.72fr)_minmax(0,1.55fr)]">
+        <div
+          aria-labelledby={`project-archive-tab-${activeIndex}`}
+          className="project-archive-stage relative grid border-b border-graphite-strong desktop:grid-cols-[minmax(300px,.72fr)_minmax(0,1.55fr)]"
+          id="project-archive-panel"
+          role="tabpanel"
+        >
           <div className="relative z-[2] order-2 flex min-h-0 flex-col justify-between border-graphite-strong px-1 py-9 tablet:px-7 desktop:order-1 desktop:min-h-[42rem] desktop:border-r desktop:px-10 desktop:py-12">
             <AnimatePresence custom={direction} initial={false} mode="wait">
               <motion.div
                 key={activeProject.name}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1, y: 0 }}
                 className="max-w-xl"
-                exit={reducedMotion ? undefined : { opacity: 0, y: -14 }}
-                initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+                exit={reducedMotion ? undefined : { clipPath: "inset(0 0 100% 0)", opacity: 0, y: -12 }}
+                initial={reducedMotion ? false : { clipPath: "inset(100% 0 0 0)", opacity: 0, y: 12 }}
                 transition={reducedMotion ? { duration: 0 } : motionSprings.gentle}
               >
                 <div className="flex items-center gap-4 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em]">
@@ -171,12 +211,16 @@ export function ProjectArchiveCarousel() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-10 flex items-end justify-between gap-6">
-              <ProjectAction project={activeProject} />
-              <div className="flex gap-2">
+            <div className="mt-10 flex flex-col gap-5 tablet:flex-row tablet:items-end tablet:justify-between">
+              <div aria-label={`${activeProject.name} links`} className="flex flex-wrap gap-2">
+                {activeProject.actions.map((action) => (
+                  <ProjectAction action={action} key={`${activeProject.name}-${action.kind}`} />
+                ))}
+              </div>
+              <div className="flex shrink-0 gap-2">
                 <button
                   aria-label="Previous project"
-                  className="grid h-12 w-12 place-items-center border border-graphite-strong text-ink-primary transition-colors hover:border-signal hover:text-signal"
+                  className="grid h-12 w-12 place-items-center border border-graphite-strong text-ink-primary transition-colors hover:border-signal hover:text-signal focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-signal"
                   onClick={showPrevious}
                   title="Previous project"
                   type="button"
@@ -185,7 +229,7 @@ export function ProjectArchiveCarousel() {
                 </button>
                 <button
                   aria-label="Next project"
-                  className="grid h-12 w-12 place-items-center border border-signal bg-signal text-graphite-page transition-colors hover:bg-ink-primary"
+                  className="grid h-12 w-12 place-items-center border border-signal bg-signal text-graphite-page transition-colors hover:bg-ink-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink-primary"
                   onClick={showNext}
                   title="Next project"
                   type="button"
@@ -222,6 +266,16 @@ export function ProjectArchiveCarousel() {
                   sizes="(max-width: 1023px) 100vw, 66vw"
                   src={activeProject.image}
                 />
+                <div aria-hidden="true" className="project-archive-hologram-overlay absolute inset-0" />
+                {!reducedMotion ? (
+                  <motion.span
+                    animate={{ top: "112%" }}
+                    aria-hidden="true"
+                    className="project-archive-hologram-scan absolute inset-x-0 z-[2]"
+                    initial={{ top: "-20%" }}
+                    transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                ) : null}
                 <div aria-hidden="true" className="project-archive-media-shade absolute inset-0" />
               </motion.div>
             </AnimatePresence>
@@ -237,14 +291,22 @@ export function ProjectArchiveCarousel() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-2 border-b border-graphite-strong desktop:grid-cols-4" role="tablist" aria-label="Project archive index">
+        <div
+          aria-label="Project archive index"
+          className="project-archive-index border-b border-graphite-strong"
+          ref={indexRailRef}
+          role="tablist"
+        >
           {archiveProjects.map((project, index) => {
             const isActive = index === activeIndex;
             return (
               <button
                 aria-selected={isActive}
-                className="project-archive-tab relative min-h-24 border-r border-t border-graphite-border px-4 py-5 text-left last:border-r-0 desktop:border-t-0 desktop:px-6"
+                aria-controls="project-archive-panel"
+                className="project-archive-tab relative min-h-24 border-r border-t border-graphite-border px-4 py-5 text-left desktop:border-t-0 desktop:px-6"
                 data-active={isActive}
+                data-archive-index={index}
+                id={`project-archive-tab-${index}`}
                 key={project.name}
                 onClick={() => selectProject(index)}
                 role="tab"

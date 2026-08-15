@@ -14,7 +14,7 @@ import {
 import { useRef, useState } from "react";
 import { ProjectMedia } from "@/components/project-media";
 import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
-import { projects } from "@/data/projects";
+import { featuredProjects as projects } from "@/data/projects";
 import { projectVisuals } from "@/data/project-visuals";
 import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";

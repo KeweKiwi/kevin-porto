@@ -63,6 +63,17 @@ export const projectVisuals: ProjectVisual[] = [
       "As Tech Lead, I owned transaction CRUD, SwiftData persistence, App Intents, and the integration of transaction data across team-owned features.",
     markers: ["SwiftData", "App Intents", "MVVM", "Tech Lead"],
   },
+  {
+    slug: "lekha",
+    index: "04",
+    shortStatus: "External TestFlight",
+    statement:
+      "An iPadOS learning prototype that turns Level 1 Balinese-script practice into a guided handwriting roadmap and short recall tests.",
+    technicalSignal: "SwiftUI + SwiftData + PencilKit",
+    proof:
+      "The team combined progressive handwriting guidance, unguided practice, flash cards, and mistake-recognition exercises in one iPad learning flow.",
+    markers: ["SwiftUI", "SwiftData", "PencilKit", "iPadOS"],
+  },
 ];
 
 export function getProjectVisual(slug: string) {

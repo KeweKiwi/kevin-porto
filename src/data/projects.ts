@@ -13,6 +13,7 @@ export type Project = {
   slug: string;
   name: string;
   order: number;
+  featured: boolean;
   platform: string;
   category: string;
   context: string;
@@ -51,6 +52,7 @@ export const projects: Project[] = [
     slug: "quackfight",
     name: "QuackFight",
     order: 1,
+    featured: true,
     platform: "iOS",
     category: "Turn-based artillery game",
     context: "Apple Developer Academy game challenge",
@@ -187,6 +189,7 @@ export const projects: Project[] = [
     slug: "rizki-mobil",
     name: "Rizki Mobil",
     order: 2,
+    featured: true,
     platform: "Web",
     category: "Used-car dealership platform",
     context: "Individual freelance project for a real multi-branch dealership",
@@ -335,6 +338,7 @@ export const projects: Project[] = [
     slug: "squeaky",
     name: "Squeaky!",
     order: 3,
+    featured: true,
     platform: "iOS",
     category: "Personal finance / habit-building app",
     context: "Apple Developer Academy - Help Yourself Challenge",
@@ -465,7 +469,108 @@ export const projects: Project[] = [
       { label: "CBL or research artifact", recommendedSize: "1600x1000", status: "missing" },
     ],
   },
+  {
+    slug: "lekha",
+    name: "Lekha",
+    order: 4,
+    featured: false,
+    platform: "iPadOS",
+    category: "Balinese-script learning prototype",
+    context: "Team-based iPadOS learning project",
+    period: "Not specified",
+    duration: "Not specified",
+    status: "Available through External TestFlight",
+    role: "Development team member",
+    preview:
+      "An iPadOS learning prototype for practicing Level 1 Balinese script through guided handwriting exercises and short recall tests.",
+    evidenceSignal:
+      "A five-person team delivered a structured iPad learning flow combining progressive handwriting guidance, recall exercises, and External TestFlight distribution.",
+    primaryCta: {
+      label: "Open TestFlight",
+      href: "https://testflight.apple.com/join/ACVvsY9y",
+      isExternal: true,
+    },
+    repoUrl: null,
+    productSummary:
+      "Lekha helps students in Bali practice and recall Level 1 Wreastra Balinese script through a progressive roadmap built for iPad.",
+    caseSummary:
+      "A team-built iPadOS prototype that combines guided handwriting practice, unguided recall, and short assessment formats in one learning sequence.",
+    caseHighlights: [
+      {
+        label: "Role",
+        value: "I contributed as a development team member within a five-person product team.",
+      },
+      {
+        label: "Learning flow",
+        value: "The product moves from stroke guidance and dashed tracing to unguided writing, flash cards, and mistake-recognition exercises.",
+      },
+      {
+        label: "Outcome",
+        value: "The team delivered an iPadOS prototype that is available to external testers through TestFlight.",
+      },
+    ],
+    caseFocus: [
+      "The learning roadmap breaks Level 1 Wreastra practice into smaller character sets so students can build familiarity progressively.",
+      "Writing practice reduces assistance across full-stroke guidance, dashed tracing, start-and-end markers, and unguided input.",
+      "Mini tests reinforce recall through unguided writing, flash cards, and spot-the-mistake exercises.",
+    ],
+    team: [
+      "Josanda - Team member",
+      "Kevin - Team member",
+      "Tiffany - Team member",
+      "Joycelyn - Team member",
+      "Rizal - Team member",
+    ],
+    kevinOwned: ["Development contribution within the team implementation"],
+    collaborative: [
+      "Progressive learning roadmap",
+      "Guided handwriting practice",
+      "Mini-test experience",
+      "External TestFlight delivery",
+    ],
+    technologies: [
+      "SwiftUI",
+      "SwiftData",
+      "PencilKit",
+      "AVKit",
+      "AVFoundation",
+      "UIKit",
+      "Swift Testing",
+    ],
+    architecture: [
+      "Progressive roadmap -> Writing practice -> Mini test",
+      "Writing support levels: full-stroke guide -> dashed line -> start-and-end markers -> no guide",
+      "Assessment formats: unguided writing, flash cards, and spot the mistake",
+    ],
+    challenges: [
+      "Helping students understand writing rules for Level 1 Wreastra characters",
+      "Supporting memorization across an extensive character set",
+      "Moving learners from guided tracing toward independent recall",
+    ],
+    testing: [
+      "External TestFlight distribution",
+      "Swift Testing included in the project technology stack",
+    ],
+    outcome:
+      "Lekha reached an External TestFlight prototype with a progressive Level 1 Wreastra roadmap, multiple handwriting-assistance levels, and three short assessment formats.",
+    limitations: [
+      "Individual feature ownership is not publicly documented beyond team membership",
+      "No public source-code repository was found",
+      "Do not claim learning outcomes that were not measured",
+    ],
+    futureImprovements: [
+      "Broader validation with target learners",
+      "Accessibility review for handwriting and audio interactions",
+      "Additional Balinese-script learning levels",
+    ],
+    assetSlots: [
+      { label: "Lekha handwriting practice", recommendedSize: "1600x1000", status: "missing" },
+      { label: "Lekha mini-test flow", recommendedSize: "1600x1000", status: "missing" },
+    ],
+  },
 ];
+
+export const featuredProjects = projects.filter((project) => project.featured);
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
