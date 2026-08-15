@@ -37,6 +37,10 @@ export const architectureAssets = [
 
 export const projectMediaAssets = {
   quackfight: {
+    onePager: {
+      alt: "QuackFight project one-pager showing gameplay, motion aiming, voice input, technology stack, and team credits",
+      src: "/assets/projects/quackfight/one-pager.jpg",
+    },
     hero: {
       alt: "QuackFight gameplay running on a development monitor",
       src: "/assets/projects/quackfight/gameplay.webp",
@@ -61,6 +65,10 @@ export const projectMediaAssets = {
     },
   },
   squeaky: {
+    onePager: {
+      alt: "Squeaky finance prototype one-pager showing the overview, pet progression, transaction entry, and transaction history interfaces",
+      src: "/assets/projects/squeaky/one-pager.png",
+    },
     hero: {
       alt: "Squeaky finance prototype interface overview",
       src: "/assets/projects/squeaky/overview.webp",

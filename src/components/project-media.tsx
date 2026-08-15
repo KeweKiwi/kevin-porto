@@ -16,6 +16,9 @@ export function ProjectMedia({ className, priority = false, project, variant = "
   const visual = getProjectVisual(project.slug);
   const sizes = variant === "compact" ? "(max-width: 1023px) 100vw, 46vw" : "(max-width: 1023px) 100vw, 62vw";
   const isSqueaky = project.slug === "squeaky";
+  const onePager = "onePager" in assets ? assets.onePager : null;
+  const primaryAsset = onePager ?? assets.hero;
+  const hasOnePager = Boolean(onePager);
   const tertiary = "tertiary" in assets ? assets.tertiary : null;
 
   return (
@@ -30,35 +33,41 @@ export function ProjectMedia({ className, priority = false, project, variant = "
       <div aria-hidden="true" className="absolute inset-0 kwf-grid opacity-30" />
 
       <MediaSlot
-        asset={assets.hero}
+        asset={primaryAsset}
         className={cn(
-          "project-media-primary inset-4 border border-graphite-strong tablet:inset-6",
-          isSqueaky && "bg-[#697188]",
+          hasOnePager
+            ? "project-media-primary inset-3 border border-graphite-strong bg-black tablet:inset-5"
+            : "project-media-primary inset-4 border border-graphite-strong tablet:inset-6",
+          isSqueaky && !hasOnePager && "bg-[#697188]",
         )}
-        imageClassName={isSqueaky ? "object-contain" : "object-cover"}
+        imageClassName={hasOnePager || isSqueaky ? "object-contain" : "object-cover"}
         priority={priority}
         sizes={sizes}
       />
 
       <div aria-hidden="true" className="project-media-vignette absolute inset-0 z-[2]" />
 
-      <div className="absolute left-4 top-4 z-10 flex min-h-9 items-center border border-graphite-strong bg-graphite-page/90 px-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary tablet:left-6 tablet:top-6">
-        {project.platform} / {visual?.technicalSignal}
-      </div>
+      {!hasOnePager ? (
+        <div className="absolute left-4 top-4 z-10 flex min-h-9 items-center border border-graphite-strong bg-graphite-page/90 px-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary tablet:left-6 tablet:top-6">
+          {project.platform} / {visual?.technicalSignal}
+        </div>
+      ) : null}
 
-      <MediaSlot
-        asset={assets.secondary}
-        className={cn(
-          "project-media-inset z-[4] border border-ink-primary/45 shadow-[0_18px_50px_rgba(0,0,0,.42)]",
-          project.slug === "quackfight" && "bottom-4 right-4 aspect-[4/3] w-[35%] tablet:bottom-7 tablet:right-7",
-          project.slug === "rizki-mobil" && "bottom-4 right-4 aspect-[16/10] w-[38%] tablet:bottom-7 tablet:right-7",
-          project.slug === "squeaky" && "bottom-4 right-5 aspect-[3/5] w-[22%] tablet:bottom-7 tablet:right-8",
-        )}
-        imageClassName="object-cover"
-        sizes="(max-width: 1023px) 38vw, 24vw"
-      />
+      {!hasOnePager ? (
+        <MediaSlot
+          asset={assets.secondary}
+          className={cn(
+            "project-media-inset z-[4] border border-ink-primary/45 shadow-[0_18px_50px_rgba(0,0,0,.42)]",
+            project.slug === "quackfight" && "bottom-4 right-4 aspect-[4/3] w-[35%] tablet:bottom-7 tablet:right-7",
+            project.slug === "rizki-mobil" && "bottom-4 right-4 aspect-[16/10] w-[38%] tablet:bottom-7 tablet:right-7",
+            project.slug === "squeaky" && "bottom-4 right-5 aspect-[3/5] w-[22%] tablet:bottom-7 tablet:right-8",
+          )}
+          imageClassName="object-cover"
+          sizes="(max-width: 1023px) 38vw, 24vw"
+        />
+      ) : null}
 
-      {tertiary ? (
+      {tertiary && !hasOnePager ? (
         <MediaSlot
           asset={tertiary}
           className={cn(
@@ -71,9 +80,11 @@ export function ProjectMedia({ className, priority = false, project, variant = "
         />
       ) : null}
 
-      <div className="absolute bottom-4 left-4 z-10 border-l border-signal bg-graphite-page/90 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary tablet:bottom-6 tablet:left-6">
-        Production evidence / {project.name}
-      </div>
+      {!hasOnePager ? (
+        <div className="absolute bottom-4 left-4 z-10 border-l border-signal bg-graphite-page/90 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary tablet:bottom-6 tablet:left-6">
+          Production evidence / {project.name}
+        </div>
+      ) : null}
     </div>
   );
 }

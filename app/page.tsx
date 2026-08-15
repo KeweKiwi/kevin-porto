@@ -4,6 +4,7 @@ import { EvidenceCounterStrip } from "@/components/evidence-counter-strip";
 import { HeroDossier } from "@/components/hero-dossier";
 import { SystemLoader } from "@/components/intro/SystemLoader";
 import { PersonalIntroduction } from "@/components/personal-introduction";
+import { ProjectArchiveCarousel } from "@/components/project-archive-carousel";
 import { SelectedWorkShowcase } from "@/components/selected-work-showcase";
 import { TechnicalSkillsSystem } from "@/components/technical-skills-system";
 
@@ -14,6 +15,7 @@ export default function HomePage() {
       <HeroDossier />
       <PersonalIntroduction />
       <SelectedWorkShowcase />
+      <ProjectArchiveCarousel />
       <EvidenceCounterStrip />
       <TechnicalSkillsSystem />
       <EvidenceAbout />
