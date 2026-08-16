@@ -29,6 +29,7 @@ export type Project = {
     isExternal?: boolean;
   };
   repoUrl: string | null;
+  repoState: "public" | "private" | "unavailable";
   productSummary: string;
   caseSummary: string;
   caseHighlights: ProjectCaseHighlight[];
@@ -69,6 +70,7 @@ export const projects: Project[] = [
       href: "/projects/quackfight",
     },
     repoUrl: "https://github.com/Quack-Fight/QuackFight",
+    repoState: "public",
     productSummary:
       "QuackFight explores how native iPhone sensors and system frameworks can make the device part of a multiplayer game controller.",
     caseSummary:
@@ -207,6 +209,7 @@ export const projects: Project[] = [
       isExternal: true,
     },
     repoUrl: null,
+    repoState: "private",
     productSummary:
       "The platform gives the dealership a managed inventory system, public vehicle discovery, branch-specific contact paths, and an administration workflow.",
     caseSummary:
@@ -355,6 +358,7 @@ export const projects: Project[] = [
       href: "/projects/squeaky",
     },
     repoUrl: "https://github.com/KeweKiwi/Squeaky",
+    repoState: "public",
     productSummary:
       "Squeaky explores a faster, less intimidating transaction-entry experience for young adults managing personal finances.",
     caseSummary:
@@ -491,6 +495,7 @@ export const projects: Project[] = [
       isExternal: true,
     },
     repoUrl: null,
+    repoState: "unavailable",
     productSummary:
       "Lekha helps students in Bali practice and recall Level 1 Wreastra Balinese script through a progressive roadmap built for iPad.",
     caseSummary:

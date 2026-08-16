@@ -1,8 +1,9 @@
 export type ArchiveProjectAction = {
   label: string;
-  href: string;
+  href?: string;
   kind: "detail" | "source" | "live" | "testflight";
   isExternal?: boolean;
+  disabledReason?: string;
 };
 
 export type ArchiveProject = {
@@ -43,7 +44,7 @@ export const archiveProjects: ArchiveProject[] = [
         kind: "detail",
       },
       {
-        label: "Source code",
+        label: "GitHub source",
         href: "https://github.com/Quack-Fight/QuackFight",
         kind: "source",
         isExternal: true,
@@ -65,6 +66,11 @@ export const archiveProjects: ArchiveProject[] = [
         label: "Case study",
         href: "/projects/rizki-mobil",
         kind: "detail",
+      },
+      {
+        label: "Private source",
+        kind: "source",
+        disabledReason: "This client repository is private.",
       },
       {
         label: "Live website",
@@ -92,7 +98,7 @@ export const archiveProjects: ArchiveProject[] = [
         kind: "detail",
       },
       {
-        label: "Source code",
+        label: "GitHub source",
         href: "https://github.com/KeweKiwi/Squeaky",
         kind: "source",
         isExternal: true,
@@ -114,6 +120,11 @@ export const archiveProjects: ArchiveProject[] = [
         label: "Case study",
         href: "/projects/lekha",
         kind: "detail",
+      },
+      {
+        label: "Source unavailable",
+        kind: "source",
+        disabledReason: "No public repository URL is available for this project.",
       },
       {
         label: "TestFlight",

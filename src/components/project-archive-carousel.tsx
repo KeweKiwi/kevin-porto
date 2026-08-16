@@ -64,6 +64,20 @@ function ProjectAction({ action }: { action: ArchiveProjectAction }) {
     </>
   );
 
+  if (action.disabledReason || !action.href) {
+    return (
+      <span
+        aria-disabled="true"
+        aria-label={`${action.label}. ${action.disabledReason ?? "Link unavailable."}`}
+        className={cn(className, "cursor-not-allowed border-graphite-border text-ink-muted opacity-65")}
+        role="link"
+        title={action.disabledReason ?? "Link unavailable"}
+      >
+        {content}
+      </span>
+    );
+  }
+
   if (action.isExternal) {
     return (
       <a className={className} href={action.href} rel="noreferrer" target="_blank">

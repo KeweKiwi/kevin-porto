@@ -82,17 +82,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              {project.repoUrl ? (
-                <InteractiveAnchor
-                  className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page hover:bg-ink-primary"
-                  href={project.repoUrl}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <Github aria-hidden="true" size={17} />
-                  View source on GitHub
-                </InteractiveAnchor>
-              ) : null}
+              <ProjectSourceAction project={project} />
               {project.primaryCta.isExternal ? (
                 <InteractiveAnchor
                   className="inline-flex min-h-12 items-center gap-2 rounded-[4px] border border-graphite-strong px-4 py-3 text-sm font-medium text-ink-primary transition hover:border-signal hover:text-signal"
@@ -209,17 +199,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <p className="technical-label text-ink-muted">Explore project</p>
 
           <div className="flex flex-wrap gap-3">
-            {project.repoUrl ? (
-              <InteractiveAnchor
-                className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page hover:bg-ink-primary"
-                href={project.repoUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <Github aria-hidden="true" size={17} />
-                View source on GitHub
-              </InteractiveAnchor>
-            ) : null}
+            <ProjectSourceAction project={project} />
 
             {project.primaryCta.isExternal ? (
               <InteractiveAnchor
@@ -253,6 +233,41 @@ function CaseMeta({ label, value }: { label: string; value: string }) {
       <dt className="technical-label text-ink-muted">{label}</dt>
       <dd className="text-sm leading-6 text-ink-primary">{value}</dd>
     </div>
+  );
+}
+
+function ProjectSourceAction({ project }: { project: (typeof projects)[number] }) {
+  if (project.repoUrl) {
+    return (
+      <InteractiveAnchor
+        className="inline-flex min-h-12 items-center gap-2 rounded-[4px] bg-signal px-4 py-3 text-sm font-medium text-graphite-page hover:bg-ink-primary"
+        href={project.repoUrl}
+        rel="noreferrer"
+        target="_blank"
+      >
+        <Github aria-hidden="true" size={17} />
+        View source on GitHub
+      </InteractiveAnchor>
+    );
+  }
+
+  const isPrivate = project.repoState === "private";
+  const label = isPrivate ? "Private GitHub source" : "GitHub source unavailable";
+  const reason = isPrivate
+    ? "This client repository is private."
+    : "No public repository URL is available for this project.";
+
+  return (
+    <span
+      aria-disabled="true"
+      aria-label={`${label}. ${reason}`}
+      className="inline-flex min-h-12 cursor-not-allowed items-center gap-2 rounded-[4px] border border-graphite-border px-4 py-3 text-sm font-medium text-ink-muted opacity-65"
+      role="link"
+      title={reason}
+    >
+      <Github aria-hidden="true" size={17} />
+      {label}
+    </span>
   );
 }
 
