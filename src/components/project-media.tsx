@@ -37,12 +37,12 @@ export function ProjectMedia({ className, priority = false, project, variant = "
       <MediaSlot
         asset={primaryAsset}
         className={cn(
-          hasOnePager
+          hasOnePager || isRizkiMobil
             ? "project-media-primary inset-3 border border-graphite-strong bg-black tablet:inset-5"
             : "project-media-primary inset-4 border border-graphite-strong tablet:inset-6",
           isSqueaky && !hasOnePager && "bg-[#697188]",
         )}
-        imageClassName={hasOnePager || isSqueaky ? "object-contain" : "object-cover object-center"}
+        imageClassName={hasOnePager || isSqueaky || isRizkiMobil ? "object-contain" : "object-cover object-center"}
         priority={priority}
         sizes={sizes}
       />
