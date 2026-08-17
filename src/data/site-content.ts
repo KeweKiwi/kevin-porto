@@ -13,12 +13,12 @@ export const aboutContent = {
   sectionLabel: "About Kevin",
   titleSegments: ["Engineering", "with ownership,", "from implementation", "to delivery."],
   paragraphs: [
-    "I'm Kevin William Faith, a student in Information System for Business at Ciputra University and an Apple Developer Academy learner focused on production web systems and native Apple development.",
+    "I'm Kevin William Faith, a student in Information System for Business at Ciputra University and an Apple Developer Academy learner. I enjoy working on products where I can stay close to both the technical decisions and the people using the result.",
     "My strongest work sits where implementation meets ownership: making technical decisions, integrating features, debugging difficult flows, and carrying software through delivery.",
   ],
   focusLabel: "Production Web + Native Apple",
   capabilities: [
-    { label: "Build", proof: "Native features and production web systems." },
+    { label: "Build", proof: "Product features and production web systems." },
     { label: "Integrate", proof: "Technical decisions, review, integration, and debugging." },
     { label: "Deliver", proof: "Deployment, handover, training, and maintenance." },
   ],

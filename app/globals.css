@@ -833,7 +833,7 @@ select {
 }
 
 .about-editorial-title {
-  max-width: 13ch;
+  max-width: 16ch;
   font-family: var(--font-display-stack);
   font-size: clamp(2.25rem, 11.5vw, 4rem);
   font-weight: 650;
@@ -874,7 +874,7 @@ select {
   }
 
   .about-editorial-title {
-    max-width: 15ch;
+    max-width: 18ch;
     font-size: clamp(4rem, 7vw, 5.6rem);
   }
 
@@ -970,7 +970,7 @@ select {
   }
 
   .about-editorial-title {
-    max-width: 14ch;
+    max-width: 20ch;
     font-size: clamp(4.2rem, 5vw, 5.6rem);
   }
 
