@@ -25,8 +25,8 @@ export const portraitDetailAssets = [
 ] satisfies readonly MediaAsset[];
 
 export const aboutPortraitAsset: MediaAsset = {
-  alt: "Kevin presenting the Squeaky finance prototype with his development team",
-  src: "/assets/profile/kevin-candid.webp",
+  alt: "Kevin and his team at Apple Developer Academy presenting QuackFight",
+  src: "/assets/profile/fotbar.jpeg",
 };
 
 export const architectureAssets = [
