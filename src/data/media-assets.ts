@@ -106,18 +106,6 @@ export const projectMediaAssets = {
 export const projectGalleryAssets = {
   quackfight: [
     {
-      alt: "QuackFight gameplay running on a development monitor",
-      detail: "The playable artillery loop combines motion aiming, voice-powered throws, turn resolution, and skill use.",
-      label: "Gameplay loop",
-      src: "/assets/projects/quackfight/gameplay.webp",
-    },
-    {
-      alt: "QuackFight team development session at Apple Developer Academy",
-      detail: "A team integration session during the Academy challenge, where gameplay and multiplayer flows were tested together.",
-      label: "Integration session",
-      src: "/assets/projects/quackfight/team-session.webp",
-    },
-    {
       alt: "QuackFight project one-pager showing gameplay, motion aiming, voice input, technology stack, and team credits",
       detail: "A supporting system overview documenting the prototype interactions, implementation stack, and team context.",
       label: "System overview",
@@ -151,18 +139,6 @@ export const projectGalleryAssets = {
     },
   ],
   squeaky: [
-    {
-      alt: "Squeaky finance prototype interface overview",
-      detail: "The prototype dashboard brings transaction data, budget context, and team-owned modules into one product view.",
-      label: "Finance overview",
-      src: "/assets/projects/squeaky/overview.webp",
-    },
-    {
-      alt: "Squeaky transaction entry interface",
-      detail: "The core entry flow records income or expenses and persists them through the shared SwiftData transaction model.",
-      label: "Transaction entry",
-      src: "/assets/projects/squeaky/transaction-entry.webp",
-    },
     {
       alt: "Squeaky finance prototype one-pager showing the overview, pet progression, transaction entry, and transaction history interfaces",
       detail: "A supporting product overview showing how the transaction system connects with the broader team-built prototype.",
