@@ -689,6 +689,15 @@ select {
   position: absolute;
 }
 
+.rizki-storefront-crop {
+  inset: 0 auto auto 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: none;
+  object-fit: contain !important;
+  object-position: left top !important;
+}
+
 .project-media-vignette {
   pointer-events: none;
   box-shadow:

@@ -13,7 +13,7 @@ export const aboutContent = {
   sectionLabel: "About Kevin",
   titleSegments: ["Engineering", "with ownership,", "from implementation", "to delivery."],
   paragraphs: [
-    "I'm Kevin William Faith, an Information System for Business student and Apple Developer Academy learner focused on production web systems and native Apple development.",
+    "I'm Kevin William Faith, a student in Information System for Business at Ciputra University and an Apple Developer Academy learner focused on production web systems and native Apple development.",
     "My strongest work sits where implementation meets ownership: making technical decisions, integrating features, debugging difficult flows, and carrying software through delivery.",
   ],
   focusLabel: "Production Web + Native Apple",
@@ -72,5 +72,5 @@ export const contactContent = {
   resumeAction: "View Résumé",
   githubAction: "GitHub",
   linkedinAction: "LinkedIn",
-  liveWorkAction: "View Rizki Mobil live",
+  liveWorkAction: "Rizki Mobil live",
 } as const;

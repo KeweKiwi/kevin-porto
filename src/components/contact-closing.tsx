@@ -23,6 +23,7 @@ export function ContactClosing() {
               <div className="grid gap-3">
                 {emailHref ? (
                   <InteractiveAnchor
+                    aria-label="Email Kevin"
                     className="flex min-h-20 items-center justify-between bg-signal px-5 text-lg font-semibold tracking-[-0.01em] text-graphite-page hover:bg-ink-primary tablet:min-h-24 tablet:px-7 tablet:text-xl"
                     href={emailHref}
                   >
@@ -38,6 +39,7 @@ export function ContactClosing() {
 
                 {profile.resumeUrl ? (
                   <InteractiveAnchor
+                    aria-label="View Kevin's résumé (opens in a new tab)"
                     className="flex min-h-14 items-center justify-between border border-graphite-strong px-5 text-sm font-semibold text-ink-primary hover:border-signal hover:text-signal tablet:px-7"
                     href={profile.resumeUrl}
                     interactionLevel="subtle"
@@ -60,20 +62,20 @@ export function ContactClosing() {
           </div>
 
           {profile.linkedinUrl ? (
-            <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.linkedinUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
+            <InteractiveAnchor aria-label="Open Kevin's LinkedIn profile (opens in a new tab)" className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.linkedinUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
               <span className="flex items-center gap-2"><Linkedin aria-hidden="true" size={15} />{contactContent.linkedinAction}</span>
               <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
             </InteractiveAnchor>
           ) : null}
 
           {profile.githubUrl ? (
-            <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm font-semibold text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.githubUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
+            <InteractiveAnchor aria-label="Open Kevin's GitHub profile (opens in a new tab)" className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm font-semibold text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.githubUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
               <span className="flex items-center gap-2"><Github aria-hidden="true" size={15} />{contactContent.githubAction}</span>
               <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
             </InteractiveAnchor>
           ) : null}
 
-          <InteractiveAnchor className="flex min-h-20 items-center justify-between py-5 text-sm text-ink-primary hover:text-signal tablet:px-5" href="https://rizkimobil.com" interactionLevel="subtle" rel="noreferrer" target="_blank">
+          <InteractiveAnchor aria-label="Open Rizki Mobil live website (opens in a new tab)" className="flex min-h-20 items-center justify-between py-5 text-sm text-ink-primary hover:text-signal tablet:px-5" href="https://rizkimobil.com" interactionLevel="subtle" rel="noreferrer" target="_blank">
             {contactContent.liveWorkAction}
             <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
           </InteractiveAnchor>

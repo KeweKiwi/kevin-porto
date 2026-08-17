@@ -538,7 +538,7 @@ export function SelectedWorkShowcase() {
                         {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                       </p>
                       <InteractiveLink
-                        className="group mt-3 flex items-end justify-between gap-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                        className="group mt-3 flex min-h-11 items-end justify-between gap-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
                         href={`/projects/${project.slug}`}
                         interactionLevel="subtle"
                       >

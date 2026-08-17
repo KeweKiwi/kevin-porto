@@ -14,17 +14,21 @@ import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 type NavSectionId = "about" | "contact" | "skills" | "work";
 
 type NavItem = {
+  external?: boolean;
   href: string;
   id?: NavSectionId;
   label: string;
 };
 
+const contactNavItem: NavItem = { id: "contact", label: "Contact", href: "/#contact" };
+
 const navItems: NavItem[] = [
   { id: "about", label: "About", href: "/#about" },
   { id: "work", label: "Work", href: "/#work" },
   { id: "skills", label: "Skills", href: "/#skills" },
-  { id: "contact", label: "Contact", href: "/#contact" },
-  ...(profile.resumeUrl ? [{ label: "Résumé", href: profile.resumeUrl }] : []),
+  ...(profile.resumeUrl
+    ? [{ external: true, label: "Résumé", href: profile.resumeUrl }]
+    : []),
 ];
 
 const menuContainerVariants = {
@@ -237,14 +241,8 @@ export function SiteHeader() {
           <nav aria-label="Main navigation" className="flex items-center gap-8">
             {navItems.map((item) => {
               const active = item.id === activeSection;
-              return (
-                <Link
-                  key={item.href}
-                  aria-current={active ? "location" : undefined}
-                  className="relative inline-flex min-h-11 items-center text-[0.82rem] font-semibold tracking-[0.025em] text-ink-secondary hover:text-ink-primary"
-                  href={item.href}
-                  onClick={() => activateItem(item)}
-                >
+              const content = (
+                <>
                   <motion.span
                     transition={motionSprings.snappy}
                     whileHover={reducedMotion ? undefined : { y: -2 }}
@@ -259,6 +257,34 @@ export function SiteHeader() {
                       transition={headerTransition}
                     />
                   ) : null}
+                </>
+              );
+
+              if (item.external) {
+                return (
+                  <a
+                    key={item.href}
+                    aria-label={`${item.label} (opens in a new tab)`}
+                    className="relative inline-flex min-h-11 min-w-11 items-center justify-center text-[0.82rem] font-semibold tracking-[0.025em] text-ink-secondary hover:text-ink-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                    href={item.href}
+                    onClick={() => activateItem(item)}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {content}
+                  </a>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.href}
+                  aria-current={active ? "location" : undefined}
+                  className="relative inline-flex min-h-11 min-w-11 items-center justify-center text-[0.82rem] font-semibold tracking-[0.025em] text-ink-secondary hover:text-ink-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                  href={item.href}
+                  onClick={() => activateItem(item)}
+                >
+                  {content}
                 </Link>
               );
             })}
@@ -318,33 +344,51 @@ export function SiteHeader() {
             <div aria-hidden="true" className="kwf-grid pointer-events-none absolute inset-0 opacity-35" />
             <nav aria-label="Mobile navigation" className="container-grid relative flex min-h-full flex-col py-6">
               <div className="grid">
-                {navItems
-                  .filter((item) => item.id !== "contact")
-                  .map((item, index) => {
+                {navItems.map((item, index) => {
                     const active = item.id === activeSection;
+                    const content = (
+                      <>
+                        <span className="flex items-center gap-4">
+                          <span className="font-mono text-[0.68rem] text-signal">0{index + 1}</span>
+                          {item.label}
+                        </span>
+                        <ArrowUpRight aria-hidden="true" className="text-signal" size={16} />
+                        {active ? (
+                          <motion.span
+                            aria-hidden="true"
+                            className="absolute bottom-0 left-0 h-px w-24 bg-signal"
+                            layoutId="mobile-navigation-active"
+                            transition={headerTransition}
+                          />
+                        ) : null}
+                      </>
+                    );
+
                     return (
                       <motion.div key={item.href} variants={menuItemVariants}>
-                        <Link
-                          aria-current={active ? "location" : undefined}
-                          className="relative flex min-h-16 items-center justify-between border-b border-graphite-strong px-1 text-xl font-semibold text-ink-primary"
-                          data-mobile-nav-link={index === 0 ? true : undefined}
-                          href={item.href}
-                          onClick={() => activateItem(item)}
-                        >
-                          <span className="flex items-center gap-4">
-                            <span className="font-mono text-[0.68rem] text-signal">0{index + 1}</span>
-                            {item.label}
-                          </span>
-                          <ArrowUpRight aria-hidden="true" className="text-signal" size={16} />
-                          {active ? (
-                            <motion.span
-                              aria-hidden="true"
-                              className="absolute bottom-0 left-0 h-px w-24 bg-signal"
-                              layoutId="mobile-navigation-active"
-                              transition={headerTransition}
-                            />
-                          ) : null}
-                        </Link>
+                        {item.external ? (
+                          <a
+                            aria-label={`${item.label} (opens in a new tab)`}
+                            className="relative flex min-h-16 items-center justify-between border-b border-graphite-strong px-1 text-xl font-semibold text-ink-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                            data-mobile-nav-link={index === 0 ? true : undefined}
+                            href={item.href}
+                            onClick={() => setMenuOpen(false)}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            {content}
+                          </a>
+                        ) : (
+                          <Link
+                            aria-current={active ? "location" : undefined}
+                            className="relative flex min-h-16 items-center justify-between border-b border-graphite-strong px-1 text-xl font-semibold text-ink-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                            data-mobile-nav-link={index === 0 ? true : undefined}
+                            href={item.href}
+                            onClick={() => activateItem(item)}
+                          >
+                            {content}
+                          </Link>
+                        )}
                       </motion.div>
                     );
                   })}
@@ -354,7 +398,7 @@ export function SiteHeader() {
                 <InteractiveLink
                   className="flex min-h-14 items-center justify-between bg-signal px-5 text-base font-semibold text-graphite-page"
                   href="/#contact"
-                  onClick={() => activateItem(navItems.find((item) => item.id === "contact")!)}
+                  onClick={() => activateItem(contactNavItem)}
                 >
                   Contact
                   <MotionArrow direction="up-right">

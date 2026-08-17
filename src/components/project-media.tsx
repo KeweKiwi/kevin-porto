@@ -37,12 +37,14 @@ export function ProjectMedia({ className, priority = false, project, variant = "
       <MediaSlot
         asset={primaryAsset}
         className={cn(
-          hasOnePager || isRizkiMobil
-            ? "project-media-primary inset-3 border border-graphite-strong bg-black tablet:inset-5"
+          isRizkiMobil
+            ? "project-media-primary left-3 right-3 top-1/2 aspect-[1.88] -translate-y-1/2 border border-graphite-strong bg-black tablet:left-5 tablet:right-5"
+            : hasOnePager
+              ? "project-media-primary inset-3 border border-graphite-strong bg-black tablet:inset-5"
             : "project-media-primary inset-4 border border-graphite-strong tablet:inset-6",
           isSqueaky && !hasOnePager && "bg-[#697188]",
         )}
-        imageClassName={hasOnePager || isSqueaky || isRizkiMobil ? "object-contain" : "object-cover object-center"}
+        imageClassName={isRizkiMobil ? "rizki-storefront-crop" : hasOnePager || isSqueaky ? "object-contain" : "object-cover object-center"}
         priority={priority}
         sizes={sizes}
       />
