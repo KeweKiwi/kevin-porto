@@ -3,7 +3,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
+import { MediaSlot } from "@/components/media-slot";
 import { ProjectMedia } from "@/components/project-media";
+import { projectGalleryAssets, type MediaAsset } from "@/data/media-assets";
 import type { Project } from "@/data/projects";
 import type { ProjectVisual } from "@/data/project-visuals";
 import { cn } from "@/lib/cn";
@@ -16,6 +18,7 @@ type ProjectGalleryCarouselProps = {
 };
 
 type GallerySlide = {
+  asset?: MediaAsset;
   id: string;
   label: string;
   detail: string;
@@ -24,14 +27,16 @@ type GallerySlide = {
 export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarouselProps) {
   const reducedMotion = usePrefersReducedMotion();
   const slides = useMemo<GallerySlide[]>(() => {
-    const mediaSlots = project.assetSlots
-      .filter((slot) => slot.status === "available")
-      .slice(0, 5)
-      .map((slot, index) => ({
+    const dedicatedGallery = projectGalleryAssets[project.slug as keyof typeof projectGalleryAssets];
+
+    if (dedicatedGallery?.length) {
+      return dedicatedGallery.map((item, index) => ({
+        asset: item,
+        detail: item.detail,
         id: `${project.slug}-${index}`,
-        label: slot.label,
-        detail: slot.recommendedSize,
+        label: item.label,
       }));
+    }
 
     return [
       {
@@ -39,9 +44,8 @@ export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarous
         label: "Case overview",
         detail: visual.proof,
       },
-      ...mediaSlots,
     ];
-  }, [project.assetSlots, project.slug, visual.proof]);
+  }, [project.slug, visual.proof]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const activeSlide = slides[activeIndex] ?? slides[0];
@@ -58,49 +62,73 @@ export function ProjectGalleryCarousel({ project, visual }: ProjectGalleryCarous
   return (
     <div className="overflow-hidden border border-graphite-strong bg-graphite-page">
       <div className="relative">
-        <ProjectMedia
-          project={project}
-          variant="case"
-          className="min-h-[420px] rounded-none border-0 shadow-none tablet:min-h-[560px]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(215,247,91,0.14),transparent_34%),linear-gradient(180deg,rgba(8,9,9,0)_38%,rgba(8,9,9,0.82)_100%)]"
-        />
+        <div className="relative aspect-[16/10] min-h-[240px] overflow-hidden bg-black">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={activeSlide.id}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              className="absolute inset-0"
+              exit={reducedMotion ? undefined : { opacity: 0, scale: 0.992, x: -16 }}
+              initial={reducedMotion ? false : { opacity: 0, scale: 1.008, x: 16 }}
+              transition={{ duration: reducedMotion ? 0 : motionDurations.content, ease: motionEasings.precise }}
+            >
+              {activeSlide.asset ? (
+                <MediaSlot
+                  asset={activeSlide.asset}
+                  className="h-full w-full bg-black"
+                  imageClassName="object-contain"
+                  priority={activeIndex === 0}
+                  sizes="(max-width: 1023px) 100vw, 86vw"
+                />
+              ) : (
+                <ProjectMedia
+                  project={project}
+                  variant="case"
+                  className="h-full min-h-full rounded-none border-0 shadow-none"
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-        <div className="absolute left-4 top-4 border border-graphite-strong bg-graphite-page/86 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary backdrop-blur tablet:left-5 tablet:top-5">
-          {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(215,247,91,0.1),transparent_34%),linear-gradient(180deg,rgba(8,9,9,0)_56%,rgba(8,9,9,0.72)_100%)]"
+          />
+
+          <div className="absolute left-4 top-4 border border-graphite-strong bg-graphite-page/86 px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary backdrop-blur tablet:left-5 tablet:top-5">
+            {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+          </div>
+
+          {hasMultipleSlides ? (
+            <div className="absolute right-4 top-4 flex items-center gap-2 tablet:right-5 tablet:top-5">
+              <motion.button
+                aria-label="Previous media"
+                className="grid h-10 w-10 place-items-center border border-graphite-strong bg-graphite-page/86 text-ink-primary backdrop-blur transition hover:border-signal hover:text-signal"
+                onClick={showPreviousSlide}
+                transition={motionSprings.snappy}
+                type="button"
+                whileHover={reducedMotion ? undefined : { y: -2 }}
+                whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
+              >
+                <ChevronLeft aria-hidden="true" size={18} />
+              </motion.button>
+              <motion.button
+                aria-label="Next media"
+                className="grid h-10 w-10 place-items-center border border-signal bg-signal text-graphite-page hover:bg-ink-primary"
+                onClick={showNextSlide}
+                transition={motionSprings.snappy}
+                type="button"
+                whileHover={reducedMotion ? undefined : { y: -2 }}
+                whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
+              >
+                <ChevronRight aria-hidden="true" size={18} />
+              </motion.button>
+            </div>
+          ) : null}
         </div>
 
-        {hasMultipleSlides ? (
-          <div className="absolute right-4 top-4 flex items-center gap-2 tablet:right-5 tablet:top-5">
-            <motion.button
-              aria-label="Previous media"
-              className="grid h-10 w-10 place-items-center border border-graphite-strong bg-graphite-page/86 text-ink-primary backdrop-blur transition hover:border-signal hover:text-signal"
-              onClick={showPreviousSlide}
-              transition={motionSprings.snappy}
-              type="button"
-              whileHover={reducedMotion ? undefined : { y: -2 }}
-              whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
-            >
-              <ChevronLeft aria-hidden="true" size={18} />
-            </motion.button>
-            <motion.button
-              aria-label="Next media"
-              className="grid h-10 w-10 place-items-center border border-signal bg-signal text-graphite-page hover:bg-ink-primary"
-              onClick={showNextSlide}
-              transition={motionSprings.snappy}
-              type="button"
-              whileHover={reducedMotion ? undefined : { y: -2 }}
-              whileTap={reducedMotion ? undefined : { scale: interactionScale.button }}
-            >
-              <ChevronRight aria-hidden="true" size={18} />
-            </motion.button>
-          </div>
-        ) : null}
-
         <div className="border-t border-graphite-border bg-graphite-page p-4 tablet:absolute tablet:bottom-5 tablet:left-5 tablet:max-w-xl tablet:border tablet:border-graphite-strong tablet:bg-graphite-page/88 tablet:p-5 tablet:backdrop-blur">
-          <p className="technical-label mb-3 text-signal">Project visualization</p>
+          <p className="technical-label mb-3 text-signal">Product evidence</p>
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={activeSlide.id}

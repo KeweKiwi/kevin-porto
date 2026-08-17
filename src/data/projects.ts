@@ -33,6 +33,10 @@ export type Project = {
   productSummary: string;
   caseSummary: string;
   caseHighlights: ProjectCaseHighlight[];
+  decisionSection: {
+    label: string;
+    title: string;
+  };
   caseFocus: string[];
   team: string[];
   kevinOwned: string[];
@@ -52,7 +56,7 @@ export const projects: Project[] = [
   {
     slug: "quackfight",
     name: "QuackFight",
-    order: 1,
+    order: 2,
     featured: true,
     platform: "iOS",
     category: "Turn-based artillery game",
@@ -62,7 +66,7 @@ export const projects: Project[] = [
     status: "Completed playable prototype; External TestFlight; not released on the App Store",
     role: "Tech Lead",
     preview:
-      "A turn-based iOS artillery prototype using Core Motion for aiming, AVFoundation for throw power, and GameKit for online multiplayer.",
+      "A turn-based iOS artillery game where device tilt controls aiming and voice input controls throw power.",
     evidenceSignal:
       "Tech Lead ownership across sensor interactions, haptics, GameKit message routing, feature integration, and multiplayer state-flow debugging.",
     primaryCta: {
@@ -72,27 +76,31 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/Quack-Fight/QuackFight",
     repoState: "public",
     productSummary:
-      "QuackFight explores how native iPhone sensors and system frameworks can make the device part of a multiplayer game controller.",
+      "QuackFight turns native iPhone input into the controller for a local and online artillery game.",
     caseSummary:
-      "A turn-based iOS game that combines motion input, voice input, haptics, and local or Game Center multiplayer in one state-driven flow.",
+      "My work centered on native input, turn-flow integration, and multiplayer debugging within the team build.",
     caseHighlights: [
       {
         label: "Role",
-        value: "I led architecture decisions, code review, feature integration, and multiplayer debugging as Tech Lead.",
+        value: "I led task allocation, code review, feature integration, and multiplayer debugging.",
       },
       {
         label: "Direct contribution",
-        value: "I built tilt aiming, voice-based throw power, haptics, local pass-and-play, and GameKit message routing.",
+        value: "I built tilt aiming, voice throw control, haptics, local play, and Game Center message routing and player-role handling.",
       },
       {
         label: "Outcome",
-        value: "Our team delivered a playable External TestFlight build that approximately 100 exhibition visitors played at the booth.",
+        value: "Playable prototype, External TestFlight, and a booth build played by approximately 100 exhibition visitors.",
       },
     ],
+    decisionSection: {
+      label: "Engineering decisions",
+      title: "Key technical decisions.",
+    },
     caseFocus: [
-      "I modeled the turn lifecycle as explicit aim, power, throw-resolution, and handoff states to keep local and online play aligned.",
-      "I separated low-latency aim and power updates from reliable locked-turn events in GameKit message routing.",
-      "I integrated Core Motion, AVFoundation, and haptics into one interaction model while accounting for sensor sensitivity and background noise.",
+      "I helped structure the turn lifecycle around explicit aim, power, throw-resolution, and handoff states so local and online play could follow the same flow.",
+      "I separated continuously changing aim and power data from locked turn-state events in the GameKit messaging flow to improve synchronization reliability.",
+      "I integrated Core Motion, AVFoundation, and haptics into one interaction model while tuning for motion sensitivity and environmental noise.",
     ],
     team: [
       "Justin - Project Manager",
@@ -190,17 +198,17 @@ export const projects: Project[] = [
   {
     slug: "rizki-mobil",
     name: "Rizki Mobil",
-    order: 2,
+    order: 1,
     featured: true,
     platform: "Web",
     category: "Used-car dealership platform",
     context: "Individual freelance project for a real multi-branch dealership",
-    period: "Not specified",
+    period: "",
     duration: "Approximately six weeks",
     status: "Completed and live; ongoing maintenance agreement",
     role: "Independent full-stack developer",
     preview:
-      "An independently delivered Laravel platform for public inventory, dealership administration, branch workflows, and ongoing production maintenance.",
+      "A live multi-branch dealership platform independently delivered from client requirements and database design through deployment and ongoing maintenance.",
     evidenceSignal:
       "End-to-end ownership from requirements and relational database design through deployment, client training, and maintenance.",
     primaryCta: {
@@ -211,23 +219,27 @@ export const projects: Project[] = [
     repoUrl: null,
     repoState: "private",
     productSummary:
-      "The platform gives the dealership a managed inventory system, public vehicle discovery, branch-specific contact paths, and an administration workflow.",
+      "Rizki Mobil connects public vehicle discovery with the dealership's multi-branch inventory and administration workflows.",
     caseSummary:
-      "I independently took this live dealership platform from client requirements and database design through deployment, training, and maintenance.",
+      "My work covered the complete delivery path from client requirements to a maintained production system.",
     caseHighlights: [
       {
         label: "Role",
-        value: "I owned product definition, implementation, launch, and ongoing support as the independent full-stack developer.",
+        value: "I independently owned product definition, implementation, launch, and support.",
       },
       {
-        label: "System",
-        value: "I built public inventory discovery, vehicle details, image workflows, Filament administration, inquiries, and branch routing.",
+        label: "Direct contribution",
+        value: "I built inventory discovery, filtering, authentication, branch routing, Filament administration, and image workflows.",
       },
       {
         label: "Outcome",
-        value: "I launched a live client-managed platform, trained stakeholders, and continue to support it under a maintenance agreement.",
+        value: "Live production platform, client training, and ongoing maintenance support.",
       },
     ],
+    decisionSection: {
+      label: "Engineering decisions",
+      title: "Key technical decisions.",
+    },
     caseFocus: [
       "I translated dealership operations into clear data models and workflows for vehicles, branches, inquiries, users, and media.",
       "I built conditional Eloquent queries with AJAX updates, pagination, and URL state so filtered inventory remains shareable.",
@@ -268,19 +280,7 @@ export const projects: Project[] = [
       "Minor revisions based on client feedback",
       "Operational training with client stakeholders",
     ],
-    technologies: [
-      "Laravel 12",
-      "Filament v4",
-      "Tailwind CSS 4",
-      "Blade",
-      "Vite 7",
-      "MySQL",
-      "Axios",
-      "PHP 8.2+",
-      "Eloquent ORM",
-      "PHPUnit",
-      "Laravel Pint",
-    ],
+    technologies: ["Laravel", "Filament", "MySQL", "Blade", "Tailwind CSS", "AJAX"],
     architecture: [
       "Public buyer flow: Homepage -> Search or Featured Cars -> Inventory -> Filter and Sort -> Vehicle Details -> WhatsApp",
       "Conditional database queries for inventory filters",
@@ -329,12 +329,10 @@ export const projects: Project[] = [
       "Cloud image storage",
     ],
     assetSlots: [
-      { label: "Rizki Mobil homepage screenshot", recommendedSize: "1600x1000", status: "missing" },
-      { label: "Inventory filters screenshot", recommendedSize: "1600x1000", status: "missing" },
-      { label: "Vehicle detail screenshot", recommendedSize: "1600x1000", status: "missing" },
-      { label: "Credit estimator screenshot", recommendedSize: "1200x900", status: "missing" },
-      { label: "Admin dashboard screenshot", recommendedSize: "1600x1000", status: "missing" },
-      { label: "Image management screenshot", recommendedSize: "1600x1000", status: "missing" },
+      { label: "Public storefront", recommendedSize: "2200x1424", status: "available" },
+      { label: "Inventory discovery", recommendedSize: "2200x1468", status: "available" },
+      { label: "Operational overview", recommendedSize: "2200x1424", status: "available" },
+      { label: "Inventory operations", recommendedSize: "2200x1415", status: "available" },
     ],
   },
   {
@@ -360,27 +358,31 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/KeweKiwi/Squeaky",
     repoState: "public",
     productSummary:
-      "Squeaky explores a faster, less intimidating transaction-entry experience for young adults managing personal finances.",
+      "Squeaky combines transaction management with faster entry through native App Shortcuts.",
     caseSummary:
-      "A native finance prototype where transaction CRUD, SwiftData persistence, App Shortcuts, and team-owned features share one data foundation.",
+      "My work centered on the transaction data layer, native shortcut entry, and integration across team-owned modules.",
     caseHighlights: [
       {
         label: "Role",
-        value: "I led technical decisions, code review, feature integration, and the core transaction system as Tech Lead.",
+        value: "I led technical decisions, code review, integration, and the transaction workflow.",
       },
       {
         label: "Direct contribution",
-        value: "I built transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction-data integration.",
+        value: "I built transaction CRUD, SwiftData persistence, App Intents, App Shortcuts, and shared transaction integration.",
       },
       {
         label: "Outcome",
-        value: "Our team delivered a functional prototype with the main transaction and shortcut flows working end to end in team and mentor demos.",
+        value: "Functional prototype with transaction and App Shortcut flows working end to end in internal and mentor demos.",
       },
     ],
+    decisionSection: {
+      label: "Engineering decisions",
+      title: "Key technical decisions.",
+    },
     caseFocus: [
-      "I modeled transaction data in SwiftData so budget, dashboard, recap, and related modules could use one source of truth.",
-      "I implemented App Intents and App Shortcuts as a native entry point for creating transactions outside the main app flow.",
-      "I defined integration boundaries and reviewed team-owned modules so independently built features worked in one prototype.",
+      "I modeled transaction data in SwiftData so the dashboard, budget, recap, and related modules could read from one shared source of truth.",
+      "I implemented App Intents and App Shortcuts as a native entry point for recording transactions outside the main app navigation.",
+      "I defined integration boundaries and reviewed team-owned modules so independently developed features could operate within one prototype.",
     ],
     team: [
       "Gaby - Project Manager",
@@ -481,8 +483,8 @@ export const projects: Project[] = [
     platform: "iPadOS",
     category: "Balinese-script learning prototype",
     context: "Team-based iPadOS learning project",
-    period: "Not specified",
-    duration: "Not specified",
+    period: "",
+    duration: "",
     status: "Available through External TestFlight",
     role: "Development team member",
     preview:
@@ -499,21 +501,25 @@ export const projects: Project[] = [
     productSummary:
       "Lekha helps students in Bali practice and recall Level 1 Wreastra Balinese script through a progressive roadmap built for iPad.",
     caseSummary:
-      "A team-built iPadOS prototype that combines guided handwriting practice, unguided recall, and short assessment formats in one learning sequence.",
+      "My contribution supported a team-built progression from guided writing practice to independent recall.",
     caseHighlights: [
       {
         label: "Role",
-        value: "I contributed as a development team member within a five-person product team.",
+        value: "I contributed as a developer within a five-person product team.",
       },
       {
-        label: "Learning flow",
-        value: "The product moves from stroke guidance and dashed tracing to unguided writing, flash cards, and mistake-recognition exercises.",
+        label: "Direct contribution",
+        value: "I contributed to the progressive handwriting and recall experience.",
       },
       {
         label: "Outcome",
-        value: "The team delivered an iPadOS prototype that is available to external testers through TestFlight.",
+        value: "iPadOS prototype available to external testers through TestFlight.",
       },
     ],
+    decisionSection: {
+      label: "Product decisions",
+      title: "Key learning-flow decisions.",
+    },
     caseFocus: [
       "The learning roadmap breaks Level 1 Wreastra practice into smaller character sets so students can build familiarity progressively.",
       "Writing practice reduces assistance across full-stroke guidance, dashed tracing, start-and-end markers, and unguided input.",
@@ -575,7 +581,9 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((project) => project.featured);
+export const projectNavigationProjects = [...projects].sort((a, b) => a.order - b.order);
+
+export const featuredProjects = projectNavigationProjects.filter((project) => project.featured);
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);

@@ -21,7 +21,7 @@ export function ContactClosing() {
 
             <div className="flex items-center gap-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary">
               <span aria-hidden="true" className="h-2 w-2 bg-signal" />
-              Open to iOS and software engineering opportunities
+              Open to software engineering and full-stack opportunities
             </div>
 
             {emailHref ? (

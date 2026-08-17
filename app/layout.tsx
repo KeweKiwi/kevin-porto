@@ -7,11 +7,11 @@ import { MotionProvider } from "@/components/motion-provider";
 import { bodyFont, displayFont, monoFont } from "@/lib/fonts";
 
 export const metadata: Metadata = {
-  title: "Kevin William Faith — iOS & Full-Stack Web Developer",
+  title: "Kevin William Faith — Software Engineer",
   description:
-    "Portfolio of Kevin William Faith: native iOS engineering, technical leadership, and end-to-end full-stack web delivery.",
+    "Portfolio of Kevin William Faith: native Apple engineering, technical leadership, and end-to-end production web delivery.",
   openGraph: {
-    title: "Kevin William Faith — iOS & Full-Stack Web Developer",
+    title: "Kevin William Faith — Software Engineer",
     description:
       "Case studies covering GameKit multiplayer, SwiftData and App Intents, and an independently delivered production Laravel platform.",
     type: "website",

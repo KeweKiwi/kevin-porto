@@ -4,7 +4,7 @@ export const heroContent = {
   greeting: "Hello, I'm Kevin.",
   positioning: "I build native Apple experiences and production web systems.",
   summary:
-    "I lead technical delivery across iOS projects and build operational web products for real clients.",
+    "I take ownership across native product engineering and full-stack delivery, from system integration to production support.",
   primaryAction: "View selected work",
   secondaryAction: "GitHub",
 } as const;
@@ -26,9 +26,9 @@ export const aboutContent = {
 
 export const selectedWorkContent = {
   label: "Selected work",
-  title: "Three projects showing how I build, lead, and deliver.",
+  title: "Production ownership, technical leadership, and systems integration.",
   summary:
-    "Native Apple engineering, technical leadership, and independent production delivery.",
+    "Three case studies showing what I built, what I owned, and what reached working users or stakeholders.",
 } as const;
 
 export const skillsSectionContent = {
@@ -67,7 +67,7 @@ export const workApproachContent = {
 export const contactContent = {
   title: "Have a product to build or a team I could contribute to?",
   summary:
-    "I'm open to native Apple and software engineering opportunities where I can contribute hands-on, collaborate across disciplines, and take responsibility for delivery.",
+    "I'm open to software engineering opportunities where I can contribute hands-on across full-stack systems, native Apple products, and technical delivery.",
   emailAction: "Email Kevin",
   resumeAction: "View resume",
   githubAction: "GitHub",

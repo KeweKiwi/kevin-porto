@@ -1,9 +1,8 @@
 export type ArchiveProjectAction = {
   label: string;
-  href?: string;
+  href: string;
   kind: "detail" | "source" | "live" | "testflight";
   isExternal?: boolean;
-  disabledReason?: string;
 };
 
 export type ArchiveProject = {
@@ -26,7 +25,7 @@ export const projectArchiveContent = {
     "Browse the complete project record by platform, delivery status, and implementation focus.",
 } as const;
 
-export const archiveProjects: ArchiveProject[] = [
+const archiveProjectRecords: ArchiveProject[] = [
   {
     name: "QuackFight",
     platform: "iOS",
@@ -59,18 +58,13 @@ export const archiveProjects: ArchiveProject[] = [
     summary:
       "A multi-branch dealership platform delivered independently from requirements and database design through deployment.",
     signal: "Laravel / Filament / MySQL",
-    image: "/assets/projects/rizki-mobil/homepage.webp",
-    imageAlt: "Rizki Mobil production website homepage",
+    image: "/assets/projects/rizki-mobil/rizkimobil1.webp",
+    imageAlt: "Rizki Mobil public storefront featuring a Toyota Innova and inventory search",
     actions: [
       {
         label: "Case study",
         href: "/projects/rizki-mobil",
         kind: "detail",
-      },
-      {
-        label: "Private source",
-        kind: "source",
-        disabledReason: "This client repository is private.",
       },
       {
         label: "Live website",
@@ -122,11 +116,6 @@ export const archiveProjects: ArchiveProject[] = [
         kind: "detail",
       },
       {
-        label: "Source unavailable",
-        kind: "source",
-        disabledReason: "No public repository URL is available for this project.",
-      },
-      {
         label: "TestFlight",
         href: "https://testflight.apple.com/join/ACVvsY9y",
         kind: "testflight",
@@ -135,3 +124,9 @@ export const archiveProjects: ArchiveProject[] = [
     ],
   },
 ];
+
+const archivePriority = ["Rizki Mobil", "QuackFight", "Squeaky!", "Lekha"];
+
+export const archiveProjects = [...archiveProjectRecords].sort(
+  (a, b) => archivePriority.indexOf(a.name) - archivePriority.indexOf(b.name),
+);

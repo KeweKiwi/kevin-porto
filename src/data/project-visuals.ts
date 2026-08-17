@@ -32,24 +32,22 @@ export const projectArchiveContent = {
 export const projectVisuals: ProjectVisual[] = [
   {
     slug: "quackfight",
-    index: "01",
+    index: "02",
     shortStatus: "Playable prototype / External TestFlight",
     statement:
-      "A turn-based iOS artillery prototype where motion, voice, haptics, and multiplayer make the iPhone part of the controller.",
+      "A turn-based iOS artillery game where device tilt controls aiming and voice input controls throw power.",
     technicalSignal: "Core Motion + AVFoundation + GameKit",
-    proof:
-      "As Tech Lead, I owned tilt aiming, voice-based throw power, haptics, GameKit message routing, and multiplayer state-flow debugging.",
+    proof: "Gameplay and development evidence from the playable prototype and Academy team session.",
     markers: ["Core Motion", "AVFoundation", "GameKit", "Tech Lead"],
   },
   {
     slug: "rizki-mobil",
-    index: "02",
+    index: "01",
     shortStatus: "Live production system",
     statement:
       "A live multi-branch dealership platform independently delivered from requirements and database design through deployment.",
     technicalSignal: "Laravel + Filament + MySQL",
-    proof:
-      "I owned the public inventory experience, Filament administration, branch workflows, deployment, client training, and ongoing maintenance.",
+    proof: "Production evidence spanning the public storefront, inventory discovery, and client operations.",
     markers: ["Laravel", "Filament", "MySQL", "Live production"],
   },
   {
@@ -59,8 +57,7 @@ export const projectVisuals: ProjectVisual[] = [
     statement:
       "A native finance prototype built around reliable transaction data and faster entry through App Shortcuts.",
     technicalSignal: "SwiftData + App Intents + MVVM",
-    proof:
-      "As Tech Lead, I owned transaction CRUD, SwiftData persistence, App Intents, and the integration of transaction data across team-owned features.",
+    proof: "Prototype evidence covering the finance overview, transaction entry, and the broader product system.",
     markers: ["SwiftData", "App Intents", "MVVM", "Tech Lead"],
   },
   {
@@ -70,8 +67,7 @@ export const projectVisuals: ProjectVisual[] = [
     statement:
       "An iPadOS learning prototype that turns Level 1 Balinese-script practice into a guided handwriting roadmap and short recall tests.",
     technicalSignal: "SwiftUI + SwiftData + PencilKit",
-    proof:
-      "The team combined progressive handwriting guidance, unguided practice, flash cards, and mistake-recognition exercises in one iPad learning flow.",
+    proof: "A product overview documenting guided handwriting, reduced assistance, and recall exercises.",
     markers: ["SwiftUI", "SwiftData", "PencilKit", "iPadOS"],
   },
 ];

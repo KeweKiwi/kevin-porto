@@ -15,7 +15,7 @@ import { useRef, useState } from "react";
 import { ProjectMedia } from "@/components/project-media";
 import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { featuredProjects as projects } from "@/data/projects";
-import { projectVisuals } from "@/data/project-visuals";
+import { getProjectVisual, type ProjectVisual } from "@/data/project-visuals";
 import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { interactionScale, motionDurations, motionSprings } from "@/lib/motion";
@@ -27,7 +27,7 @@ const workTransitionWindows = [
 ] as const;
 
 type WorkProject = (typeof projects)[number];
-type WorkVisual = (typeof projectVisuals)[number];
+type WorkVisual = ProjectVisual;
 
 const cardMotionRanges = [
   {
@@ -316,7 +316,10 @@ export function SelectedWorkShowcase() {
           </div>
 
           {projects.map((project, index) => {
-            const visual = projectVisuals[index];
+            const visual = getProjectVisual(project.slug);
+            if (!visual) {
+              return null;
+            }
             return (
               <DesktopWorkCard
                 key={project.slug}
@@ -371,7 +374,10 @@ export function SelectedWorkShowcase() {
 
         <div className="relative z-10 grid laptop:hidden">
           {projects.map((project, index) => {
-            const visual = projectVisuals[index];
+            const visual = getProjectVisual(project.slug);
+            if (!visual) {
+              return null;
+            }
             return (
               <motion.article
                 key={project.slug}

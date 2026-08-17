@@ -16,10 +16,12 @@ export function ProjectMedia({ className, priority = false, project, variant = "
   const visual = getProjectVisual(project.slug);
   const sizes = variant === "compact" ? "(max-width: 1023px) 100vw, 46vw" : "(max-width: 1023px) 100vw, 62vw";
   const isSqueaky = project.slug === "squeaky";
+  const isRizkiMobil = project.slug === "rizki-mobil";
   const onePager = "onePager" in assets ? assets.onePager : null;
   const primaryAsset = onePager ?? assets.hero;
   const hasOnePager = Boolean(onePager);
   const tertiary = "tertiary" in assets ? assets.tertiary : null;
+  const showSupportingMedia = !hasOnePager && !isRizkiMobil;
 
   return (
     <div
@@ -40,7 +42,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
             : "project-media-primary inset-4 border border-graphite-strong tablet:inset-6",
           isSqueaky && !hasOnePager && "bg-[#697188]",
         )}
-        imageClassName={hasOnePager || isSqueaky ? "object-contain" : "object-cover"}
+        imageClassName={hasOnePager || isSqueaky ? "object-contain" : "object-cover object-center"}
         priority={priority}
         sizes={sizes}
       />
@@ -53,7 +55,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
         </div>
       ) : null}
 
-      {!hasOnePager ? (
+      {showSupportingMedia ? (
         <MediaSlot
           asset={assets.secondary}
           className={cn(
@@ -67,7 +69,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
         />
       ) : null}
 
-      {tertiary && !hasOnePager ? (
+      {tertiary && showSupportingMedia ? (
         <MediaSlot
           asset={tertiary}
           className={cn(

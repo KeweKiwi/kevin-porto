@@ -3,6 +3,11 @@ export type MediaAsset = {
   src: string | null;
 };
 
+export type ProjectGalleryAsset = MediaAsset & {
+  detail: string;
+  label: string;
+};
+
 export const portraitAsset: MediaAsset = {
   alt: "Portrait of Kevin William Faith",
   src: "/assets/profile/kevin-photo.jpg",
@@ -52,16 +57,16 @@ export const projectMediaAssets = {
   },
   "rizki-mobil": {
     hero: {
-      alt: "Rizki Mobil production website homepage",
-      src: "/assets/projects/rizki-mobil/homepage.webp",
+      alt: "Rizki Mobil public storefront featuring a Toyota Innova and inventory search",
+      src: "/assets/projects/rizki-mobil/rizkimobil1.webp",
     },
     secondary: {
-      alt: "Rizki Mobil vehicle inventory administration",
-      src: "/assets/projects/rizki-mobil/inventory-admin.webp",
+      alt: "Rizki Mobil searchable public vehicle inventory",
+      src: "/assets/projects/rizki-mobil/rizkimobil2.webp",
     },
     tertiary: {
-      alt: "Rizki Mobil administration overview",
-      src: "/assets/projects/rizki-mobil/admin-overview.webp",
+      alt: "Rizki Mobil inventory-derived operational dashboard",
+      src: "/assets/projects/rizki-mobil/rizkimobil3.webp",
     },
   },
   squeaky: {
@@ -97,3 +102,80 @@ export const projectMediaAssets = {
     },
   },
 } satisfies Record<string, Record<string, MediaAsset>>;
+
+export const projectGalleryAssets = {
+  quackfight: [
+    {
+      alt: "QuackFight gameplay running on a development monitor",
+      detail: "The playable artillery loop combines motion aiming, voice-powered throws, turn resolution, and skill use.",
+      label: "Gameplay loop",
+      src: "/assets/projects/quackfight/gameplay.webp",
+    },
+    {
+      alt: "QuackFight team development session at Apple Developer Academy",
+      detail: "A team integration session during the Academy challenge, where gameplay and multiplayer flows were tested together.",
+      label: "Integration session",
+      src: "/assets/projects/quackfight/team-session.webp",
+    },
+    {
+      alt: "QuackFight project one-pager showing gameplay, motion aiming, voice input, technology stack, and team credits",
+      detail: "A supporting system overview documenting the prototype interactions, implementation stack, and team context.",
+      label: "System overview",
+      src: "/assets/projects/quackfight/one-pager.jpg",
+    },
+  ],
+  "rizki-mobil": [
+    {
+      alt: "Rizki Mobil public storefront featuring a Toyota Innova and inventory search",
+      detail: "The production homepage connects featured inventory with direct search and vehicle-detail paths.",
+      label: "Public storefront",
+      src: "/assets/projects/rizki-mobil/rizkimobil1.webp",
+    },
+    {
+      alt: "Rizki Mobil searchable public vehicle inventory",
+      detail: "Conditional filtering and AJAX updates let buyers narrow inventory without losing a shareable URL state.",
+      label: "Inventory discovery",
+      src: "/assets/projects/rizki-mobil/rizkimobil2.webp",
+    },
+    {
+      alt: "Rizki Mobil inventory-derived operational dashboard",
+      detail: "Inventory-derived operational views help the client review active stock, price bands, and recorded sales without calling it real-time analytics.",
+      label: "Client operations",
+      src: "/assets/projects/rizki-mobil/rizkimobil3.webp",
+    },
+    {
+      alt: "Rizki Mobil administration view for stock pricing and sales records",
+      detail: "The administration workflow gives the client direct control over vehicle records, listing status, and stock prioritization.",
+      label: "Stock management",
+      src: "/assets/projects/rizki-mobil/rizkimobil4.webp",
+    },
+  ],
+  squeaky: [
+    {
+      alt: "Squeaky finance prototype interface overview",
+      detail: "The prototype dashboard brings transaction data, budget context, and team-owned modules into one product view.",
+      label: "Finance overview",
+      src: "/assets/projects/squeaky/overview.webp",
+    },
+    {
+      alt: "Squeaky transaction entry interface",
+      detail: "The core entry flow records income or expenses and persists them through the shared SwiftData transaction model.",
+      label: "Transaction entry",
+      src: "/assets/projects/squeaky/transaction-entry.webp",
+    },
+    {
+      alt: "Squeaky finance prototype one-pager showing the overview, pet progression, transaction entry, and transaction history interfaces",
+      detail: "A supporting product overview showing how the transaction system connects with the broader team-built prototype.",
+      label: "Product system",
+      src: "/assets/projects/squeaky/one-pager.png",
+    },
+  ],
+  lekha: [
+    {
+      alt: "Lekha iPadOS learning prototype one-pager showing Balinese-script handwriting practice and mini tests",
+      detail: "The current product overview documents progression from guided handwriting practice to short recall exercises.",
+      label: "Learning flow overview",
+      src: "/assets/projects/lekha/one-pager.png",
+    },
+  ],
+} satisfies Partial<Record<string, readonly ProjectGalleryAsset[]>>;

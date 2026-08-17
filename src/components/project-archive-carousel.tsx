@@ -64,20 +64,6 @@ function ProjectAction({ action }: { action: ArchiveProjectAction }) {
     </>
   );
 
-  if (action.disabledReason || !action.href) {
-    return (
-      <span
-        aria-disabled="true"
-        aria-label={`${action.label}. ${action.disabledReason ?? "Link unavailable."}`}
-        className={cn(className, "cursor-not-allowed border-graphite-border text-ink-muted opacity-65")}
-        role="link"
-        title={action.disabledReason ?? "Link unavailable"}
-      >
-        {content}
-      </span>
-    );
-  }
-
   if (action.isExternal) {
     return (
       <a className={className} href={action.href} rel="noreferrer" target="_blank">
@@ -225,31 +211,11 @@ export function ProjectArchiveCarousel() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-10 flex flex-col gap-5 tablet:flex-row tablet:items-end tablet:justify-between">
+            <div className="mt-10">
               <div aria-label={`${activeProject.name} links`} className="flex flex-wrap gap-2">
                 {activeProject.actions.map((action) => (
                   <ProjectAction action={action} key={`${activeProject.name}-${action.kind}`} />
                 ))}
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <button
-                  aria-label="Previous project"
-                  className="grid h-12 w-12 place-items-center border border-graphite-strong text-ink-primary transition-colors hover:border-signal hover:text-signal focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-signal"
-                  onClick={showPrevious}
-                  title="Previous project"
-                  type="button"
-                >
-                  <ChevronLeft aria-hidden="true" size={19} />
-                </button>
-                <button
-                  aria-label="Next project"
-                  className="grid h-12 w-12 place-items-center border border-signal bg-signal text-graphite-page transition-colors hover:bg-ink-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink-primary"
-                  onClick={showNext}
-                  title="Next project"
-                  type="button"
-                >
-                  <ChevronRight aria-hidden="true" size={19} />
-                </button>
               </div>
             </div>
           </div>
@@ -262,6 +228,31 @@ export function ProjectArchiveCarousel() {
             onDragEnd={handleDragEnd}
           >
             <div aria-hidden="true" className="absolute inset-0 kwf-grid opacity-35" />
+            <div
+              aria-label="Project navigation"
+              className="absolute right-4 top-4 z-[6] flex items-center gap-2 tablet:right-7 tablet:top-7 desktop:right-10 desktop:top-10"
+              onPointerDown={(event) => event.stopPropagation()}
+              role="group"
+            >
+              <button
+                aria-label="Previous project"
+                className="grid h-11 w-11 place-items-center border border-graphite-strong bg-graphite-page/90 text-ink-primary backdrop-blur-sm transition-colors hover:border-signal hover:text-signal focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-signal tablet:h-12 tablet:w-12"
+                onClick={showPrevious}
+                title="Previous project"
+                type="button"
+              >
+                <ChevronLeft aria-hidden="true" size={19} />
+              </button>
+              <button
+                aria-label="Next project"
+                className="grid h-11 w-11 place-items-center border border-signal bg-signal text-graphite-page transition-colors hover:bg-ink-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ink-primary tablet:h-12 tablet:w-12"
+                onClick={showNext}
+                title="Next project"
+                type="button"
+              >
+                <ChevronRight aria-hidden="true" size={19} />
+              </button>
+            </div>
             <AnimatePresence custom={direction} initial={false} mode="popLayout">
               <motion.div
                 key={activeProject.image}
