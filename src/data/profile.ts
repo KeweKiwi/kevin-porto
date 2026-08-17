@@ -2,7 +2,7 @@ export const profile = {
   name: "Kevin William Faith",
   shortName: "Kevin",
   role: "Software Engineer · Native Apple & Full-Stack Web",
-  headline: "I build native Apple experiences and production web systems.",
+  headline: "I build production web systems and native Apple products.",
   intro:
     "Software Engineer with hands-on experience in native Apple systems, technical integration, relational data, and end-to-end production web delivery.",
   principle: "Build clearly. Ship responsibly.",

@@ -1,4 +1,4 @@
-export type SkillProject = "QuackFight" | "Rizki Mobil" | "Squeaky";
+export type SkillProject = "Kevin Portfolio" | "QuackFight" | "Rizki Mobil" | "Squeaky";
 
 export type TechnicalSkill = {
   name: string;
@@ -109,10 +109,28 @@ export const skillGroups: SkillGroup[] = [
         ownership: "Production delivery",
       },
       {
+        name: "Next.js",
+        projects: ["Kevin Portfolio"],
+        evidence: "I built this portfolio with the Next.js App Router, static project routes, metadata, and optimized media delivery.",
+        ownership: "Direct ownership",
+      },
+      {
+        name: "React",
+        projects: ["Kevin Portfolio"],
+        evidence: "I used React to build the portfolio's reusable project, skills, navigation, and evidence interfaces.",
+        ownership: "Direct ownership",
+      },
+      {
+        name: "TypeScript",
+        projects: ["Kevin Portfolio"],
+        evidence: "I used TypeScript to model project, media, skill, and navigation data across this portfolio.",
+        ownership: "Direct ownership",
+      },
+      {
         name: "Tailwind CSS",
-        projects: ["Rizki Mobil"],
-        evidence: "I used Tailwind CSS to create the responsive public and administrative interfaces.",
-        ownership: "Production delivery",
+        projects: ["Rizki Mobil", "Kevin Portfolio"],
+        evidence: "I used Tailwind CSS for responsive production interfaces in Rizki Mobil and this portfolio's design system.",
+        ownership: "Direct ownership",
       },
       {
         name: "JavaScript",
@@ -230,9 +248,14 @@ export const skillGroups: SkillGroup[] = [
 
 export const evidenceCounters = [
   {
+    value: 1,
+    label: "Live production platform",
+    detail: "Rizki Mobil — deployed and client-managed",
+  },
+  {
     value: 3,
     label: "Selected projects",
-    detail: "game, finance app, dealership platform",
+    detail: "live web, native game, finance prototype",
   },
   {
     value: 2,
@@ -240,14 +263,9 @@ export const evidenceCounters = [
     detail: "QuackFight and Squeaky",
   },
   {
-    value: 1,
-    label: "Live client platform",
-    detail: "Rizki Mobil production system",
-  },
-  {
     value: 100,
     prefix: "~",
-    label: "Exhibition visitors",
-    detail: "Played the QuackFight booth build",
+    label: "QuackFight exhibition visitors",
+    detail: "Played the booth build",
   },
 ] as const;

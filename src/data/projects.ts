@@ -30,6 +30,8 @@ export type Project = {
   };
   repoUrl: string | null;
   repoState: "public" | "private" | "unavailable";
+  liveUrl: string | null;
+  testFlightUrl: string | null;
   productSummary: string;
   caseSummary: string;
   caseHighlights: ProjectCaseHighlight[];
@@ -75,6 +77,8 @@ export const projects: Project[] = [
     },
     repoUrl: "https://github.com/Quack-Fight/QuackFight",
     repoState: "public",
+    liveUrl: null,
+    testFlightUrl: null,
     productSummary:
       "QuackFight turns native iPhone input into the controller for a local and online artillery game.",
     caseSummary:
@@ -218,6 +222,8 @@ export const projects: Project[] = [
     },
     repoUrl: null,
     repoState: "private",
+    liveUrl: "https://rizkimobil.com",
+    testFlightUrl: null,
     productSummary:
       "Rizki Mobil connects public vehicle discovery with the dealership's multi-branch inventory and administration workflows.",
     caseSummary:
@@ -357,6 +363,8 @@ export const projects: Project[] = [
     },
     repoUrl: "https://github.com/KeweKiwi/Squeaky",
     repoState: "public",
+    liveUrl: null,
+    testFlightUrl: null,
     productSummary:
       "Squeaky combines transaction management with faster entry through native App Shortcuts.",
     caseSummary:
@@ -498,6 +506,8 @@ export const projects: Project[] = [
     },
     repoUrl: null,
     repoState: "unavailable",
+    liveUrl: null,
+    testFlightUrl: "https://testflight.apple.com/join/ACVvsY9y",
     productSummary:
       "Lekha helps students in Bali practice and recall Level 1 Wreastra Balinese script through a progressive roadmap built for iPad.",
     caseSummary:

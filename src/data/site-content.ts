@@ -2,7 +2,7 @@ import { profile } from "@/data/profile";
 
 export const heroContent = {
   greeting: "Hello, I'm Kevin.",
-  positioning: "I build native Apple experiences and production web systems.",
+  positioning: "I build production web systems and native Apple products.",
   summary:
     "I take ownership across native product engineering and full-stack delivery, from system integration to production support.",
   primaryAction: "View selected work",
@@ -11,15 +11,15 @@ export const heroContent = {
 
 export const aboutContent = {
   sectionLabel: "About Kevin",
-  titleSegments: ["Engineering", "with ownership,", "from architecture", "to delivery."],
+  titleSegments: ["Engineering", "with ownership,", "from implementation", "to delivery."],
   paragraphs: [
-    "I'm Kevin William Faith, an Information System for Business student and Apple Developer Academy learner focused on native Apple development and production web systems.",
-    "My strongest work sits where implementation meets ownership: shaping architecture, integrating features, debugging difficult flows, and carrying software through delivery.",
+    "I'm Kevin William Faith, an Information System for Business student and Apple Developer Academy learner focused on production web systems and native Apple development.",
+    "My strongest work sits where implementation meets ownership: making technical decisions, integrating features, debugging difficult flows, and carrying software through delivery.",
   ],
-  focusLabel: "Native Apple + Production Web",
+  focusLabel: "Production Web + Native Apple",
   capabilities: [
     { label: "Build", proof: "Native features and production web systems." },
-    { label: "Lead", proof: "Architecture, review, integration, and debugging." },
+    { label: "Integrate", proof: "Technical decisions, review, integration, and debugging." },
     { label: "Deliver", proof: "Deployment, handover, training, and maintenance." },
   ],
 } as const;
@@ -27,35 +27,35 @@ export const aboutContent = {
 export const selectedWorkContent = {
   label: "Selected work",
   title: "Production ownership, technical leadership, and systems integration.",
-  summary:
-    "Three case studies showing what I built, what I owned, and what reached working users or stakeholders.",
+  summary: "Three projects spanning live client delivery, technical leadership, and native product engineering.",
 } as const;
 
 export const skillsSectionContent = {
   label: "Technical skills",
   title: "Tools I use to build and ship.",
-  summary:
-    "Select a capability to see where I applied it, what I owned, and which project demonstrates it.",
+  summary: "A practical view of the tools and engineering patterns behind my work.",
 } as const;
 
 export const workApproachContent = {
   label: "How I work",
   title: "Turning unclear requirements into shipped software.",
-  summary: "How I move from ambiguity to implementation, integration, and delivery.",
   rows: [
     {
+      label: "Clarify",
       question: "When requirements are unclear",
       answer:
         "I translate the product goal into concrete user flows, technical boundaries, and an implementation plan before adding complexity.",
       evidence: "Rizki Mobil / Product delivery",
     },
     {
+      label: "Integrate",
       question: "When features must work together",
       answer:
-        "I align architecture, review code, integrate team-owned modules, and debug the system across feature boundaries.",
+        "I align technical boundaries, review code, integrate team-owned modules, and debug the system across feature boundaries.",
       evidence: "QuackFight + Squeaky / Tech Lead",
     },
     {
+      label: "Ship",
       question: "When software moves into production",
       answer:
         "I handle deployment, client training, handover, and maintenance so the system remains usable after launch.",
@@ -67,9 +67,9 @@ export const workApproachContent = {
 export const contactContent = {
   title: "Have a product to build or a team I could contribute to?",
   summary:
-    "I'm open to software engineering opportunities where I can contribute hands-on across full-stack systems, native Apple products, and technical delivery.",
+    "My work spans full-stack systems, native Apple products, and hands-on technical delivery.",
   emailAction: "Email Kevin",
-  resumeAction: "View resume",
+  resumeAction: "View Résumé",
   githubAction: "GitHub",
   linkedinAction: "LinkedIn",
   liveWorkAction: "View Rizki Mobil live",

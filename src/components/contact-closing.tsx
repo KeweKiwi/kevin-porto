@@ -19,24 +19,36 @@ export function ContactClosing() {
               {contactContent.summary}
             </p>
 
-            <div className="flex items-center gap-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-primary">
-              <span aria-hidden="true" className="h-2 w-2 bg-signal" />
-              Open to software engineering and full-stack opportunities
-            </div>
+            {emailHref || profile.resumeUrl ? (
+              <div className="grid gap-3">
+                {emailHref ? (
+                  <InteractiveAnchor
+                    className="flex min-h-20 items-center justify-between bg-signal px-5 text-lg font-semibold tracking-[-0.01em] text-graphite-page hover:bg-ink-primary tablet:min-h-24 tablet:px-7 tablet:text-xl"
+                    href={emailHref}
+                  >
+                    <span className="flex items-center gap-3">
+                      <Mail aria-hidden="true" size={21} strokeWidth={1.7} />
+                      {contactContent.emailAction}
+                    </span>
+                    <MotionArrow>
+                      <ArrowRight size={22} />
+                    </MotionArrow>
+                  </InteractiveAnchor>
+                ) : null}
 
-            {emailHref ? (
-              <InteractiveAnchor
-                className="flex min-h-20 items-center justify-between bg-signal px-5 text-lg font-semibold tracking-[-0.01em] text-graphite-page hover:bg-ink-primary tablet:min-h-24 tablet:px-7 tablet:text-xl"
-                href={emailHref}
-              >
-                <span className="flex items-center gap-3">
-                  <Mail aria-hidden="true" size={21} strokeWidth={1.7} />
-                  {contactContent.emailAction}
-                </span>
-                <MotionArrow>
-                  <ArrowRight size={22} />
-                </MotionArrow>
-              </InteractiveAnchor>
+                {profile.resumeUrl ? (
+                  <InteractiveAnchor
+                    className="flex min-h-14 items-center justify-between border border-graphite-strong px-5 text-sm font-semibold text-ink-primary hover:border-signal hover:text-signal tablet:px-7"
+                    href={profile.resumeUrl}
+                    interactionLevel="subtle"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {contactContent.resumeAction}
+                    <MotionArrow direction="up-right"><ExternalLink size={15} /></MotionArrow>
+                  </InteractiveAnchor>
+                ) : null}
+              </div>
             ) : null}
           </div>
         </div>
@@ -46,13 +58,6 @@ export function ContactClosing() {
             <p className="font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted">Based in</p>
             <p className="mt-2 text-sm text-ink-primary">Indonesia</p>
           </div>
-
-          {profile.resumeUrl ? (
-            <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.resumeUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">
-              {contactContent.resumeAction}
-              <MotionArrow direction="up-right"><ExternalLink size={14} /></MotionArrow>
-            </InteractiveAnchor>
-          ) : null}
 
           {profile.linkedinUrl ? (
             <InteractiveAnchor className="flex min-h-20 items-center justify-between border-b border-graphite-border py-5 text-sm text-ink-primary hover:text-signal tablet:px-5 laptop:border-b-0 laptop:border-r" href={profile.linkedinUrl} interactionLevel="subtle" rel="noreferrer" target="_blank">

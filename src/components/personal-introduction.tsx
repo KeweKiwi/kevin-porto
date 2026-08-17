@@ -81,7 +81,7 @@ export function PersonalIntroduction() {
                 <span className="block">
                   {aboutContent.titleSegments.map((segment, index) => (
                     <span key={segment}>
-                      <span className="whitespace-nowrap">{segment}</span>
+                      <span className="tablet:whitespace-nowrap">{segment}</span>
                       {index < aboutContent.titleSegments.length - 1 ? " " : null}
                     </span>
                   ))}
@@ -106,7 +106,7 @@ export function PersonalIntroduction() {
               sizes="(max-width: 1023px) 100vw, 40vw"
             />
             <span className="absolute -bottom-px -left-px border border-graphite-strong bg-graphite-page px-4 py-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-secondary">
-              Team delivery / Squeaky
+              Squeaky / Tech Lead
             </span>
           </div>
         </div>

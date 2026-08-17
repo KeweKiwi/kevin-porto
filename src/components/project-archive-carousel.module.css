@@ -1,0 +1,29 @@
+.viewport {
+  margin-right: calc(var(--container-margin) * -1);
+  overscroll-behavior-inline: contain;
+  padding-right: var(--container-margin);
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 88vw;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (min-width: 768px) {
+  .slide {
+    flex-basis: calc(100% - 4rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .slide {
+    flex-basis: calc(100% - clamp(5rem, 9vw, 8.5rem));
+  }
+}

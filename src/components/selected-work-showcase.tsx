@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ExternalLink, Github, Globe2 } from "lucide-react";
 import {
   motion,
   type MotionValue,
@@ -13,14 +13,13 @@ import {
 } from "motion/react";
 import { useRef, useState } from "react";
 import { ProjectMedia } from "@/components/project-media";
-import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
+import { InteractiveAnchor, InteractiveLink, MotionArrow } from "@/components/interactive-link";
 import { featuredProjects as projects } from "@/data/projects";
 import { getProjectVisual, type ProjectVisual } from "@/data/project-visuals";
 import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { interactionScale, motionDurations, motionSprings } from "@/lib/motion";
 
-const MotionLink = motion.create(Link);
 const workTransitionWindows = [
   { start: 0.08, end: 0.42 },
   { start: 0.58, end: 0.92 },
@@ -28,6 +27,135 @@ const workTransitionWindows = [
 
 type WorkProject = (typeof projects)[number];
 type WorkVisual = ProjectVisual;
+type FeaturedProjectAction = {
+  external: boolean;
+  href: string;
+  kind: "case-study" | "live" | "source" | "testflight";
+  label: string;
+};
+
+function getFeaturedProjectActions(project: WorkProject): FeaturedProjectAction[] {
+  const actions: FeaturedProjectAction[] = [
+    {
+      external: false,
+      href: `/projects/${project.slug}`,
+      kind: "case-study",
+      label: "View case study",
+    },
+  ];
+
+  if (project.repoState === "public" && project.repoUrl) {
+    actions.push({
+      external: true,
+      href: project.repoUrl,
+      kind: "source",
+      label: "Source code",
+    });
+  }
+
+  if (project.liveUrl) {
+    actions.push({
+      external: true,
+      href: project.liveUrl,
+      kind: "live",
+      label: "Live website",
+    });
+  }
+
+  if (project.testFlightUrl) {
+    actions.push({
+      external: true,
+      href: project.testFlightUrl,
+      kind: "testflight",
+      label: "TestFlight",
+    });
+  }
+
+  return actions;
+}
+
+function FeaturedActionIcon({ kind }: { kind: FeaturedProjectAction["kind"] }) {
+  if (kind === "source") {
+    return <Github aria-hidden="true" size={15} strokeWidth={1.8} />;
+  }
+
+  if (kind === "live") {
+    return <Globe2 aria-hidden="true" size={15} strokeWidth={1.8} />;
+  }
+
+  if (kind === "testflight") {
+    return <ExternalLink aria-hidden="true" size={15} strokeWidth={1.8} />;
+  }
+
+  return null;
+}
+
+function FeaturedProjectActions({
+  project,
+  tabIndex,
+}: {
+  project: WorkProject;
+  tabIndex?: number;
+}) {
+  const actions = getFeaturedProjectActions(project);
+
+  return (
+    <div
+      aria-label={`${project.name} project links`}
+      className="mt-8 flex flex-wrap items-center gap-3"
+    >
+      {actions.map((action) => {
+        const className =
+          action.kind === "case-study"
+            ? "group inline-flex min-h-11 items-center gap-3 border border-signal bg-signal px-4 text-sm font-semibold text-graphite-page transition-colors hover:bg-ink-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+            : "group inline-flex min-h-11 items-center gap-2 border border-graphite-strong px-4 text-sm font-semibold text-ink-primary transition-colors hover:border-signal hover:text-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal";
+        const content = (
+          <>
+            <FeaturedActionIcon kind={action.kind} />
+            <span>{action.label}</span>
+            <MotionArrow direction={action.external ? "up-right" : "right"}>
+              {action.external ? (
+                <ArrowUpRight aria-hidden="true" size={15} />
+              ) : (
+                <ArrowRight aria-hidden="true" size={15} />
+              )}
+            </MotionArrow>
+          </>
+        );
+
+        if (action.external) {
+          return (
+            <InteractiveAnchor
+              aria-label={`${action.label} for ${project.name} (opens in a new tab)`}
+              className={className}
+              href={action.href}
+              interactionLevel="subtle"
+              key={action.kind}
+              rel="noreferrer"
+              tabIndex={tabIndex}
+              target="_blank"
+            >
+              {content}
+            </InteractiveAnchor>
+          );
+        }
+
+        return (
+          <InteractiveLink
+            aria-label={`${action.label} for ${project.name}`}
+            className={className}
+            href={action.href}
+            interactionLevel="subtle"
+            key={action.kind}
+            tabIndex={tabIndex}
+          >
+            {content}
+          </InteractiveLink>
+        );
+      })}
+    </div>
+  );
+}
 
 const cardMotionRanges = [
   {
@@ -146,13 +274,11 @@ function DesktopWorkCard({
   const isActive = activeIndex === index;
 
   return (
-    <MotionLink
+    <motion.article
       aria-hidden={!isActive}
-      aria-label={`View ${project.name} case study`}
       className="work-project-card absolute inset-x-0 bottom-20 top-0 grid grid-cols-[minmax(330px,.72fr)_minmax(0,1.5fr)]"
       data-work-card
       data-work-index={index}
-      href={`/projects/${project.slug}`}
       style={
         reducedMotion
           ? {
@@ -168,7 +294,6 @@ function DesktopWorkCard({
               visibility: "visible",
             }
       }
-      tabIndex={isActive ? 0 : -1}
       transition={motionSprings.gentle}
       whileHover={reducedMotion ? undefined : { y: -2 }}
       whileTap={reducedMotion ? undefined : { scale: 0.995 }}
@@ -203,10 +328,7 @@ function DesktopWorkCard({
           {visual.markers.slice(0, 3).join(" / ")}
         </p>
 
-        <span className="mt-8 inline-flex min-h-12 w-fit items-center gap-8 border-b border-signal text-sm font-medium text-ink-primary">
-          View case study
-          <ArrowRight aria-hidden="true" size={16} />
-        </span>
+        <FeaturedProjectActions project={project} tabIndex={isActive ? 0 : -1} />
       </motion.div>
 
       <motion.div
@@ -214,13 +336,20 @@ function DesktopWorkCard({
         data-work-project-media
         style={reducedMotion ? undefined : { opacity: contentOpacity, scale: mediaScale, y: mediaY }}
       >
-        <ProjectMedia
-          className="h-full min-h-full w-full"
-          project={project}
-          variant="hero"
-        />
+        <Link
+          aria-label={`View ${project.name} case study`}
+          className="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+          href={`/projects/${project.slug}`}
+          tabIndex={isActive ? 0 : -1}
+        >
+          <ProjectMedia
+            className="h-full min-h-full w-full"
+            project={project}
+            variant="hero"
+          />
+        </Link>
       </motion.div>
-    </MotionLink>
+    </motion.article>
   );
 }
 
@@ -389,33 +518,42 @@ export function SelectedWorkShowcase() {
                 viewport={{ amount: 0.18, once: true }}
                 whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
               >
-                <InteractiveLink
-                  className="group block touch-manipulation border-b border-graphite-strong py-10"
-                  href={`/projects/${project.slug}`}
-                >
+                <div className="border-b border-graphite-strong py-10">
                   <div className="container-grid">
+                    <InteractiveLink
+                      aria-label={`View ${project.name} case study`}
+                      className="group block touch-manipulation focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                      href={`/projects/${project.slug}`}
+                      interactionLevel="subtle"
+                    >
                     <motion.div
                       transition={motionSprings.gentle}
                       whileTap={reducedMotion ? undefined : { scale: interactionScale.card }}
                     >
                       <ProjectMedia className="w-full" project={project} variant="compact" />
                     </motion.div>
+                    </InteractiveLink>
                     <div className="pt-6">
                       <p className="font-mono text-xs text-signal">
                         {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                       </p>
-                      <div className="mt-3 flex items-end justify-between gap-5">
+                      <InteractiveLink
+                        className="group mt-3 flex items-end justify-between gap-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal"
+                        href={`/projects/${project.slug}`}
+                        interactionLevel="subtle"
+                      >
                         <h3 className="font-display text-4xl font-semibold leading-[0.95] tracking-[-0.04em] text-ink-primary tablet:text-6xl">{project.name}</h3>
                         <MotionArrow><ArrowRight className="text-signal" size={22} /></MotionArrow>
-                      </div>
+                      </InteractiveLink>
                       <p className="mt-4 max-w-xl text-base leading-7 text-ink-secondary">{visual.statement}</p>
                       <div className="mt-6 grid gap-3 border-t border-graphite-border pt-4 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-muted xs:grid-cols-2">
                         <span>{project.role}</span>
                         <span className="xs:text-right">{visual.shortStatus}</span>
                       </div>
+                      <FeaturedProjectActions project={project} />
                     </div>
                   </div>
-                </InteractiveLink>
+                </div>
               </motion.article>
             );
           })}

@@ -45,16 +45,11 @@ export function EvidenceAbout() {
     <section ref={rootRef} id="capabilities" className="relative overflow-hidden border-b border-graphite-strong bg-graphite-page py-20 tablet:py-28">
       <div aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-graphite-border" />
       <div className="container-grid relative">
-        <div className="grid gap-6 laptop:grid-cols-[minmax(0,1fr)_minmax(300px,.6fr)] laptop:items-end">
-          <div>
-            <p className="font-mono text-xs uppercase text-signal">{workApproachContent.label}</p>
-            <h2 className="mt-5 max-w-4xl text-balance font-display text-[clamp(2.75rem,7.5vw,4rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-ink-primary tablet:text-[clamp(4rem,6vw,5.6rem)]">
-              {workApproachContent.title}
-            </h2>
-          </div>
-          <p className="max-w-md text-base leading-7 text-ink-secondary laptop:justify-self-end">
-            {workApproachContent.summary}
-          </p>
+        <div>
+          <p className="font-mono text-xs uppercase text-signal">{workApproachContent.label}</p>
+          <h2 className="mt-5 max-w-4xl text-balance font-display text-[clamp(2.75rem,7.5vw,4rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-ink-primary tablet:text-[clamp(4rem,6vw,5.6rem)]">
+            {workApproachContent.title}
+          </h2>
         </div>
 
         <div className="relative mt-12 grid border-y border-graphite-strong tablet:grid-cols-3">
@@ -82,7 +77,14 @@ export function EvidenceAbout() {
                   />
                 ) : null}
                 <span className="relative z-10 font-mono text-sm text-signal">0{index + 1}</span>
-                <span className="relative z-10 text-base font-semibold leading-6">{row.question}</span>
+                <span className="relative z-10 grid gap-1.5">
+                  <span className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.065em] text-current">
+                    {row.label}
+                  </span>
+                  <span className="text-sm font-medium leading-5 tablet:text-base tablet:leading-6">
+                    {row.question}
+                  </span>
+                </span>
                 <motion.span
                   animate={{ color: active ? "#D7F75B" : "#3A413F", x: active ? 3 : 0 }}
                   className="relative z-10 ml-auto mt-1 inline-flex shrink-0 group-hover:text-signal"

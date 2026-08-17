@@ -356,6 +356,7 @@ export function InteractivePortrait({
               asset={portraitDetailAssets[0]}
               className="h-full w-full"
               imageClassName={`hero-architecture-image ${styles.insetImage} ${styles.insetChairImage}`}
+              priority
               sizes="(max-width: 767px) 38vw, 22vw"
             />
           </div>
@@ -374,6 +375,7 @@ export function InteractivePortrait({
               asset={portraitDetailAssets[1]}
               className="h-full w-full"
               imageClassName={`hero-architecture-image ${styles.insetImage} ${styles.insetPersonalImage}`}
+              priority
               sizes="18vw"
             />
           </div>

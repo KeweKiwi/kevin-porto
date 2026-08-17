@@ -11,6 +11,7 @@ import { interactionScale, motionDurations, motionEasings, motionSprings } from 
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 
 const projectLinks: Record<SkillProject, string> = {
+  "Kevin Portfolio": "/",
   QuackFight: "/projects/quackfight",
   "Rizki Mobil": "/projects/rizki-mobil",
   Squeaky: "/projects/squeaky",
@@ -30,7 +31,7 @@ const groupShortTitles: Record<SkillGroup["id"], string> = {
 
 const prioritySkillNames: Record<SkillGroup["id"], readonly string[]> = {
   native: ["Core Motion", "GameKit", "App Intents", "SwiftData"],
-  web: ["Laravel", "Filament", "MySQL", "AJAX filtering"],
+  web: ["Laravel", "Next.js", "React", "TypeScript"],
   delivery: ["State-machine architecture", "Technical leadership", "Feature integration", "Production deployment"],
 };
 
@@ -44,7 +45,7 @@ function orderedSkills(group: SkillGroup) {
 }
 
 export function TechnicalSkillsSystem() {
-  const initialGroup = skillGroups[0];
+  const initialGroup = skillGroups.find((group) => group.id === "web") ?? skillGroups[0];
   const [activeGroupId, setActiveGroupId] = useState<SkillGroup["id"]>(initialGroup.id);
   const [activeSkill, setActiveSkill] = useState<TechnicalSkill>(orderedSkills(initialGroup)[0]);
   const [expandedGroups, setExpandedGroups] = useState<Set<SkillGroup["id"]>>(new Set());

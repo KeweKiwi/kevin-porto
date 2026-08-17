@@ -6,6 +6,7 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { InteractiveLink, MotionArrow } from "@/components/interactive-link";
+import { KwfMark } from "@/components/kwf-mark";
 import { profile } from "@/data/profile";
 import { interactionScale, motionDurations, motionEasings, motionSprings } from "@/lib/motion";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
@@ -23,7 +24,7 @@ const navItems: NavItem[] = [
   { id: "work", label: "Work", href: "/#work" },
   { id: "skills", label: "Skills", href: "/#skills" },
   { id: "contact", label: "Contact", href: "/#contact" },
-  ...(profile.resumeUrl ? [{ label: "Resume", href: profile.resumeUrl }] : []),
+  ...(profile.resumeUrl ? [{ label: "Résumé", href: profile.resumeUrl }] : []),
 ];
 
 const menuContainerVariants = {
@@ -223,12 +224,13 @@ export function SiteHeader() {
     >
       <div className="container-grid flex h-16 items-center justify-between tablet:h-[4.5rem]">
         <InteractiveLink
-          className="inline-flex min-h-11 min-w-11 items-center text-base font-semibold text-ink-primary hover:text-signal tablet:text-lg"
+          aria-label="Kevin William Faith — Home"
+          className="group inline-flex min-h-11 min-w-20 items-center text-ink-primary"
           href="/"
           interactionLevel="subtle"
           onClick={() => setMenuOpen(false)}
         >
-          KWF
+          <KwfMark className="h-7 w-auto tablet:h-8" />
         </InteractiveLink>
 
         <div className="hidden items-center gap-9 tablet:flex">

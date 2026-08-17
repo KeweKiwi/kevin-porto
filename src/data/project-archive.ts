@@ -1,132 +1,76 @@
-export type ArchiveProjectAction = {
-  label: string;
-  href: string;
-  kind: "detail" | "source" | "live" | "testflight";
-  isExternal?: boolean;
+export type ArchiveProjectImage = {
+  alt: string;
+  kind: "image";
+  objectFit: "contain" | "cover";
+  objectPosition: string;
+  src: string;
+};
+
+export type ArchiveProjectResearchCover = {
+  kind: "research-cover";
 };
 
 export type ArchiveProject = {
-  name: string;
-  platform: string;
+  caseStudyUrl: string | null;
   category: string;
-  status: string;
-  summary: string;
-  signal: string;
-  image: string;
-  imageAlt: string;
-  actions: ArchiveProjectAction[];
-  imageFit?: "contain" | "cover";
+  description: string;
+  image: ArchiveProjectImage | ArchiveProjectResearchCover;
+  index: string;
+  liveUrl: string | null;
+  slug: string;
+  sourceUrl: string | null;
+  technologies: string[];
+  testFlightUrl: string | null;
+  title: string;
 };
 
 export const projectArchiveContent = {
   label: "Project archive",
-  title: "All projects, one focused index.",
-  summary:
-    "Browse the complete project record by platform, delivery status, and implementation focus.",
+  title: "More work to explore.",
+  summary: "Additional product, research, and experimental work beyond featured case studies.",
 } as const;
 
-const archiveProjectRecords: ArchiveProject[] = [
+export const archiveProjects: ArchiveProject[] = [
   {
-    name: "QuackFight",
-    platform: "iOS",
-    category: "Native interaction game",
-    status: "External TestFlight",
-    summary:
-      "A turn-based artillery prototype that combines motion aiming, voice input, haptics, and GameKit multiplayer.",
-    signal: "Core Motion / AVFoundation / GameKit",
-    image: "/assets/projects/quackfight/one-pager.jpg",
-    imageAlt: "QuackFight project one-pager",
-    actions: [
-      {
-        label: "Case study",
-        href: "/projects/quackfight",
-        kind: "detail",
-      },
-      {
-        label: "GitHub source",
-        href: "https://github.com/Quack-Fight/QuackFight",
-        kind: "source",
-        isExternal: true,
-      },
-    ],
+    caseStudyUrl: "/projects/lekha",
+    category: "iPadOS / Learning Product",
+    description:
+      "A Balinese-script learning prototype that moves students from guided handwriting practice toward independent recall.",
+    image: {
+      alt: "Lekha iPadOS learning product one-pager showing the Balinese-script learning flow",
+      kind: "image",
+      objectFit: "contain",
+      objectPosition: "center",
+      src: "/assets/projects/lekha/one-pager.png",
+    },
+    index: "01",
+    liveUrl: null,
+    slug: "lekha",
+    sourceUrl: null,
+    technologies: ["SwiftUI", "PencilKit", "Product Flow"],
+    testFlightUrl: "https://testflight.apple.com/join/ACVvsY9y",
+    title: "Lekha",
   },
   {
-    name: "Rizki Mobil",
-    platform: "Web",
-    category: "Production dealership platform",
-    status: "Live production",
-    summary:
-      "A multi-branch dealership platform delivered independently from requirements and database design through deployment.",
-    signal: "Laravel / Filament / MySQL",
-    image: "/assets/projects/rizki-mobil/rizkimobil1.webp",
-    imageAlt: "Rizki Mobil public storefront featuring a Toyota Innova and inventory search",
-    actions: [
-      {
-        label: "Case study",
-        href: "/projects/rizki-mobil",
-        kind: "detail",
-      },
-      {
-        label: "Live website",
-        href: "https://rizkimobil.com",
-        kind: "live",
-        isExternal: true,
-      },
+    caseStudyUrl: null,
+    category: "AI / Research",
+    description:
+      "Evaluating text-only, image-only, and multimodal models for Indonesian online gambling promotion detection under text and image perturbations.",
+    image: {
+      kind: "research-cover",
+    },
+    index: "02",
+    liveUrl: null,
+    slug: "multimodal-robustness-research",
+    sourceUrl: null,
+    technologies: [
+      "PyTorch",
+      "E5-large",
+      "SigLIP 2",
+      "Multimodal Learning",
+      "Robustness Evaluation",
     ],
-    imageFit: "cover",
-  },
-  {
-    name: "Squeaky!",
-    platform: "iOS",
-    category: "Personal finance prototype",
-    status: "Functional prototype",
-    summary:
-      "A finance prototype centered on reliable transaction persistence, faster entry, and App Shortcuts.",
-    signal: "SwiftData / App Intents / MVVM",
-    image: "/assets/projects/squeaky/one-pager.png",
-    imageAlt: "Squeaky finance prototype one-pager",
-    actions: [
-      {
-        label: "Case study",
-        href: "/projects/squeaky",
-        kind: "detail",
-      },
-      {
-        label: "GitHub source",
-        href: "https://github.com/KeweKiwi/Squeaky",
-        kind: "source",
-        isExternal: true,
-      },
-    ],
-  },
-  {
-    name: "Lekha",
-    platform: "iPadOS",
-    category: "Balinese script learning prototype",
-    status: "External TestFlight",
-    summary:
-      "An iPad learning prototype for practicing Level 1 Balinese script through guided handwriting exercises and mini tests.",
-    signal: "SwiftUI / SwiftData / PencilKit",
-    image: "/assets/projects/lekha/one-pager.png",
-    imageAlt: "Lekha Balinese script learning project one-pager",
-    actions: [
-      {
-        label: "Case study",
-        href: "/projects/lekha",
-        kind: "detail",
-      },
-      {
-        label: "TestFlight",
-        href: "https://testflight.apple.com/join/ACVvsY9y",
-        kind: "testflight",
-        isExternal: true,
-      },
-    ],
+    testFlightUrl: null,
+    title: "Multimodal Robustness Research",
   },
 ];
-
-const archivePriority = ["Rizki Mobil", "QuackFight", "Squeaky!", "Lekha"];
-
-export const archiveProjects = [...archiveProjectRecords].sort(
-  (a, b) => archivePriority.indexOf(a.name) - archivePriority.indexOf(b.name),
-);
