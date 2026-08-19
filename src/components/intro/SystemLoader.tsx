@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import {
   INTRO_COMPLETE_EVENT,
@@ -21,22 +21,24 @@ type LoaderStatus = {
   confirmation: string;
 };
 
-const desktopStatuses = [
-  { command: "INITIALIZING PROFILE", confirmation: "IDENTITY LOCKED" },
-  { command: "INDEXING CORE ASSETS", confirmation: "ASSET MAP READY" },
-  { command: "COMPILING PROJECT SIGNALS", confirmation: "SIGNAL LOCKED" },
-  { command: "OPENING CASEFILE", confirmation: "INTERFACE LIVE" },
-];
-
-const mobileStatuses: LoaderStatus[] = [
-  { command: "PROFILE INIT", confirmation: "LOCKED" },
-  { command: "CORE INDEX", confirmation: "READY" },
-  { command: "PROJECT SIGNALS", confirmation: "LOCKED" },
-  { command: "OPEN CASEFILE", confirmation: "LIVE" },
-];
-
-const progressCells = Array.from({ length: 24 }, (_, index) => index);
-const decodeGlyphs = ["0", "1", "/", "_", "+", ":"] as const;
+const loaderStatuses = [
+  {
+    desktop: { command: "INITIALIZING PROFILE", confirmation: "IDENTITY LOCKED" },
+    mobile: { command: "PROFILE INIT", confirmation: "LOCKED" },
+  },
+  {
+    desktop: { command: "INDEXING CORE ASSETS", confirmation: "ASSET MAP READY" },
+    mobile: { command: "CORE INDEX", confirmation: "READY" },
+  },
+  {
+    desktop: { command: "COMPILING PROJECT SIGNALS", confirmation: "SIGNAL LOCKED" },
+    mobile: { command: "PROJECT SIGNALS", confirmation: "LOCKED" },
+  },
+  {
+    desktop: { command: "OPENING CASEFILE", confirmation: "INTERFACE LIVE" },
+    mobile: { command: "OPEN CASEFILE", confirmation: "LIVE" },
+  },
+] satisfies readonly { desktop: LoaderStatus; mobile: LoaderStatus }[];
 
 const wireframeRows = [
   [[12, 28], [108, 48], [206, 18], [302, 52], [398, 24], [496, 58], [594, 20], [692, 48], [790, 16], [888, 56], [986, 24], [1084, 52], [1182, 20]],
@@ -102,34 +104,21 @@ const wireframeGlyphs = [
   },
 ] as const;
 
-type StatusMode = "desktop" | "mobile";
-
 function prefersReducedMotion() {
   return window.matchMedia(prefersReducedMotionQuery).matches;
 }
 
 function TerminalStatusLine({
   index,
-  mode,
   status,
   total,
 }: {
   index: number;
-  mode: StatusMode;
-  status: LoaderStatus;
+  status: (typeof loaderStatuses)[number];
   total: number;
 }) {
-  const lineProps =
-    mode === "desktop"
-      ? { "data-desktop-status": true }
-      : { "data-mobile-status": true };
-  const confirmationProps =
-    mode === "desktop"
-      ? { "data-desktop-confirmation": true }
-      : { "data-mobile-confirmation": true };
-
   return (
-    <li className={styles.statusLine} {...lineProps}>
+    <li className={styles.statusLine} data-status>
       <span className={styles.statusBeam} data-status-beam />
       <span className={styles.statusGate} aria-hidden="true">
         <span
@@ -152,25 +141,14 @@ function TerminalStatusLine({
           &gt;
         </span>
         <span className={styles.statusText} data-status-text>
-          {status.command.split(" ").map((word, wordIndex) => (
-            <span key={`${status.command}-${wordIndex}-${word}`} className={styles.statusWord}>
-              {Array.from(word).map((char, charIndex) => (
-                <span
-                  key={`${status.command}-${wordIndex}-${charIndex}`}
-                  className={styles.statusChar}
-                  data-status-value={char}
-                  data-status-char
-                >
-                  {char}
-                </span>
-              ))}
-            </span>
-          ))}
+          <span className={styles.desktopStatusCopy}>{status.desktop.command}</span>
+          <span className={styles.mobileStatusCopy}>{status.mobile.command}</span>
         </span>
         <span className={styles.statusCursor} data-status-cursor />
       </span>
-      <span className={styles.confirmationMark} {...confirmationProps}>
-        {status.confirmation}
+      <span className={styles.confirmationMark} data-status-confirmation>
+        <span className={styles.desktopStatusCopy}>{status.desktop.confirmation}</span>
+        <span className={styles.mobileStatusCopy}>{status.mobile.confirmation}</span>
       </span>
     </li>
   );
@@ -270,8 +248,6 @@ export function SystemLoader({
   const revealRef = useRef(false);
   const onCompleteRef = useRef(onComplete);
   const reducedMotion = usePrefersReducedMotion();
-  const [isActive, setIsActive] = useState(true);
-
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
@@ -292,6 +268,7 @@ export function SystemLoader({
     document.documentElement.dataset.kwfIntroActive = "true";
 
     let timeline: gsap.core.Timeline | undefined;
+    let exitTimeline: gsap.core.Timeline | undefined;
     let context: gsap.Context | undefined;
     let fallbackTimer: number | undefined;
     const progressState = { value: 0 };
@@ -346,21 +323,30 @@ export function SystemLoader({
       delete document.documentElement.dataset.kwfIntroActive;
       window.dispatchEvent(new CustomEvent(INTRO_COMPLETE_EVENT));
       onCompleteRef.current?.();
-      setIsActive(false);
     }
 
     function finishQuickly() {
+      if (exitTimeline || completeRef.current) {
+        return;
+      }
+
       timeline?.kill();
       revealHero();
       setProgress(100);
       setSystemStatus("SYSTEM READY");
+
+      if (document.hidden) {
+        gsap.set(loaderRoot, { autoAlpha: 0 });
+        completeIntro();
+        return;
+      }
 
       const frame = loaderRoot.querySelector<HTMLElement>("[data-loader-frame]");
       const exitLine = loaderRoot.querySelector<HTMLElement>("[data-loader-exit-line]");
       const panelTop = loaderRoot.querySelector<HTMLElement>("[data-loader-panel='top']");
       const panelBottom = loaderRoot.querySelector<HTMLElement>("[data-loader-panel='bottom']");
 
-      gsap
+      exitTimeline = gsap
         .timeline({ onComplete: completeIntro })
         .to(
           frame,
@@ -426,18 +412,31 @@ export function SystemLoader({
       }
     }
 
+    function handleVisibilityChange() {
+      loaderRoot.dataset.loaderPaused = String(document.hidden);
+      if (document.hidden) {
+        timeline?.pause();
+        exitTimeline?.pause();
+      } else {
+        timeline?.resume();
+        exitTimeline?.resume();
+      }
+    }
+
     window.addEventListener("keydown", handleSkip);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    handleVisibilityChange();
 
     context = gsap.context(() => {
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
       const effectiveTimeoutMs = isMobile ? Math.min(timeoutMs, 4900) : timeoutMs;
       const shouldReduceMotion = reducedMotion || prefersReducedMotion();
       const statusLines = gsap.utils.toArray<HTMLElement>(
-        isMobile ? "[data-mobile-status]" : "[data-desktop-status]",
+        "[data-status]",
         root,
       );
       const confirmationMarks = gsap.utils.toArray<HTMLElement>(
-        isMobile ? "[data-mobile-confirmation]" : "[data-desktop-confirmation]",
+        "[data-status-confirmation]",
         root,
       );
       const wireLetters = gsap.utils.toArray<SVGElement>(
@@ -505,10 +504,6 @@ export function SystemLoader({
           exit: 0.58,
           handoff: 0.08,
         };
-
-      root.querySelectorAll<HTMLElement>("[data-status-char]").forEach((char) => {
-        char.textContent = char.dataset.statusValue ?? char.textContent;
-      });
 
       gsap.set(root, {
         "--loader-grid-opacity": 0.56,
@@ -781,10 +776,6 @@ export function SystemLoader({
         const phase = line.querySelector<HTMLElement>("[data-status-phase]");
         const gateLeft = line.querySelector<HTMLElement>("[data-status-gate-left]");
         const gateRight = line.querySelector<HTMLElement>("[data-status-gate-right]");
-        const chars = gsap.utils.toArray<HTMLElement>("[data-status-char]", line);
-        const decodeChars = chars.filter(
-          (_, charIndex) => (charIndex + index * 2) % 7 === 2,
-        );
         const lineTimeline = gsap.timeline();
 
         lineTimeline
@@ -835,16 +826,6 @@ export function SystemLoader({
             },
             "enter",
           )
-          .call(
-            () => {
-              decodeChars.forEach((char, charIndex) => {
-                char.textContent =
-                  decodeGlyphs[(charIndex + index * 3) % decodeGlyphs.length];
-              });
-            },
-            undefined,
-            "enter+=0.06",
-          )
           .to(
             text,
             {
@@ -865,15 +846,6 @@ export function SystemLoader({
               ease: "power2.inOut",
             },
             "enter+=0.02",
-          )
-          .call(
-            () => {
-              chars.forEach((char) => {
-                char.textContent = char.dataset.statusValue ?? char.textContent;
-              });
-            },
-            undefined,
-            `enter+=${timing.reveal * 0.48}`,
           )
           .to(sweep, {
             autoAlpha: 0,
@@ -1178,12 +1150,15 @@ export function SystemLoader({
 
     return () => {
       window.removeEventListener("keydown", handleSkip);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
 
       if (fallbackTimer) {
         window.clearTimeout(fallbackTimer);
       }
 
       context?.revert();
+      timeline?.kill();
+      exitTimeline?.kill();
 
       if (!completeRef.current) {
         document.body.style.overflow = originalBodyOverflow;
@@ -1193,15 +1168,12 @@ export function SystemLoader({
     };
   }, [allowSkip, reducedMotion, timeoutMs]);
 
-  if (!isActive) {
-    return null;
-  }
-
   return (
     <div
       ref={rootRef}
       aria-hidden="true"
       className={`${styles.loader} kwf-system-loader`}
+      data-loader-paused="false"
     >
       <div className={styles.panelTop} data-loader-panel="top" />
       <div className={styles.panelBottom} data-loader-panel="bottom" />
@@ -1271,26 +1243,13 @@ export function SystemLoader({
         </div>
 
         <div className={styles.statusGrid}>
-          <ul className={styles.desktopStatuses}>
-            {desktopStatuses.map((status, index) => (
+          <ul className={styles.statuses}>
+            {loaderStatuses.map((status, index) => (
               <TerminalStatusLine
-                key={status.command}
+                key={status.desktop.command}
                 index={index}
-                mode="desktop"
                 status={status}
-                total={desktopStatuses.length}
-              />
-            ))}
-          </ul>
-
-          <ul className={styles.mobileStatuses}>
-            {mobileStatuses.map((status, index) => (
-              <TerminalStatusLine
-                key={status.command}
-                index={index}
-                mode="mobile"
-                status={status}
-                total={mobileStatuses.length}
+                total={loaderStatuses.length}
               />
             ))}
           </ul>
@@ -1307,12 +1266,6 @@ export function SystemLoader({
           <div className={styles.terminalProgress}>
             <span className={styles.progressBracket}>[</span>
             <div className={styles.progressCells} data-progress-cells>
-              {progressCells.map((cell) => (
-                <span
-                  key={cell}
-                  className={styles.progressCell}
-                />
-              ))}
             </div>
             <span className={styles.progressBracket}>]</span>
           </div>

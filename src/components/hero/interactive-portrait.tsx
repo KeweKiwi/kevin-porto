@@ -302,7 +302,7 @@ export function InteractivePortrait({
               className="h-full w-full"
               imageClassName="hero-portrait-image"
               priority
-              sizes="(max-width: 767px) 92vw, (max-width: 1023px) 68vw, 46vw"
+              sizes="(max-width: 767px) 84vw, (max-width: 1023px) 78vw, (max-width: 1535px) 39vw, 600px"
             />
           </div>
           <div
@@ -356,8 +356,7 @@ export function InteractivePortrait({
               asset={portraitDetailAssets[0]}
               className="h-full w-full"
               imageClassName={`hero-architecture-image ${styles.insetImage} ${styles.insetChairImage}`}
-              priority
-              sizes="(max-width: 767px) 38vw, 22vw"
+              sizes="(max-width: 767px) 40vw, (max-width: 1023px) 35vw, (max-width: 1535px) 19vw, 290px"
             />
           </div>
           <span aria-hidden="true" className={styles.insetSignal} />
@@ -375,8 +374,7 @@ export function InteractivePortrait({
               asset={portraitDetailAssets[1]}
               className="h-full w-full"
               imageClassName={`hero-architecture-image ${styles.insetImage} ${styles.insetPersonalImage}`}
-              priority
-              sizes="18vw"
+              sizes="(max-width: 767px) 1px, (max-width: 1023px) 27vw, (max-width: 1535px) 15vw, 230px"
             />
           </div>
           <span aria-hidden="true" className={styles.insetSignal} />

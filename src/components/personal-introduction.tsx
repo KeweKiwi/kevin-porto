@@ -103,7 +103,7 @@ export function PersonalIntroduction() {
               asset={aboutPortraitAsset}
               className="aspect-[4/5] border border-graphite-strong"
               imageClassName="object-cover object-[center_60%]"
-              sizes="(max-width: 1023px) 100vw, 40vw"
+              sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, (max-width: 1535px) 38vw, 600px"
             />
             <span className="absolute -bottom-px -left-px border border-graphite-strong bg-graphite-page px-4 py-3 font-mono text-[0.68rem] font-medium uppercase tracking-[0.065em] text-ink-secondary">
               QuackFight / Tech Lead

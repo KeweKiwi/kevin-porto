@@ -207,7 +207,7 @@ function ArchiveVisual({ project }: { project: ArchiveProject }) {
         alt={project.image.alt}
         className="p-2 tablet:p-4"
         fill
-        sizes="(max-width: 767px) 88vw, (max-width: 1023px) 75vw, 58vw"
+        sizes="(max-width: 767px) 88vw, (max-width: 1023px) calc(100vw - 6rem), (max-width: 1699px) 56vw, 860px"
         src={project.image.src}
         style={{
           objectFit: project.image.objectFit,
@@ -222,8 +222,22 @@ export function ProjectArchiveCarousel() {
   const reducedMotion = usePrefersReducedMotion();
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const slideRefs = useRef<Array<HTMLElement | null>>([]);
+  const slideOffsetsRef = useRef<number[]>([]);
   const frameRef = useRef<number | null>(null);
+  const measureFrameRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const cacheSlideOffsets = useCallback(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) {
+      return;
+    }
+
+    const viewportOffset = viewport.offsetLeft;
+    slideOffsetsRef.current = slideRefs.current.map((slide) =>
+      slide ? slide.offsetLeft - viewportOffset : 0,
+    );
+  }, []);
 
   const selectProject = useCallback(
     (index: number) => {
@@ -239,7 +253,9 @@ export function ProjectArchiveCarousel() {
 
       viewport.scrollTo({
         behavior: reducedMotion ? "auto" : "smooth",
-        left: slide.offsetLeft - viewport.offsetLeft,
+        left:
+          slideOffsetsRef.current[normalizedIndex] ??
+          slide.offsetLeft - viewport.offsetLeft,
       });
     },
     [reducedMotion],
@@ -252,16 +268,12 @@ export function ProjectArchiveCarousel() {
       return;
     }
 
-    const viewportLeft = viewport.getBoundingClientRect().left;
+    const viewportLeft = viewport.scrollLeft;
     let nearestIndex = 0;
     let nearestDistance = Number.POSITIVE_INFINITY;
 
-    slideRefs.current.forEach((slide, index) => {
-      if (!slide) {
-        return;
-      }
-
-      const distance = Math.abs(slide.getBoundingClientRect().left - viewportLeft);
+    slideOffsetsRef.current.forEach((slideLeft, index) => {
+      const distance = Math.abs(slideLeft - viewportLeft);
       if (distance < nearestDistance) {
         nearestDistance = distance;
         nearestIndex = index;
@@ -298,12 +310,50 @@ export function ProjectArchiveCarousel() {
   }
 
   useEffect(() => {
+    const viewport = viewportRef.current;
+
+    function scheduleMeasurement() {
+      if (measureFrameRef.current !== null) {
+        return;
+      }
+
+      measureFrameRef.current = window.requestAnimationFrame(() => {
+        measureFrameRef.current = null;
+        cacheSlideOffsets();
+      });
+    }
+
+    function handleVisibilityChange() {
+      if (document.hidden && frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+    }
+
+    const resizeObserver =
+      viewport && typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(scheduleMeasurement)
+        : null;
+
+    if (viewport) {
+      resizeObserver?.observe(viewport);
+    }
+    window.addEventListener("resize", scheduleMeasurement, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    scheduleMeasurement();
+
     return () => {
       if (frameRef.current !== null) {
         window.cancelAnimationFrame(frameRef.current);
       }
+      if (measureFrameRef.current !== null) {
+        window.cancelAnimationFrame(measureFrameRef.current);
+      }
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleMeasurement);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [cacheSlideOffsets]);
 
   return (
     <section

@@ -1,4 +1,10 @@
-export type SkillProject = "Kevin Portfolio" | "QuackFight" | "Rizki Mobil" | "Squeaky";
+export type SkillProject =
+  | "Kevin Portfolio"
+  | "QuackFight"
+  | "Rizki Mobil"
+  | "Squeaky"
+  | "Lekha"
+  | "Multimodal Robustness Research";
 
 export type TechnicalSkill = {
   name: string;
@@ -62,7 +68,7 @@ export const skillGroups: SkillGroup[] = [
         name: "GameKit",
         projects: ["QuackFight"],
         evidence: "I contributed to Game Center multiplayer integration, including message routing, player-role assignment, and online state debugging.",
-        ownership: "Direct ownership",
+        ownership: "Project implementation",
       },
       {
         name: "Core Motion",
@@ -99,7 +105,7 @@ export const skillGroups: SkillGroup[] = [
       {
         name: "PHP",
         projects: ["Rizki Mobil"],
-        evidence: "I used PHP across Rizki Mobil's Laravel application and production workflows.",
+        evidence: "I used PHP in Rizki Mobil's Laravel backend for inventory, authentication, filtering, and operational logic.",
         ownership: "Production delivery",
       },
       {
@@ -159,7 +165,7 @@ export const skillGroups: SkillGroup[] = [
       {
         name: "Authentication and authorization",
         projects: ["Rizki Mobil"],
-        evidence: "I implemented guest, registered-user, and administrator access levels for the live system.",
+        evidence: "I implemented guest and authenticated-user flows plus administrator access to the Filament panel.",
         ownership: "Production delivery",
       },
       {
@@ -173,7 +179,7 @@ export const skillGroups: SkillGroup[] = [
   {
     id: "delivery",
     title: "Technical Leadership and Delivery",
-    summary: "Architecture, review, integration, debugging, deployment, handover, and maintenance across team and client work.",
+    summary: "Technical decisions, review, integration, debugging, deployment, handover, and maintenance across team and client work.",
     proof: "I led technical workflows on two iOS projects and independently delivered a live client platform from requirements through maintenance.",
     skills: [
       {
@@ -215,7 +221,7 @@ export const skillGroups: SkillGroup[] = [
       {
         name: "Debugging",
         projects: ["QuackFight", "Squeaky"],
-        evidence: "I supported online state flow, multiplayer synchronization, merge, and app-flow debugging.",
+        evidence: "I supported online state-flow, multiplayer integration, merge, and app-flow debugging across QuackFight and Squeaky.",
         ownership: "Team leadership",
       },
       {

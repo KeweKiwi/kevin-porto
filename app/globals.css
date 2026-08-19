@@ -1435,6 +1435,10 @@ select {
   animation-duration: 38s;
 }
 
+.skill-marquee-shell[data-marquee-running="false"] .skill-marquee-track {
+  animation-play-state: paused;
+}
+
 .skill-marquee-group {
   display: flex;
   align-items: center;

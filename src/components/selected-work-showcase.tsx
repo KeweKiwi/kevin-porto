@@ -19,11 +19,13 @@ import { getProjectVisual, type ProjectVisual } from "@/data/project-visuals";
 import { selectedWorkContent } from "@/data/site-content";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
 import { interactionScale, motionDurations, motionSprings } from "@/lib/motion";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 const workTransitionWindows = [
   { start: 0.08, end: 0.42 },
   { start: 0.58, end: 0.92 },
 ] as const;
+const desktopWorkQuery = "(min-width: 1024px)";
 
 type WorkProject = (typeof projects)[number];
 type WorkVisual = ProjectVisual;
@@ -358,6 +360,7 @@ export function SelectedWorkShowcase() {
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const reducedMotion = usePrefersReducedMotion();
+  const desktopLayout = useMediaQuery(desktopWorkQuery);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
@@ -432,7 +435,8 @@ export function SelectedWorkShowcase() {
           </p>
         </header>
 
-        <div className="kinetic-work-desktop-grid relative z-10 hidden laptop:block">
+        {desktopLayout ? (
+        <div className="kinetic-work-desktop-grid relative z-10">
           <div aria-hidden="true" className="work-shutter-handoffs">
             {projects.slice(1).map((project, index) => (
               <WorkSignalHandoff
@@ -500,8 +504,8 @@ export function SelectedWorkShowcase() {
             ))}
           </nav>
         </div>
-
-        <div className="relative z-10 grid laptop:hidden">
+        ) : (
+        <div className="relative z-10 grid">
           {projects.map((project, index) => {
             const visual = getProjectVisual(project.slug);
             if (!visual) {
@@ -558,6 +562,7 @@ export function SelectedWorkShowcase() {
             );
           })}
         </div>
+        )}
       </div>
     </section>
   );

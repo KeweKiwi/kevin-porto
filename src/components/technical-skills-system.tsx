@@ -15,6 +15,8 @@ const projectLinks: Record<SkillProject, string> = {
   QuackFight: "/projects/quackfight",
   "Rizki Mobil": "/projects/rizki-mobil",
   Squeaky: "/projects/squeaky",
+  Lekha: "#",
+  "Multimodal Robustness Research": "#",
 };
 
 const groupTitles: Record<SkillGroup["id"], string> = {

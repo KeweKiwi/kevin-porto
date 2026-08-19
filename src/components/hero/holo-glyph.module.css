@@ -113,7 +113,7 @@
     rgba(137, 168, 26, 0.48) 78%,
     rgba(190, 234, 31, 0.74) 96%
   );
-  background-position: 84% 68%;
+  background-position: 50% 50%;
   background-size: 250% 250%;
   -webkit-mask-position: calc(50% - 22px) calc(50% + 16px);
   -webkit-mask-size: 286% 286%;
@@ -123,6 +123,8 @@
   opacity: clamp(0.07, calc(var(--glyph-ambient) * 1.1), 0.24);
   animation: glyphSpectrumDrift 16s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
   animation-delay: var(--glyph-delay);
+  transform: translate3d(-1.5%, 1%, 0) scale(1.06);
+  will-change: transform, opacity;
 }
 
 .glyphSpecular {
@@ -141,7 +143,7 @@
     rgba(215, 247, 91, 0.56) 55%,
     transparent 60% 100%
   );
-  background-position: 118% 50%;
+  background-position: 50% 50%;
   background-size: 260% 220%;
   -webkit-mask-position: calc(50% + 3px) calc(50% + 2px);
   -webkit-mask-size: 108% 108%;
@@ -151,6 +153,8 @@
   opacity: var(--glyph-specular);
   animation: glyphSpecularSweep 14s cubic-bezier(0.45, 0, 0.55, 1) infinite;
   animation-delay: var(--glyph-delay);
+  transform: translate3d(24%, 0, 0) scale3d(1.34, 1.08, 1);
+  will-change: transform, opacity;
 }
 
 .glyphSpecular::after {
@@ -180,27 +184,40 @@
 
 @keyframes glyphSpectrumDrift {
   0% {
-    background-position: 84% 68%;
+    opacity: clamp(0.06, var(--glyph-ambient), 0.2);
+    transform: translate3d(-1.5%, 1%, 0) scale(1.06);
   }
 
   48% {
-    background-position: 48% 36%;
+    opacity: clamp(0.07, calc(var(--glyph-ambient) * 1.1), 0.24);
+    transform: translate3d(0.8%, -1.1%, 0) scale(1.075);
   }
 
   100% {
-    background-position: 12% 28%;
+    opacity: clamp(0.065, var(--glyph-ambient), 0.21);
+    transform: translate3d(1.7%, -0.4%, 0) scale(1.065);
   }
 }
 
 @keyframes glyphSpecularSweep {
   0%,
   18% {
-    background-position: 118% 50%;
+    opacity: 0;
+    transform: translate3d(24%, 0, 0) scale3d(1.34, 1.08, 1);
   }
 
-  72%,
+  36% {
+    opacity: var(--glyph-specular);
+  }
+
+  72% {
+    opacity: var(--glyph-specular);
+    transform: translate3d(-24%, 0, 0) scale3d(1.34, 1.08, 1);
+  }
+
   100% {
-    background-position: -18% 50%;
+    opacity: 0;
+    transform: translate3d(-24%, 0, 0) scale3d(1.34, 1.08, 1);
   }
 }
 

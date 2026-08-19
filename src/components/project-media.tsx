@@ -14,7 +14,12 @@ type ProjectMediaProps = {
 export function ProjectMedia({ className, priority = false, project, variant = "hero" }: ProjectMediaProps) {
   const assets = projectMediaAssets[project.slug as keyof typeof projectMediaAssets];
   const visual = getProjectVisual(project.slug);
-  const sizes = variant === "compact" ? "(max-width: 1023px) 100vw, 46vw" : "(max-width: 1023px) 100vw, 62vw";
+  const sizes =
+    variant === "compact"
+      ? "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, 46vw"
+      : variant === "case"
+        ? "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, 86vw"
+        : "(max-width: 1023px) 92vw, 66vw";
   const isSqueaky = project.slug === "squeaky";
   const isRizkiMobil = project.slug === "rizki-mobil";
   const onePager = "onePager" in assets ? assets.onePager : null;
@@ -67,7 +72,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
             project.slug === "squeaky" && "bottom-4 right-5 aspect-[3/5] w-[22%] tablet:bottom-7 tablet:right-8",
           )}
           imageClassName="object-cover"
-          sizes="(max-width: 1023px) 38vw, 24vw"
+          sizes="(max-width: 767px) 35vw, (max-width: 1023px) 32vw, 23vw"
         />
       ) : null}
 
@@ -80,7 +85,7 @@ export function ProjectMedia({ className, priority = false, project, variant = "
             project.slug === "squeaky" && "right-[26%] top-[14%] aspect-square w-[12%]",
           )}
           imageClassName="object-cover"
-          sizes="18vw"
+          sizes="(max-width: 1023px) 14vw, 18vw"
         />
       ) : null}
 
